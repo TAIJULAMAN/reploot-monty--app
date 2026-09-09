@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "KINETQX",
+    "slug": "kinetqx-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "kinetqx",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#070A11",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kinetqx.app"
+    },
+    "android": {
+      "package": "com.kinetqx.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#070A11",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      "expo-image",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow KINETQX to access your camera for AI workout pose tracking and food scanning."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "root": "app"
+      }
+    }
+  }
+}
