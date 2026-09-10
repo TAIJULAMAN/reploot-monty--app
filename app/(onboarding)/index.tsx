@@ -157,22 +157,6 @@ export default function OnboardingScreen() {
 
         {/* Dynamic Action Button (NEXT -> / GET STARTED ->) */}
         <View style={styles.buttonContainer}>
-          {/* Ambient Purple Glow under button matching Figma */}
-          <View style={styles.buttonGlowWrapper} pointerEvents="none">
-            <LinearGradient
-              colors={[
-                "transparent",
-                "rgba(99, 102, 241, 0.38)",
-                "rgba(139, 92, 246, 0.18)",
-                "transparent",
-              ]}
-              locations={[0, 0.25, 0.65, 1]}
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 0.5, y: 1 }}
-              style={styles.buttonGlow}
-            />
-          </View>
-
           <Pressable
             onPress={handleNext}
             style={({ pressed }) => [
@@ -235,29 +219,16 @@ const styles = StyleSheet.create({
     height: 60,
     position: "relative",
   },
-  buttonGlowWrapper: {
-    position: "absolute",
-    left: 28,
-    right: 28,
-    bottom: -22,
-    height: 42,
-    zIndex: 1,
-  },
-  buttonGlow: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 21,
-  },
   buttonWrapper: {
     width: "100%",
     height: 60,
     borderRadius: 30,
     overflow: "hidden",
-    shadowColor: "#4F46E5",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 18,
-    elevation: 10,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 8,
     zIndex: 2,
   },
   buttonPressed: {
