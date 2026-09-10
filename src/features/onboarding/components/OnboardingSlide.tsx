@@ -18,7 +18,8 @@ interface OnboardingSlideProps {
 export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const bottomOffset = Math.max(insets.bottom + 130, 144);
+  const bottomInset = insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64;
+  const bottomOffset = bottomInset + 164;
 
   return (
     <View style={[styles.container, { width, height }]}>
@@ -31,23 +32,45 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
         priority="high"
       />
 
+      {/* Atmospheric Amber Embers & Cyber Line matching Figma reference */}
+      {slide.id === "trainer" && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          {/* Subtle Angled Cyber HUD Grid Line */}
+          <View style={styles.cyberLine} />
+
+          {/* Ember 1: Warm glowing particle at top-right */}
+          <View style={[styles.emberGlow, { top: "18%", right: "32%" }]}>
+            <View style={styles.emberCore} />
+          </View>
+
+          {/* Ember 2: Warm glowing particle at mid-left */}
+          <View style={[styles.emberGlow, { top: "34%", left: "11%" }]}>
+            <View style={styles.emberCore} />
+          </View>
+
+          {/* Ember 3: Warm glowing particle at bottom-right */}
+          <View style={[styles.emberGlow, { top: "84%", right: "18%" }]}>
+            <View style={styles.emberCore} />
+          </View>
+        </View>
+      )}
+
       {/* Top Gradient for Status Bar / Header contrast */}
       <LinearGradient
-        colors={["rgba(7, 10, 17, 0.75)", "rgba(7, 10, 17, 0.2)", "transparent"]}
-        locations={[0, 0.6, 1]}
+        colors={["rgba(7, 10, 17, 0.55)", "transparent"]}
+        locations={[0, 1]}
         style={styles.topGradient}
       />
 
-      {/* Bottom Cinematic Dark Gradient for Text Contrast */}
+      {/* Bottom Subtle Gradient - Keeps gym/barbell/trainer completely visible! */}
       <LinearGradient
         colors={[
           "transparent",
-          "rgba(7, 10, 17, 0.4)",
-          "rgba(7, 10, 17, 0.85)",
-          "rgba(7, 10, 17, 0.98)",
-          "#070A11",
+          "rgba(7, 10, 17, 0.15)",
+          "rgba(7, 10, 17, 0.42)",
+          "rgba(7, 10, 17, 0.65)",
         ]}
-        locations={[0, 0.35, 0.65, 0.88, 1]}
+        locations={[0, 0.35, 0.68, 1]}
         style={styles.bottomGradient}
       />
 
@@ -94,6 +117,34 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#070A11",
   },
+  cyberLine: {
+    position: "absolute",
+    top: "14%",
+    left: "-15%",
+    width: "70%",
+    height: 1,
+    backgroundColor: "rgba(45, 212, 191, 0.22)",
+    transform: [{ rotate: "-15deg" }],
+  },
+  emberGlow: {
+    position: "absolute",
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: "rgba(249, 115, 22, 0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  emberCore: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#FDBA74",
+    shadowColor: "#F97316",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+  },
   topGradient: {
     position: "absolute",
     top: 0,
@@ -107,34 +158,37 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "68%",
+    height: "52%",
     zIndex: 2,
   },
   textContainer: {
     position: "absolute",
-    left: 24,
-    right: 24,
+    left: 20,
+    right: 20,
     alignItems: "center",
     zIndex: 3,
   },
   titleStack: {
     alignItems: "center",
-    marginBottom: 14,
+    marginBottom: 12,
   },
   titleLine: {
     color: "#FFFFFF",
-    fontSize: 40,
-    lineHeight: 45,
+    fontSize: 44,
+    lineHeight: 46,
     fontWeight: "900",
-    letterSpacing: 0.5,
+    letterSpacing: -0.6,
     textAlign: "center",
     textTransform: "uppercase",
+    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   subtitleWrapper: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "center",
-    maxWidth: 320,
+    maxWidth: 340,
     paddingHorizontal: 8,
   },
   badgeIcon: {
@@ -151,5 +205,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     fontWeight: "400",
+    textShadowColor: "rgba(0, 0, 0, 0.85)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
   },
 });

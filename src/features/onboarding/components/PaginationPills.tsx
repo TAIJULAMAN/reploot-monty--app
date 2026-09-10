@@ -76,7 +76,7 @@ const PillItem: React.FC<{
       >
         {isActive ? (
           <LinearGradient
-            colors={["#2563EB", "#38BDF8"]}
+            colors={["#818CF8", "#2DD4BF"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={StyleSheet.absoluteFill}

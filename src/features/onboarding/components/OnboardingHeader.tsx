@@ -29,7 +29,7 @@ export const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
     <View
       style={[
         styles.container,
-        { paddingTop: Math.max(insets.top + 10, 20) },
+        { paddingTop: Math.max(insets.top, 24) + 12 },
       ]}
       pointerEvents="box-none"
     >
@@ -68,24 +68,24 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   brandTitle: {
-    color: "#38BDF8",
-    fontSize: 20,
+    color: "#288BE5",
+    fontSize: 21,
     fontWeight: "900",
-    letterSpacing: 1,
+    letterSpacing: 1.2,
     textTransform: "uppercase",
   },
   skipButton: {
-    paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   skipPressed: {
     opacity: 0.6,
   },
   skipText: {
-    color: "#94A3B8",
+    color: "#CBD5E1",
     fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 1.5,
+    fontWeight: "600",
+    letterSpacing: 2.5,
     textTransform: "uppercase",
   },
   skipPlaceholder: {

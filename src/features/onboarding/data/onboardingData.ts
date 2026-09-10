@@ -24,7 +24,12 @@ export const ONBOARDING_SLIDES: OnboardingSlideItem[] = [
     titleLines: ["YOUR", "VISUAL", "PERSONAL", "TRAINER"],
     subtitleParts: [
       {
-        text: "AI-powered plans that adapt to your progress in real-time.",
+        text: "AI-powered",
+        color: "#5FFFD7",
+        isBold: true,
+      },
+      {
+        text: " plans that adapt to your\nprogress in real-time.",
       },
     ],
     image: require("../../../../assets/onboarding/slide1_gym.jpg"),

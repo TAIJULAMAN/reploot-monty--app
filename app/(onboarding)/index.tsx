@@ -138,50 +138,70 @@ export default function OnboardingScreen() {
       <View
         style={[
           styles.bottomControls,
-          { paddingBottom: Math.max(insets.bottom + 16, 28) },
+          { bottom: insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64 },
         ]}
         pointerEvents="box-none"
       >
         {/* Pagination Indicator Pills (Hidden on Slide 4 / Final Screen) */}
         {!isFinalSlide ? (
-          <PaginationPills
-            total={3}
-            activeIndex={activePage}
-            onSelectIndex={scrollToSlide}
-          />
+          <View style={styles.paginationWrapper}>
+            <PaginationPills
+              total={3}
+              activeIndex={activePage}
+              onSelectIndex={scrollToSlide}
+            />
+          </View>
         ) : (
           <View style={styles.paginationSpacer} />
         )}
 
         {/* Dynamic Action Button (NEXT -> / GET STARTED ->) */}
-        <Pressable
-          onPress={handleNext}
-          style={({ pressed }) => [
-            styles.buttonWrapper,
-            pressed && styles.buttonPressed,
-          ]}
-        >
-          <LinearGradient
-            colors={
-              isFinalSlide
-                ? ["#0284C7", "#0EA5E9", "#38BDF8"]
-                : ["#2563EB", "#0284C7", "#38BDF8"]
-            }
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.buttonGradient}
-          >
-            <Text style={styles.buttonText}>
-              {isFinalSlide ? "GET STARTED" : "NEXT"}
-            </Text>
-            <ArrowRight
-              size={18}
-              color="#FFFFFF"
-              strokeWidth={2.5}
-              style={styles.arrowIcon}
+        <View style={styles.buttonContainer}>
+          {/* Ambient Purple Glow under button matching Figma */}
+          <View style={styles.buttonGlowWrapper} pointerEvents="none">
+            <LinearGradient
+              colors={[
+                "transparent",
+                "rgba(99, 102, 241, 0.38)",
+                "rgba(139, 92, 246, 0.18)",
+                "transparent",
+              ]}
+              locations={[0, 0.25, 0.65, 1]}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              style={styles.buttonGlow}
             />
-          </LinearGradient>
-        </Pressable>
+          </View>
+
+          <Pressable
+            onPress={handleNext}
+            style={({ pressed }) => [
+              styles.buttonWrapper,
+              pressed && styles.buttonPressed,
+            ]}
+          >
+            <LinearGradient
+              colors={
+                isFinalSlide
+                  ? ["#0284C7", "#0EA5E9", "#38BDF8"]
+                  : ["#3568A0", "#4B85C4", "#69A6E3"]
+              }
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>
+                {isFinalSlide ? "GET STARTED" : "NEXT"}
+              </Text>
+              <ArrowRight
+                size={19}
+                color="#FFFFFF"
+                strokeWidth={2.4}
+                style={styles.arrowIcon}
+              />
+            </LinearGradient>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -197,27 +217,48 @@ const styles = StyleSheet.create({
   },
   bottomControls: {
     position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 24,
-    alignItems: "center",
+    left: 20,
+    right: 20,
     zIndex: 10,
   },
+  paginationWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 48,
+  },
   paginationSpacer: {
-    height: 24,
-    marginVertical: 10,
+    height: 4,
+    marginBottom: 48,
+  },
+  buttonContainer: {
+    width: "100%",
+    height: 60,
+    position: "relative",
+  },
+  buttonGlowWrapper: {
+    position: "absolute",
+    left: 28,
+    right: 28,
+    bottom: -22,
+    height: 42,
+    zIndex: 1,
+  },
+  buttonGlow: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 21,
   },
   buttonWrapper: {
     width: "100%",
-    height: 56,
-    borderRadius: 28,
+    height: 60,
+    borderRadius: 30,
     overflow: "hidden",
-    shadowColor: "#0284C7",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowColor: "#4F46E5",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 18,
+    elevation: 10,
+    zIndex: 2,
   },
   buttonPressed: {
     opacity: 0.88,
@@ -225,8 +266,8 @@ const styles = StyleSheet.create({
   },
   buttonGradient: {
     width: "100%",
-    height: "100%",
-    borderRadius: 28,
+    height: 60,
+    borderRadius: 30,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -234,12 +275,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "800",
-    letterSpacing: 1.5,
+    letterSpacing: 2,
     textTransform: "uppercase",
   },
   arrowIcon: {
-    marginLeft: 10,
+    marginLeft: 8,
   },
 });
