@@ -39,6 +39,26 @@ export const ONBOARDING_SLIDES: OnboardingSlideItem[] = [
     indicatorIndex: 0,
   },
   {
+    id: "smart_trainer",
+    titleLines: ["AI SMART", "TRAINER"],
+    badgeIcon: "lightning",
+    subtitleParts: [
+      {
+        text: "Real-time pose tracking and\n",
+      },
+      {
+        text: "intelligent form coaching.",
+        color: "#22D3EE",
+        isBold: true,
+      },
+    ],
+    image: require("../../../../assets/onboarding/slide2_smart_trainer.jpg"),
+    buttonText: "NEXT",
+    showSkip: true,
+    showIndicator: true,
+    indicatorIndex: 1,
+  },
+  {
     id: "nutrition",
     titleLines: ["PRECISION", "NUTRITION"],
     subtitleParts: [
@@ -51,27 +71,7 @@ export const ONBOARDING_SLIDES: OnboardingSlideItem[] = [
         isBold: true,
       },
     ],
-    image: require("../../../../assets/onboarding/slide2_nutrition.jpg"),
-    buttonText: "NEXT",
-    showSkip: true,
-    showIndicator: true,
-    indicatorIndex: 1,
-  },
-  {
-    id: "smart_trainer",
-    titleLines: ["AI SMART", "TRAINER"],
-    badgeIcon: "lightning",
-    subtitleParts: [
-      {
-        text: "Scan meals and track macros with\n",
-      },
-      {
-        text: "instant AI recognition.",
-        color: "#22D3EE",
-        isBold: true,
-      },
-    ],
-    image: require("../../../../assets/onboarding/slide3_smart_trainer.jpg"),
+    image: require("../../../../assets/onboarding/slide3_nutrition.jpg"),
     buttonText: "NEXT",
     showSkip: true,
     showIndicator: true,

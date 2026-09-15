@@ -194,7 +194,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#070A11",
+    backgroundColor: "#11131E",
   },
   flatList: {
     flex: 1,

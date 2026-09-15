@@ -55,23 +55,23 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
         </View>
       )}
 
-      {/* Top Gradient for Status Bar / Header contrast */}
+      {/* Top subtle gradient for status bar / header readability */}
       <LinearGradient
-        colors={["rgba(7, 10, 17, 0.55)", "transparent"]}
+        colors={["rgba(17, 19, 30, 0.45)", "rgba(17, 19, 30, 0)"]}
         locations={[0, 1]}
         style={styles.topGradient}
+        pointerEvents="none"
       />
 
-      {/* Bottom Subtle Gradient - Keeps gym/barbell/trainer completely visible! */}
+      {/* Onboarding Overlay - Matching exact Figma specification:
+          linear-gradient(180deg, rgba(17, 19, 30, 0) 0%, rgba(17, 19, 30, 0.5) 50%, #11131E 100%) */}
       <LinearGradient
-        colors={[
-          "transparent",
-          "rgba(7, 10, 17, 0.15)",
-          "rgba(7, 10, 17, 0.42)",
-          "rgba(7, 10, 17, 0.65)",
-        ]}
-        locations={[0, 0.35, 0.68, 1]}
-        style={styles.bottomGradient}
+        colors={["rgba(17, 19, 30, 0)", "rgba(17, 19, 30, 0.5)", "#11131E"]}
+        locations={[0, 0.5, 1]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
       />
 
       {/* Slide Typography & Highlights */}
@@ -115,7 +115,7 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
 const styles = StyleSheet.create({
   container: {
     overflow: "hidden",
-    backgroundColor: "#070A11",
+    backgroundColor: "#11131E",
   },
   cyberLine: {
     position: "absolute",
@@ -150,16 +150,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 180,
+    height: 140,
     zIndex: 1,
-  },
-  bottomGradient: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "52%",
-    zIndex: 2,
   },
   textContainer: {
     position: "absolute",
