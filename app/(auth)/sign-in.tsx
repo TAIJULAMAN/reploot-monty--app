@@ -253,17 +253,16 @@ export default function SignInRoute() {
             </LinearGradient>
           </View>
 
-          {/* Bottom Account CTA */}
+          {/* Bottom Account CTA - Dedicated Pressable with HitTarget */}
           <View style={styles.bottomCtaContainer}>
-            <Text style={styles.bottomCtaText}>
-              Don't have an account?{" "}
-              <Text
-                style={styles.createAccountLink}
-                onPress={handleCreateAccount}
-              >
-                Create Account
-              </Text>
-            </Text>
+            <Text style={styles.bottomCtaText}>Don't have an account? </Text>
+            <Pressable
+              onPress={handleCreateAccount}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              style={({ pressed }) => [pressed && styles.buttonPressed]}
+            >
+              <Text style={styles.createAccountLink}>Create Account</Text>
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -457,6 +456,7 @@ const styles = StyleSheet.create({
 
   /* Bottom Account CTA */
   bottomCtaContainer: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 24,
@@ -469,6 +469,7 @@ const styles = StyleSheet.create({
   },
   createAccountLink: {
     color: "#10B981",
+    fontSize: 14,
     fontWeight: "700",
   },
 
