@@ -6,6 +6,7 @@ import {
   TextInputProps as RNTextInputProps,
   StyleSheet,
   ViewStyle,
+  Platform,
 } from "react-native";
 
 export interface AuthPillInputProps extends RNTextInputProps {
@@ -84,6 +85,12 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     height: "100%",
     paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: "center",
+        includeFontPadding: false,
+      },
+    }),
   },
   rightIconWrapper: {
     marginLeft: 10,

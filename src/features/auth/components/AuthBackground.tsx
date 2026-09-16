@@ -34,15 +34,15 @@ export const AuthBackground: React.FC = () => {
           y1={0}
           x2={width * 0.05}
           y2={height * 0.45}
-          stroke="rgba(129, 140, 248, 0.1)"
+          stroke="rgba(129, 140, 248, 0.09)"
           strokeWidth="1.2"
         />
         <Line
-          x1={width * 0.95}
-          y1={height * 0.12}
-          x2={width * 0.1}
-          y2={height * 0.65}
-          stroke="rgba(34, 211, 238, 0.08)"
+          x1={width}
+          y1={height * 0.22}
+          x2={width * 0.15}
+          y2={height * 0.75}
+          stroke="rgba(34, 211, 238, 0.07)"
           strokeWidth="1"
         />
         <Line
@@ -50,12 +50,12 @@ export const AuthBackground: React.FC = () => {
           y1={height * 0.55}
           x2={width * 0.18}
           y2={height * 0.98}
-          stroke="rgba(16, 185, 129, 0.09)"
+          stroke="rgba(16, 185, 129, 0.08)"
           strokeWidth="1.2"
         />
         <Path
           d={`M ${width * 0.02} ${height * 0.18} Q ${width * 0.45} ${height * 0.35} ${width * 0.98} ${height * 0.82}`}
-          stroke="rgba(99, 102, 241, 0.07)"
+          stroke="rgba(99, 102, 241, 0.06)"
           strokeWidth="1"
           fill="none"
         />

@@ -12,11 +12,12 @@ import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
-import { ArrowLeft, Lock, AtSign, Dumbbell } from "lucide-react-native";
+import { ArrowLeft, Lock, AtSign } from "lucide-react-native";
 
 import {
   AuthBackground,
   SparkleDecoration,
+  DumbbellDecoration,
   AuthPillInput,
   GoogleIcon,
   AppleIcon,
@@ -87,7 +88,7 @@ export default function SignInRoute() {
 
   return (
     <View style={styles.root}>
-      {/* Dark Ambient Background with Subtle Geometric Lines */}
+      {/* Dark Space Ambient Background with Subtle Geometric Lines */}
       <AuthBackground />
 
       <KeyboardAvoidingView
@@ -124,26 +125,27 @@ export default function SignInRoute() {
             <Text style={styles.wordmark}>KINETQX</Text>
           </View>
 
-          {/* Hero Section: Sparkle, Title with Clean Cyan Glow, Floating Dumbbell */}
+          {/* Hero Section: Sparkle, Crisp Glowing Title, Floating Dumbbell */}
           <View style={styles.heroSection}>
             {/* Sparkle Cluster */}
             <View style={styles.sparklePosition}>
               <SparkleDecoration size={32} />
             </View>
 
+            {/* Crisp Foreground Title with Neon Cyan Glow */}
             <Text style={styles.heroTitle}>WELCOME</Text>
             <Text style={styles.heroTitle}>BACK</Text>
 
-            {/* Decorative Rotated Dumbbell floating on right */}
+            {/* Fully Rendered Unclipped Dumbbell Floating Right of BACK */}
             <View style={styles.dumbbellPosition}>
-              <Dumbbell size={32} color="#64748B" style={styles.dumbbellIcon} />
+              <DumbbellDecoration size={42} color="#64748B" opacity={0.4} />
             </View>
           </View>
 
           {/* Authentication Panel */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={["#2D2852", "#203144", "#153638"]}
+              colors={["#322B60", "#22374E", "#134648"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -157,7 +159,7 @@ export default function SignInRoute() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
-                rightIcon={<AtSign size={18} color="#94A3B8" />}
+                rightIcon={<AtSign size={19} color="#94A3B8" />}
               />
 
               {/* Password Field */}
@@ -167,39 +169,40 @@ export default function SignInRoute() {
                 onChangeText={setPassword}
                 placeholder="••••••••"
                 secureTextEntry
-                rightIcon={<Lock size={18} color="#94A3B8" />}
+                rightIcon={<Lock size={19} color="#94A3B8" />}
                 containerStyle={styles.passwordField}
               />
 
-              {/* Forgot Password Link */}
-              <Pressable
-                onPress={handleForgotPassword}
-                style={({ pressed }) => [
-                  styles.forgotPasswordButton,
-                  pressed && styles.buttonPressed,
-                ]}
-                hitSlop={8}
-              >
-                <Text style={styles.forgotPasswordText}>FORGOT PASSWORD?</Text>
-              </Pressable>
-
-              {/* Primary Continue CTA Button */}
-              <Pressable
-                onPress={handleLogin}
-                style={({ pressed }) => [
-                  styles.continueButton,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <LinearGradient
-                  colors={["#2B64E3", "#0284C7", "#38BDF8"]}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                  style={styles.continueGradient}
+              {/* Forgot Password Link - Dedicated Static Container */}
+              <View style={styles.forgotPasswordContainer}>
+                <Pressable
+                  onPress={handleForgotPassword}
+                  style={({ pressed }) => [pressed && styles.buttonPressed]}
+                  hitSlop={10}
                 >
-                  <Text style={styles.continueText}>CONTINUE</Text>
-                </LinearGradient>
-              </Pressable>
+                  <Text style={styles.forgotPasswordText}>FORGOT PASSWORD?</Text>
+                </Pressable>
+              </View>
+
+              {/* Primary Continue CTA Button - Dedicated Static Container */}
+              <View style={styles.continueWrapper}>
+                <Pressable
+                  onPress={handleLogin}
+                  style={({ pressed }) => [
+                    styles.fullWidth,
+                    pressed && styles.buttonPressed,
+                  ]}
+                >
+                  <LinearGradient
+                    colors={["#3568A5", "#4B85C4", "#69A6E3"]}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}
+                    style={styles.continueGradient}
+                  >
+                    <Text style={styles.continueText}>CONTINUE</Text>
+                  </LinearGradient>
+                </Pressable>
+              </View>
 
               {/* OR Divider */}
               <View style={styles.dividerRow}>
@@ -208,42 +211,45 @@ export default function SignInRoute() {
                 <View style={styles.dividerLine} />
               </View>
 
-              {/* Social Login: Continue with Google */}
-              <Pressable
-                onPress={handleGoogleLogin}
-                style={({ pressed }) => [
-                  styles.socialButtonWrapper,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <View style={styles.socialButtonContainer}>
-                  <View style={styles.socialIconBox}>
-                    <GoogleIcon size={19} />
+              {/* Social Login: Continue with Google - Dedicated Static Container */}
+              <View style={styles.socialButtonWrapper}>
+                <Pressable
+                  onPress={handleGoogleLogin}
+                  style={({ pressed }) => [
+                    styles.fullWidth,
+                    pressed && styles.buttonPressed,
+                  ]}
+                >
+                  <View style={styles.socialButtonContainer}>
+                    <View style={styles.socialIconBox}>
+                      <GoogleIcon size={19} />
+                    </View>
+                    <Text style={styles.socialButtonText}>
+                      Continue with Google
+                    </Text>
                   </View>
-                  <Text style={styles.socialButtonText}>
-                    Continue with Google
-                  </Text>
-                </View>
-              </Pressable>
+                </Pressable>
+              </View>
 
-              {/* Social Login: Continue with Apple */}
-              <Pressable
-                onPress={handleAppleLogin}
-                style={({ pressed }) => [
-                  styles.socialButtonWrapper,
-                  styles.appleButtonWrapper,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <View style={styles.socialButtonContainer}>
-                  <View style={styles.socialIconBox}>
-                    <AppleIcon size={20} color="#FFFFFF" />
+              {/* Social Login: Continue with Apple - Dedicated Static Container */}
+              <View style={styles.appleButtonWrapper}>
+                <Pressable
+                  onPress={handleAppleLogin}
+                  style={({ pressed }) => [
+                    styles.fullWidth,
+                    pressed && styles.buttonPressed,
+                  ]}
+                >
+                  <View style={styles.socialButtonContainer}>
+                    <View style={styles.socialIconBox}>
+                      <AppleIcon size={20} color="#FFFFFF" />
+                    </View>
+                    <Text style={styles.socialButtonText}>
+                      Continue with Apple
+                    </Text>
                   </View>
-                  <Text style={styles.socialButtonText}>
-                    Continue with Apple
-                  </Text>
-                </View>
-              </Pressable>
+                </Pressable>
+              </View>
             </LinearGradient>
           </View>
 
@@ -268,10 +274,14 @@ export default function SignInRoute() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#060812",
+    backgroundColor: "#080A14",
   },
   flexOne: {
     flex: 1,
+  },
+  fullWidth: {
+    width: "100%",
+    height: "100%",
   },
   scrollContent: {
     flexGrow: 1,
@@ -283,36 +293,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 22,
   },
   backButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.22)",
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "rgba(255, 255, 255, 0.32)",
+    backgroundColor: "rgba(255, 255, 255, 0.09)",
     alignItems: "center",
     justifyContent: "center",
   },
   wordmark: {
-    color: "#288BE5",
-    fontSize: 20,
+    color: "#0284C7",
+    fontSize: 21,
     fontWeight: "900",
-    letterSpacing: 1.5,
+    letterSpacing: 2,
     textTransform: "uppercase",
   },
 
   /* Hero Section */
   heroSection: {
     position: "relative",
-    marginBottom: 20,
+    marginBottom: 22,
     paddingLeft: 2,
   },
   sparklePosition: {
     position: "absolute",
-    top: -20,
-    left: 0,
+    top: -22,
+    left: -2,
     zIndex: 2,
   },
   heroTitle: {
@@ -328,62 +338,59 @@ const styles = StyleSheet.create({
   },
   dumbbellPosition: {
     position: "absolute",
-    right: 18,
-    bottom: -6,
+    right: 22,
+    top: 36,
     zIndex: 1,
-    opacity: 0.3,
-  },
-  dumbbellIcon: {
-    transform: [{ rotate: "35deg" }],
   },
 
   /* Authentication Card */
   cardWrapper: {
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.14)",
+    borderRadius: 32,
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.15)",
     overflow: "hidden",
     shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.4,
-    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.45,
+    shadowRadius: 20,
     elevation: 8,
   },
   cardGradient: {
     paddingHorizontal: 20,
-    paddingTop: 26,
-    paddingBottom: 26,
+    paddingTop: 28,
+    paddingBottom: 28,
   },
 
   /* Password & Forgot Password */
   passwordField: {
+    marginTop: 2,
     marginBottom: 8,
   },
-  forgotPasswordButton: {
+  forgotPasswordContainer: {
     alignSelf: "flex-end",
+    marginTop: 6,
     marginBottom: 22,
-    paddingVertical: 2,
   },
   forgotPasswordText: {
-    color: "#FF7A00",
+    color: "#FF7700",
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 1.2,
     textTransform: "uppercase",
   },
 
-  /* Continue Button */
-  continueButton: {
+  /* Continue Button Wrapper & Gradient */
+  continueWrapper: {
     width: "100%",
-    height: 54,
-    borderRadius: 27,
+    height: 52,
+    borderRadius: 26,
     overflow: "hidden",
     marginBottom: 22,
   },
   continueGradient: {
     width: "100%",
-    height: 54,
-    borderRadius: 27,
+    height: 52,
+    borderRadius: 26,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -391,7 +398,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 15,
     fontWeight: "800",
-    letterSpacing: 2,
+    letterSpacing: 2.2,
     textTransform: "uppercase",
   },
 
@@ -400,7 +407,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 22,
   },
   dividerLine: {
     flex: 1,
@@ -411,25 +418,27 @@ const styles = StyleSheet.create({
     color: "#94A3B8",
     fontSize: 11,
     fontWeight: "700",
-    letterSpacing: 1.5,
-    marginHorizontal: 14,
+    letterSpacing: 2,
+    marginHorizontal: 16,
   },
 
-  /* Social Buttons */
+  /* Social Buttons - Guaranteed Static Layout Margins */
   socialButtonWrapper: {
     width: "100%",
     height: 52,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   appleButtonWrapper: {
+    width: "100%",
+    height: 52,
     marginBottom: 0,
   },
   socialButtonContainer: {
     width: "100%",
     height: 52,
     borderRadius: 26,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.18)",
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.22)",
     backgroundColor: "rgba(255, 255, 255, 0.08)",
     flexDirection: "row",
     alignItems: "center",
@@ -450,8 +459,8 @@ const styles = StyleSheet.create({
   bottomCtaContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 22,
-    marginBottom: 8,
+    marginTop: 24,
+    marginBottom: 12,
   },
   bottomCtaText: {
     color: "#CBD5E1",
