@@ -65,6 +65,7 @@ export function ProfileOnboardingScreen() {
         bounces={false}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
         contentContainerStyle={[
           styles.scrollContent,
           { paddingBottom: Math.max(insets.bottom, 12) },

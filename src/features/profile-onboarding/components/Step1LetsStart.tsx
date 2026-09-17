@@ -16,6 +16,7 @@ import * as Haptics from "expo-haptics";
 import Svg, { Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { AgeSlider } from "./AgeSlider";
 
 export function Step1LetsStart() {
   const { width } = useWindowDimensions();
@@ -58,15 +59,6 @@ export function Step1LetsStart() {
     updateData({ gender });
   };
 
-  const handleSetAge = (age: number) => {
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    const boundedAge = Math.max(16, Math.min(80, age));
-    updateData({ age: boundedAge });
-  };
 
   return (
     <View style={styles.container}>
@@ -231,7 +223,7 @@ export function Step1LetsStart() {
         </Pressable>
       </View>
 
-      {/* Age Selector Card: SELECT AGE | 22 23 [24] 25 */}
+      {/* Age Selector Card: SELECT AGE | Slideable Number Carousel */}
       <View style={styles.ageCard}>
         <View style={styles.ageInfo}>
           <Text style={styles.ageTitle}>SELECT</Text>
@@ -240,37 +232,10 @@ export function Step1LetsStart() {
           <Text style={styles.ageSubtitle}>power</Text>
         </View>
 
-        <View style={styles.ageWheelRow}>
-          {/* -2 Years */}
-          <Pressable
-            onPress={() => handleSetAge(data.age - 2)}
-            style={styles.ageNumberWrapper}
-          >
-            <Text style={styles.ageMutedNum}>{data.age - 2}</Text>
-          </Pressable>
-
-          {/* -1 Year */}
-          <Pressable
-            onPress={() => handleSetAge(data.age - 1)}
-            style={styles.ageNumberWrapper}
-          >
-            <Text style={styles.ageSubNum}>{data.age - 1}</Text>
-          </Pressable>
-
-          {/* Selected Age with Top Tick Mark */}
-          <View style={styles.ageActiveWrapper}>
-            <View style={styles.ageTickMark} />
-            <Text style={styles.ageActiveNum}>{data.age}</Text>
-          </View>
-
-          {/* +1 Year */}
-          <Pressable
-            onPress={() => handleSetAge(data.age + 1)}
-            style={styles.ageNumberWrapper}
-          >
-            <Text style={styles.ageMutedNum}>{data.age + 1}</Text>
-          </Pressable>
-        </View>
+        <AgeSlider
+          value={data.age}
+          onChange={(age) => updateData({ age })}
+        />
       </View>
 
       {/* Continue CTA */}
@@ -461,11 +426,11 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#2DD4BF",
     backgroundColor: "#12131C",
-    paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingLeft: 18,
+    paddingRight: 8,
+    paddingVertical: 6,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     marginBottom: 8,
     shadowColor: "#2DD4BF",
     shadowOffset: { width: 0, height: 0 },
@@ -473,6 +438,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   ageInfo: {
+    width: 76,
     justifyContent: "center",
   },
   ageTitle: {
@@ -487,43 +453,6 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     lineHeight: 11,
     fontWeight: "600",
-  },
-  ageWheelRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  ageNumberWrapper: {
-    padding: 4,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ageMutedNum: {
-    color: "#334155",
-    fontSize: 15,
-    fontWeight: "800",
-  },
-  ageSubNum: {
-    color: "#64748B",
-    fontSize: 17,
-    fontWeight: "800",
-  },
-  ageActiveWrapper: {
-    alignItems: "center",
-    paddingHorizontal: 4,
-  },
-  ageTickMark: {
-    width: 2.5,
-    height: 5,
-    borderRadius: 1,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 2,
-  },
-  ageActiveNum: {
-    color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 36,
-    fontWeight: "900",
   },
   pressed: {
     opacity: 0.82,
