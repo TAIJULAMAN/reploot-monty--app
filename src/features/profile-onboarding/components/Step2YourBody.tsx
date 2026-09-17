@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Check, Ruler, Scale, Zap } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
@@ -7,78 +7,98 @@ import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { VerticalWheelPicker } from "./VerticalWheelPicker";
 import { ActivityLevel } from "@/shared/types/user";
 
+const ACTIVITY_OPTIONS: {
+  id: ActivityLevel;
+  title: string;
+  subtitle: string;
+}[] = [
+  {
+    id: "beginner",
+    title: "Beginner",
+    subtitle: "0-1 workouts / week",
+  },
+  {
+    id: "moderately_active",
+    title: "Moderately Active",
+    subtitle: "2-4 workouts / week",
+  },
+  {
+    id: "very_active",
+    title: "Very Active",
+    subtitle: "5+ workouts / week",
+  },
+];
+
 export function Step2YourBody() {
-  const { data, updateData, nextStep } = useProfileSetupStore();
+  const heightCm = useProfileSetupStore((s) => s.data.heightCm);
+  const weightKg = useProfileSetupStore((s) => s.data.weightKg);
+  const activityLevel = useProfileSetupStore((s) => s.data.activityLevel);
+  const updateData = useProfileSetupStore((s) => s.updateData);
+  const nextStep = useProfileSetupStore((s) => s.nextStep);
+
   const [heightUnit, setHeightUnit] = useState<"cm" | "inch">("cm");
   const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg");
 
-  const handleSelectActivity = (activityLevel: ActivityLevel) => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {
-      // ignore
-    }
-    updateData({ activityLevel });
-  };
+  const handleSelectActivity = useCallback(
+    (level: ActivityLevel) => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
+      updateData({ activityLevel: level });
+    },
+    [updateData]
+  );
 
-  const handleUnitToggle = (unit: "cm" | "inch") => {
-    if (unit === heightUnit) return;
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    setHeightUnit(unit);
-  };
+  const handleHeightUnitToggle = useCallback(
+    (unit: "cm" | "inch") => {
+      if (unit === heightUnit) return;
+      try {
+        void Haptics.selectionAsync();
+      } catch {
+        // ignore
+      }
+      setHeightUnit(unit);
+    },
+    [heightUnit]
+  );
 
-  const handleWeightUnitToggle = (unit: "kg" | "lbs") => {
-    if (unit === weightUnit) return;
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    setWeightUnit(unit);
-  };
+  const handleWeightUnitToggle = useCallback(
+    (unit: "kg" | "lbs") => {
+      if (unit === weightUnit) return;
+      try {
+        void Haptics.selectionAsync();
+      } catch {
+        // ignore
+      }
+      setWeightUnit(unit);
+    },
+    [weightUnit]
+  );
 
-  // Convert for display if imperial selected
+  // Derived display values
   const displayedHeight =
-    heightUnit === "cm" ? data.heightCm : Math.round(data.heightCm / 2.54);
+    heightUnit === "cm" ? heightCm : Math.round(heightCm / 2.54);
 
-  const handleHeightChange = (val: number) => {
-    const cm = heightUnit === "cm" ? val : Math.round(val * 2.54);
-    updateData({ heightCm: cm });
-  };
+  const handleHeightChange = useCallback(
+    (val: number) => {
+      const cm = heightUnit === "cm" ? val : Math.round(val * 2.54);
+      updateData({ heightCm: cm });
+    },
+    [heightUnit, updateData]
+  );
 
   const displayedWeight =
-    weightUnit === "kg" ? data.weightKg : Math.round(data.weightKg * 2.20462);
+    weightUnit === "kg" ? weightKg : Math.round(weightKg * 2.20462);
 
-  const handleWeightChange = (val: number) => {
-    const kg = weightUnit === "kg" ? val : Math.round(val / 2.20462);
-    updateData({ weightKg: kg });
-  };
-
-  const activityOptions: {
-    id: ActivityLevel;
-    title: string;
-    subtitle: string;
-  }[] = [
-    {
-      id: "beginner",
-      title: "Beginner",
-      subtitle: "0-1 workouts / week",
+  const handleWeightChange = useCallback(
+    (val: number) => {
+      const kg = weightUnit === "kg" ? val : Math.round(val / 2.20462);
+      updateData({ weightKg: kg });
     },
-    {
-      id: "moderately_active",
-      title: "Moderately Active",
-      subtitle: "2-4 workouts / week",
-    },
-    {
-      id: "very_active",
-      title: "Very Active",
-      subtitle: "5+ workouts / week",
-    },
-  ];
+    [weightUnit, updateData]
+  );
 
   return (
     <View style={styles.container}>
@@ -92,7 +112,7 @@ export function Step2YourBody() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.titleGroup}>
-            <Ruler size={15} color="#2DD4BF" style={styles.headerIcon} />
+            <Ruler size={16} color="#2DD4BF" style={styles.headerIcon} />
             <Text style={styles.headerTitle}>HEIGHT</Text>
           </View>
 
@@ -101,7 +121,8 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Centimeters"
-              onPress={() => handleUnitToggle("cm")}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              onPress={() => handleHeightUnitToggle("cm")}
               style={[
                 styles.toggleOption,
                 heightUnit === "cm" && styles.toggleOptionActive,
@@ -119,7 +140,8 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Inches"
-              onPress={() => handleUnitToggle("inch")}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              onPress={() => handleHeightUnitToggle("inch")}
               style={[
                 styles.toggleOption,
                 heightUnit === "inch" && styles.toggleOptionActive,
@@ -144,7 +166,7 @@ export function Step2YourBody() {
           min={heightUnit === "cm" ? 120 : 48}
           max={heightUnit === "cm" ? 230 : 90}
           unit={heightUnit.toUpperCase()}
-          itemHeight={36}
+          itemHeight={44}
         />
       </View>
 
@@ -152,7 +174,7 @@ export function Step2YourBody() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.titleGroup}>
-            <Scale size={15} color="#2DD4BF" style={styles.headerIcon} />
+            <Scale size={16} color="#2DD4BF" style={styles.headerIcon} />
             <Text style={styles.headerTitle}>WEIGHT</Text>
           </View>
 
@@ -161,6 +183,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Kilograms"
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleWeightUnitToggle("kg")}
               style={[
                 styles.toggleOption,
@@ -179,6 +202,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Pounds"
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleWeightUnitToggle("lbs")}
               style={[
                 styles.toggleOption,
@@ -202,9 +226,9 @@ export function Step2YourBody() {
           value={displayedWeight}
           onChange={handleWeightChange}
           min={weightUnit === "kg" ? 35 : 77}
-          max={weightUnit === "kg" ? 200 : 440}
+          max={weightUnit === "kg" ? 180 : 396}
           unit={weightUnit.toUpperCase()}
-          itemHeight={36}
+          itemHeight={44}
         />
       </View>
 
@@ -212,24 +236,21 @@ export function Step2YourBody() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.titleGroup}>
-            <Zap size={15} color="#2DD4BF" fill="#2DD4BF" style={styles.headerIcon} />
+            <Zap size={16} color="#2DD4BF" fill="#2DD4BF" style={styles.headerIcon} />
             <Text style={styles.headerTitle}>ACTIVITY LEVEL</Text>
           </View>
         </View>
 
         <View style={styles.activityList}>
-          {activityOptions.map((opt) => {
-            const isSelected = data.activityLevel === opt.id;
+          {ACTIVITY_OPTIONS.map((opt) => {
+            const isSelected = activityLevel === opt.id;
             return (
               <Pressable
                 key={opt.id}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: isSelected }}
                 onPress={() => handleSelectActivity(opt.id)}
-                style={({ pressed }) => [
-                  styles.activityPressable,
-                  pressed && styles.pressed,
-                ]}
+                style={styles.activityPressable}
               >
                 <View
                   style={[
@@ -261,7 +282,7 @@ export function Step2YourBody() {
                     ]}
                   >
                     {isSelected ? (
-                      <Check size={11} color="#0D1117" strokeWidth={3.5} />
+                      <Check size={12} color="#0B0E17" strokeWidth={3.5} />
                     ) : null}
                   </View>
                 </View>
@@ -272,149 +293,153 @@ export function Step2YourBody() {
       </View>
 
       {/* Continue CTA */}
-      <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+      <View style={styles.ctaContainer}>
+        <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 18,
-    paddingBottom: 4,
+    paddingHorizontal: 20,
+    paddingTop: 4,
+    paddingBottom: 24,
   },
   hero: {
-    marginTop: 0,
-    marginBottom: 6,
+    marginTop: 2,
+    marginBottom: 16,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 32,
-    lineHeight: 35,
+    fontSize: 36,
+    lineHeight: 40,
     fontWeight: "900",
     letterSpacing: -0.5,
-    textShadowColor: "rgba(56, 189, 248, 0.65)",
+    textShadowColor: "rgba(56, 189, 248, 0.7)",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 14,
+    textShadowRadius: 16,
     includeFontPadding: false,
   },
   card: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    backgroundColor: "#11141E",
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 6,
-    marginBottom: 7,
+    borderRadius: 24,
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.09)",
+    backgroundColor: "#111420",
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 14,
+    marginBottom: 16,
   },
   cardHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 2,
+    marginBottom: 8,
   },
   titleGroup: {
     flexDirection: "row",
     alignItems: "center",
   },
   headerIcon: {
-    marginRight: 7,
+    marginRight: 9,
   },
   headerTitle: {
     color: "#94A3B8",
-    fontSize: 10.5,
+    fontSize: 11.5,
     fontWeight: "900",
-    letterSpacing: 1.6,
+    letterSpacing: 2,
   },
   togglePill: {
     flexDirection: "row",
-    backgroundColor: "#1A1E2B",
-    borderRadius: 12,
-    padding: 2.5,
+    backgroundColor: "#181B28",
+    borderRadius: 14,
+    padding: 3,
   },
   toggleOption: {
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 9,
+    paddingHorizontal: 13,
+    paddingVertical: 5.5,
+    borderRadius: 11,
   },
   toggleOptionActive: {
     backgroundColor: "#38BDF8",
   },
   toggleText: {
     color: "#64748B",
-    fontSize: 9.5,
+    fontSize: 10.5,
     fontWeight: "900",
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
+    includeFontPadding: false,
   },
   toggleTextActive: {
-    color: "#0F1015",
+    color: "#0B0E17",
   },
   activityList: {
-    gap: 5,
-    marginTop: 4,
-    marginBottom: 2,
+    gap: 10,
+    marginTop: 8,
+    marginBottom: 4,
   },
   activityPressable: {
     width: "100%",
   },
   activityOptionRow: {
     width: "100%",
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   activityOptionUnselected: {
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    backgroundColor: "#161924",
+    borderColor: "rgba(255, 255, 255, 0.07)",
+    backgroundColor: "#161926",
   },
   activityOptionSelected: {
-    borderWidth: 1.5,
+    borderWidth: 1.6,
     borderColor: "#2DD4BF",
-    backgroundColor: "#172332",
+    backgroundColor: "#152536",
   },
   activityInfo: {
     flex: 1,
   },
   activityTitle: {
     color: "#CBD5E1",
-    fontSize: 13,
+    fontSize: 14.5,
     fontWeight: "800",
-    marginBottom: 2,
+    marginBottom: 3,
     includeFontPadding: false,
   },
   activityTitleActive: {
     color: "#FFFFFF",
   },
   activitySubtitle: {
-    color: "#64748B",
-    fontSize: 10.5,
+    color: "#8290A4",
+    fontSize: 11.5,
     fontWeight: "500",
     includeFontPadding: false,
   },
   radioCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 12,
+    marginLeft: 14,
   },
   radioCircleUnselected: {
-    borderWidth: 1.8,
+    borderWidth: 2,
     borderColor: "#475569",
     backgroundColor: "transparent",
   },
   radioCircleSelected: {
-    borderWidth: 1.8,
+    borderWidth: 2,
     borderColor: "#2DD4BF",
     backgroundColor: "#2DD4BF",
   },
-  pressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.99 }],
+  ctaContainer: {
+    marginTop: 6,
+    marginBottom: 16,
   },
 });
