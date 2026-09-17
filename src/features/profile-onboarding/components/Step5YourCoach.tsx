@@ -40,6 +40,16 @@ export function Step5YourCoach() {
     return () => clearInterval(interval);
   }, []);
 
+  // Smooth auto-redirect once AI Coach finishes calibration
+  useEffect(() => {
+    if (isReady) {
+      const autoRedirectTimer = setTimeout(() => {
+        handleFinish();
+      }, 1500);
+      return () => clearTimeout(autoRedirectTimer);
+    }
+  }, [isReady]);
+
   const handleFinish = () => {
     // Persist user and onboarding completion in stores
     setHasSeenOnboarding(true);
@@ -59,8 +69,8 @@ export function Step5YourCoach() {
       // ignore
     }
 
-    // Navigate to main tab navigator
-    router.replace("/(tabs)");
+    // Navigate to main tab navigator (Home)
+    router.replace("/(tabs)/home");
   };
 
   const statusMessages = [
@@ -179,16 +189,16 @@ const styles = StyleSheet.create({
   },
   chamberContainer: {
     position: "relative",
-    width: 290,
-    height: 290,
+    width: 250,
+    height: 250,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 18,
+    marginVertical: 10,
   },
   outerRing: {
-    width: 284,
-    height: 284,
-    borderRadius: 142,
+    width: 244,
+    height: 244,
+    borderRadius: 122,
     padding: 4,
     alignItems: "center",
     justifyContent: "center",
@@ -201,7 +211,7 @@ const styles = StyleSheet.create({
   middleRing: {
     width: "100%",
     height: "100%",
-    borderRadius: 138,
+    borderRadius: 118,
     borderWidth: 2,
     borderColor: "rgba(255, 255, 255, 0.18)",
     backgroundColor: "#0F1015",
@@ -215,11 +225,11 @@ const styles = StyleSheet.create({
   },
   settingsBadge: {
     position: "absolute",
-    top: 14,
-    right: 20,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    top: 10,
+    right: 14,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: "rgba(80, 78, 100, 0.85)",
     borderWidth: 1.5,
     borderColor: "rgba(255, 255, 255, 0.25)",
@@ -229,7 +239,7 @@ const styles = StyleSheet.create({
   statusSection: {
     alignItems: "center",
     width: "100%",
-    marginTop: 24,
+    marginTop: 14,
     marginBottom: 16,
   },
   statusBadgeRow: {
