@@ -6,5 +6,8 @@ export * from "./DumbbellDecoration";
 export * from "./ArrowheadDecoration";
 export * from "./AuthBackground";
 export * from "./SignUpBackground";
+export * from "./ForgotPasswordBackground";
 export * from "./AuthPillInput";
 export * from "./AuthDarkPillInput";
+export * from "./NeonBorderInput";
+export * from "./SecurityStrengthBar";
