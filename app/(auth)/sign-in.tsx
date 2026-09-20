@@ -44,12 +44,14 @@ export default function SignInRoute() {
   };
 
   const handleLogin = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      // Haptics fallback
-    }
     router.push("/(profile-setup)");
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        // Haptics fallback
+      }
+    });
   };
 
   const handleForgotPassword = () => {
@@ -188,6 +190,8 @@ export default function SignInRoute() {
               <View style={styles.continueWrapper}>
                 <Pressable
                   onPress={handleLogin}
+                  unstable_pressDelay={0}
+                  hitSlop={6}
                   style={({ pressed }) => [
                     styles.fullWidth,
                     pressed && styles.buttonPressed,

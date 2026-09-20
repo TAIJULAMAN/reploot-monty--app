@@ -15,7 +15,9 @@ export default function RootLayout() {
           contentStyle: {
             backgroundColor: colors.background.primary,
           },
-          animation: "fade",
+          animation: "slide_from_right",
+          animationDuration: 220,
+          freezeOnBlur: true,
         }}
       >
         <Stack.Screen name="index" />

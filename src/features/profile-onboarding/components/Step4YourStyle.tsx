@@ -1,41 +1,160 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { Check, Dumbbell, Home } from "lucide-react-native";
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from "react-native";
+import Svg, { Path, Circle, Rect } from "react-native-svg";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { WorkoutStyle } from "@/shared/types/user";
 
+// Custom Dumbbell Icon matching Figma (angled barbell with weights)
+function GymDumbbellIcon({ color = "#FB923C" }: { color?: string }) {
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="m6.5 6.5 11 11" />
+      <Path d="m21 21-1-1" />
+      <Path d="m3 3 1 1" />
+      <Path d="m18 22 4-4" />
+      <Path d="m2 6 4-4" />
+      <Path d="m3 10 7-7" />
+      <Path d="m14 21 7-7" />
+    </Svg>
+  );
+}
+
+// Custom Home Icon matching Figma
+function HomeRoofIcon({ color = "#C4B5FD" }: { color?: string }) {
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M3 10.5L12 3l9 7.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <Path d="M9 22V12h6v10" />
+    </Svg>
+  );
+}
+
+// Check Circle matching Figma (cyan circle outline with checkmark)
+function CheckCircleIcon({ color = "#2DD4BF" }: { color?: string }) {
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.8" />
+      <Path d="M8 12.5L10.5 15L16 9" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+// Title Sparkle Cluster
+function TitleSparkleCluster() {
+  return (
+    <Svg width={28} height={28} viewBox="0 0 28 28" fill="none">
+      <Path
+        d="M14 2C14 7 18 11 23 11C18 11 14 15 14 20C14 15 10 11 5 11C10 11 14 7 14 2Z"
+        fill="#2DD4BF"
+        opacity="0.8"
+      />
+      <Path
+        d="M21 16C21 18 22.5 19.5 24.5 19.5C22.5 19.5 21 21 21 23C21 21 19.5 19.5 17.5 19.5C19.5 19.5 21 18 21 16Z"
+        fill="#2DD4BF"
+        opacity="0.5"
+      />
+    </Svg>
+  );
+}
+
+const DAY_ROWS: number[][] = [
+  [2, 3, 4],
+  [5, 6, 7],
+];
+
+interface DayPillItemProps {
+  days: number;
+  isSelected: boolean;
+  pillWidth: number;
+  onSelect: (days: number) => void;
+}
+
+const DayPillItem = React.memo(
+  ({ days, isSelected, pillWidth, onSelect }: DayPillItemProps) => {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
+        unstable_pressDelay={0}
+        hitSlop={6}
+        onPress={() => onSelect(days)}
+        style={({ pressed }) => [
+          { width: pillWidth },
+          pressed && styles.pressed,
+        ]}
+      >
+        {isSelected ? (
+          <LinearGradient
+            colors={["#38BDF8", "#3B82F6"]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={[styles.dayPillActive, { width: pillWidth }]}
+          >
+            <Text style={styles.dayTextActive}>{days} Days</Text>
+          </LinearGradient>
+        ) : (
+          <View style={[styles.dayPillInactive, { width: pillWidth }]}>
+            <Text style={styles.dayTextInactive}>{days} Days</Text>
+          </View>
+        )}
+      </Pressable>
+    );
+  }
+);
+
 export function Step4YourStyle() {
-  const { data, updateData, nextStep } = useProfileSetupStore();
+  const { width } = useWindowDimensions();
+  const pillWidth = Math.floor((width - 40 - 24) / 3);
 
-  const handleSelectStyle = (workoutStyle: WorkoutStyle) => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {
-      // ignore
-    }
-    updateData({ workoutStyle });
-  };
+  const selectedStyle = useProfileSetupStore((s) => s.data.workoutStyle || "gym");
+  const selectedDays = useProfileSetupStore((s) => s.data.workoutDaysPerWeek || 3);
+  const updateData = useProfileSetupStore((s) => s.updateData);
+  const nextStep = useProfileSetupStore((s) => s.nextStep);
 
-  const handleSelectDays = (workoutDaysPerWeek: number) => {
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    updateData({ workoutDaysPerWeek });
-  };
+  const handleSelectStyle = React.useCallback(
+    (workoutStyle: WorkoutStyle) => {
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        } catch {
+          // ignore
+        }
+      });
+      updateData({ workoutStyle });
+    },
+    [updateData]
+  );
 
-  const daysOptions = [2, 3, 4, 5, 6, 7];
+  const handleSelectDays = React.useCallback(
+    (workoutDaysPerWeek: number) => {
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.selectionAsync();
+        } catch {
+          // ignore
+        }
+      });
+      updateData({ workoutDaysPerWeek });
+    },
+    [updateData]
+  );
 
   return (
     <View style={styles.container}>
-      {/* Title with cyan neon bloom */}
+      {/* Title & Sparkles */}
       <View style={styles.hero}>
-        <Text style={styles.title}>YOUR</Text>
-        <Text style={styles.title}>STYLE</Text>
+        <View style={styles.titleRow}>
+          <View>
+            <Text style={styles.title}>YOUR</Text>
+            <Text style={styles.title}>STYLE</Text>
+          </View>
+          <View style={styles.sparkleWrap}>
+            <TitleSparkleCluster />
+          </View>
+        </View>
         <Text style={styles.subtitle}>Where do you usually work out?</Text>
       </View>
 
@@ -44,95 +163,106 @@ export function Step4YourStyle() {
         {/* GYM Card */}
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ selected: selectedStyle === "gym" }}
+          unstable_pressDelay={0}
+          hitSlop={6}
           onPress={() => handleSelectStyle("gym")}
-          style={({ pressed }) => [
-            styles.locationCard,
-            data.workoutStyle === "gym" && styles.locationCardActive,
-            pressed && styles.pressed,
-          ]}
+          style={({ pressed }) => [pressed && styles.pressed]}
         >
-          <View style={styles.locationIconWrap}>
-            <Dumbbell size={22} color="#FF9A5A" strokeWidth={2.2} />
-          </View>
-
-          <View style={styles.locationTextGroup}>
-            <Text style={styles.locationTitle}>GYM</Text>
-            <Text style={styles.locationSubtitle}>Full equipment access</Text>
-          </View>
-
-          {data.workoutStyle === "gym" ? (
-            <View style={styles.checkBadge}>
-              <Check size={14} color="#0F1015" strokeWidth={3} />
+          <View
+            style={[
+              styles.locationCard,
+              selectedStyle === "gym"
+                ? styles.locationCardActive
+                : styles.locationCardInactive,
+            ]}
+          >
+            {/* Square Icon Container */}
+            <View style={styles.iconSquare}>
+              <GymDumbbellIcon color="#FB923C" />
             </View>
-          ) : (
-            <View style={styles.emptyRadio} />
-          )}
+
+            <View style={styles.locationTextGroup}>
+              <Text
+                style={[
+                  styles.locationTitle,
+                  selectedStyle === "gym" && styles.locationTitleActive,
+                ]}
+              >
+                GYM
+              </Text>
+              <Text style={styles.locationSubtitle}>Full equipment access</Text>
+            </View>
+
+            {selectedStyle === "gym" && (
+              <View style={styles.badgeContainer}>
+                <CheckCircleIcon color="#2DD4BF" />
+              </View>
+            )}
+          </View>
         </Pressable>
 
         {/* HOME Card */}
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ selected: selectedStyle === "home" }}
+          unstable_pressDelay={0}
+          hitSlop={6}
           onPress={() => handleSelectStyle("home")}
-          style={({ pressed }) => [
-            styles.locationCard,
-            data.workoutStyle === "home" && styles.locationCardActive,
-            pressed && styles.pressed,
-          ]}
+          style={({ pressed }) => [pressed && styles.pressed]}
         >
-          <View style={styles.locationIconWrap}>
-            <Home size={22} color="#C5C0FF" strokeWidth={2.2} />
-          </View>
-
-          <View style={styles.locationTextGroup}>
-            <Text style={styles.locationTitle}>HOME</Text>
-            <Text style={styles.locationSubtitle}>Bodyweight & basics</Text>
-          </View>
-
-          {data.workoutStyle === "home" ? (
-            <View style={styles.checkBadge}>
-              <Check size={14} color="#0F1015" strokeWidth={3} />
+          <View
+            style={[
+              styles.locationCard,
+              selectedStyle === "home"
+                ? styles.locationCardActive
+                : styles.locationCardInactive,
+            ]}
+          >
+            {/* Square Icon Container */}
+            <View style={styles.iconSquare}>
+              <HomeRoofIcon color="#C4B5FD" />
             </View>
-          ) : (
-            <View style={styles.emptyRadio} />
-          )}
+
+            <View style={styles.locationTextGroup}>
+              <Text
+                style={[
+                  styles.locationTitle,
+                  selectedStyle === "home" && styles.locationTitleActive,
+                ]}
+              >
+                HOME
+              </Text>
+              <Text style={styles.locationSubtitle}>Bodyweight & basics</Text>
+            </View>
+
+            {selectedStyle === "home" && (
+              <View style={styles.badgeContainer}>
+                <CheckCircleIcon color="#2DD4BF" />
+              </View>
+            )}
+          </View>
         </Pressable>
       </View>
 
-      {/* Workout Days / Week Section */}
+      {/* Workout Days / week Section */}
       <View style={styles.frequencySection}>
         <Text style={styles.frequencyTitle}>Workout Days / week</Text>
 
         <View style={styles.daysGrid}>
-          {daysOptions.map((days) => {
-            const isSelected = data.workoutDaysPerWeek === days;
-
-            return (
-              <Pressable
-                key={days}
-                accessibilityRole="button"
-                onPress={() => handleSelectDays(days)}
-                style={({ pressed }) => [
-                  styles.dayPill,
-                  pressed && styles.pressed,
-                ]}
-              >
-                {isSelected ? (
-                  <LinearGradient
-                    colors={["#4474A8", "#558DC2", "#6EA8E4"]}
-                    start={{ x: 0, y: 0.5 }}
-                    end={{ x: 1, y: 0.5 }}
-                    style={styles.dayPillGradient}
-                  >
-                    <Text style={styles.dayTextActive}>{days} Days</Text>
-                  </LinearGradient>
-                ) : (
-                  <View style={styles.dayPillInactive}>
-                    <Text style={styles.dayTextInactive}>{days} Days</Text>
-                  </View>
-                )}
-              </Pressable>
-            );
-          })}
+          {DAY_ROWS.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.pillsRow}>
+              {row.map((days) => (
+                <DayPillItem
+                  key={days}
+                  days={days}
+                  isSelected={selectedDays === days}
+                  pillWidth={pillWidth}
+                  onSelect={handleSelectDays}
+                />
+              ))}
+            </View>
+          ))}
         </View>
       </View>
 
@@ -145,55 +275,70 @@ export function Step4YourStyle() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingBottom: 24,
+    paddingTop: 4,
+    paddingBottom: 20,
   },
   hero: {
-    marginTop: 12,
-    marginBottom: 24,
+    marginTop: 2,
+    marginBottom: 20,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 46,
+    fontSize: 40,
+    lineHeight: 44,
     fontWeight: "900",
     letterSpacing: -0.5,
+    fontStyle: "italic",
     textShadowColor: "rgba(95, 255, 215, 0.75)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 18,
   },
+  sparkleWrap: {
+    paddingBottom: 6,
+    paddingRight: 10,
+  },
   subtitle: {
-    color: "#B0AEC2",
+    color: "#CBD5E1",
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     marginTop: 12,
   },
   locationGroup: {
-    gap: 12,
-    marginBottom: 28,
+    gap: 14,
+    marginBottom: 24,
   },
   locationCard: {
-    height: 84,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    width: "100%",
+    height: 88,
+    borderRadius: 24,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
+  },
+  locationCardInactive: {
+    backgroundColor: "#111823",
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.08)",
   },
   locationCardActive: {
-    borderColor: "#44EAC3",
-    backgroundColor: "rgba(68, 234, 195, 0.1)",
-    shadowColor: "#44EAC3",
+    backgroundColor: "#102331",
+    borderWidth: 2,
+    borderColor: "#2DD4BF",
+    shadowColor: "#2DD4BF",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 4,
+    shadowOpacity: 0.6,
+    shadowRadius: 16,
+    elevation: 8,
   },
-  locationIconWrap: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+  iconSquare: {
+    width: 50,
+    height: 50,
+    borderRadius: 16,
     backgroundColor: "rgba(255, 255, 255, 0.06)",
     alignItems: "center",
     justifyContent: "center",
@@ -203,85 +348,81 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   locationTitle: {
-    color: "#FFFFFF",
-    fontSize: 17,
+    color: "#94A3B8",
+    fontSize: 16,
     fontWeight: "900",
-    letterSpacing: 1,
-    marginBottom: 3,
+    letterSpacing: 1.5,
+    fontFamily: "monospace",
+    marginBottom: 4,
+  },
+  locationTitleActive: {
+    color: "#FFFFFF",
+    fontWeight: "900",
   },
   locationSubtitle: {
-    color: "#918EA1",
-    fontSize: 12,
+    color: "#64748B",
+    fontSize: 12.5,
     fontWeight: "500",
   },
-  checkBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#44EAC3",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emptyRadio: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.25)",
+  badgeContainer: {
+    marginRight: 4,
   },
   frequencySection: {
-    marginBottom: 12,
+    marginBottom: 20,
   },
   frequencyTitle: {
     color: "#FFFFFF",
     fontSize: 15,
-    fontWeight: "800",
-    marginBottom: 16,
+    fontWeight: "700",
+    marginBottom: 14,
   },
   daysGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-    justifyContent: "space-between",
+    width: "100%",
+    gap: 12,
   },
-  dayPill: {
-    width: "31%",
+  pillsRow: {
+    width: "100%",
+    flexDirection: "row",
+    gap: 12,
+  },
+  pillPressable: {
+    flex: 1,
+    height: 48,
+  },
+  dayPillActive: {
+    width: "100%",
     height: 48,
     borderRadius: 24,
-    overflow: "hidden",
-  },
-  dayPillGradient: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 24,
     shadowColor: "#38BDF8",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.45,
     shadowRadius: 8,
     elevation: 4,
   },
   dayPillInactive: {
-    flex: 1,
+    width: "100%",
+    height: 48,
     borderRadius: 24,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: "#111823",
     alignItems: "center",
     justifyContent: "center",
   },
   dayTextActive: {
     color: "#FFFFFF",
     fontSize: 13,
-    fontWeight: "800",
+    fontWeight: "900",
   },
   dayTextInactive: {
-    color: "#D0CCDD",
+    color: "#CBD5E1",
     fontSize: 13,
     fontWeight: "700",
   },
   pressed: {
-    opacity: 0.82,
-    transform: [{ scale: 0.99 }],
+    opacity: 0.85,
+    transform: [{ scale: 0.985 }],
   },
 });

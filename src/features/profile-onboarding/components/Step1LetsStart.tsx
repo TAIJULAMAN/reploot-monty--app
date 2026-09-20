@@ -51,12 +51,14 @@ export function Step1LetsStart() {
   };
 
   const handleSelectGender = (gender: "male" | "female") => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {
-      // ignore
-    }
     updateData({ gender });
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
+    });
   };
 
 
@@ -187,6 +189,8 @@ export function Step1LetsStart() {
           accessibilityRole="button"
           accessibilityLabel="Select Male"
           onPress={() => handleSelectGender("male")}
+          unstable_pressDelay={0}
+          hitSlop={6}
           style={({ pressed }) => [pressed && styles.pressed]}
         >
           <View
@@ -207,6 +211,8 @@ export function Step1LetsStart() {
           accessibilityRole="button"
           accessibilityLabel="Select Female"
           onPress={() => handleSelectGender("female")}
+          unstable_pressDelay={0}
+          hitSlop={6}
           style={({ pressed }) => [pressed && styles.pressed]}
         >
           <View

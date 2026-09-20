@@ -7,6 +7,8 @@ export default function ProfileSetupLayout() {
       screenOptions={{
         headerShown: false,
         animation: "slide_from_right",
+        animationDuration: 220,
+        freezeOnBlur: true,
       }}
     />
   );

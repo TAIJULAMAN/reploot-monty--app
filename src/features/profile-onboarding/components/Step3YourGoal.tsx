@@ -1,293 +1,407 @@
 import React, { useCallback } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
-import { Sparkles } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { FitnessGoal } from "@/shared/types/user";
 
-// Custom SVG Icons matching Figma design exactly
-function ScaleBoxIcon({ color = "#C4B5FD" }: { color?: string }) {
+// Custom SVG Icons matched 100% to Figma page 4
+function ScaleBoxIcon({ isSelected }: { isSelected: boolean }) {
+  const strokeColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <Rect x="4" y="4" width="16" height="16" rx="4" />
-      <Circle cx="12" cy="11" r="3" />
-      <Path d="M12 11l1.5-1.5" />
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Rect
+        x="3.5"
+        y="3.5"
+        width="17"
+        height="17"
+        rx="3.5"
+        stroke={strokeColor}
+        strokeWidth="1.9"
+      />
+      <Circle cx="12" cy="8.8" r="2.7" stroke={strokeColor} strokeWidth="1.5" />
+      <Circle cx="10.8" cy="8.8" r="0.6" fill={strokeColor} />
+      <Circle cx="12" cy="8.8" r="0.6" fill={strokeColor} />
+      <Circle cx="13.2" cy="8.8" r="0.6" fill={strokeColor} />
     </Svg>
   );
 }
 
-function BicepArmIcon({ color = "#FB923C" }: { color?: string }) {
+function BicepArmIcon({ isSelected }: { isSelected: boolean }) {
+  const fillColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M6 13.5c-1-1.5-1.5-3.5-.5-5.5 1-2 3-2.5 5-2 1.5.5 3 1.8 3.5 3.5.5 1.5 0 3-1 4.5l3.5 3.5c1 .5 1.5 1.5 1.5 2.5s-.5 2-1.5 2.5-2 .5-2.5 0L10 18.5c-1.5.5-3 0-4-1z" />
-      <Path d="M9 9.5c.8-.8 2-.8 2.8 0" />
+    <Svg width={25} height={25} viewBox="0 0 24 24" fill={fillColor}>
+      <Path
+        fillRule="evenodd"
+        d="M 5.81 4.14 L 2.0 15.57 L 2.48 17.95 L 9.14 21.29 L 14.38 21.29 L 19.62 18.9 L 20.57 19.86 L 21.52 18.43 L 20.1 17.0 L 14.38 19.86 L 9.14 19.86 L 4.38 17.48 L 3.43 16.05 L 5.81 7.48 L 8.19 4.62 L 10.57 3.67 L 12.0 5.57 L 7.71 6.52 L 7.71 13.67 L 8.67 14.62 L 10.57 13.19 L 14.38 13.19 L 16.29 14.62 L 17.24 13.67 L 16.29 12.71 L 18.19 10.81 L 21.52 9.86 L 21.52 8.43 L 18.67 8.9 L 14.86 11.76 L 10.1 12.24 L 10.1 7.95 L 12.48 7.48 L 13.43 4.62 L 11.52 2.24 Z"
+      />
     </Svg>
   );
 }
 
-function HeartShapeIcon({ color = "#2DD4BF" }: { color?: string }) {
+function HeartShapeIcon({ isSelected }: { isSelected: boolean }) {
+  const strokeColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    <Svg width={25} height={25} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M19.5 13.572L12 21l-7.5-7.428A5 5 0 1 1 12 6.786a5 5 0 1 1 7.5 6.786z"
+        stroke={strokeColor}
+        strokeWidth="2.1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </Svg>
   );
 }
 
-function LightningIcon({ color = "#FB923C" }: { color?: string }) {
+function LightningIcon({ isSelected }: { isSelected: boolean }) {
+  const fillColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill={fillColor}>
+      <Path
+        d="M13 2L3.5 13.5h7l-1.5 8.5L20.5 10.5h-7.5L13 2z"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </Svg>
   );
 }
 
-function StopwatchIcon({ color = "#94A3B8" }: { color?: string }) {
+function StopwatchIcon({ isSelected }: { isSelected: boolean }) {
+  const strokeColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <Circle cx="12" cy="13" r="8" />
-      <Path d="M12 9v4l2.5 1.5" />
-      <Path d="M10 2h4" />
-      <Path d="M12 2v3" />
+    <Svg width={25} height={25} viewBox="0 0 24 24" fill="none">
+      <Circle cx="12" cy="13.5" r="7.5" stroke={strokeColor} strokeWidth="2" />
+      <Path d="M12 9.5v4" stroke={strokeColor} strokeWidth="2.2" strokeLinecap="round" />
+      <Path d="M10 2.5h4" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+      <Path d="M12 2.5v3" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+      <Path d="M17.5 7.5l1.5-1.5" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
     </Svg>
   );
 }
 
-function MeditationIcon({ color = "#2DD4BF" }: { color?: string }) {
+function MeditationIcon({ isSelected }: { isSelected: boolean }) {
+  const fillColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <Circle cx="12" cy="6" r="2.5" />
-      <Path d="M12 9.5v5.5" />
-      <Path d="M8 12l4 3 4-3" />
-      <Path d="M5 19c2-2 4-2.5 7-2.5s5 .5 7 2.5" />
-      <Path d="M6 16l-2 3" />
-      <Path d="M18 16l2 3" />
+    <Svg width={25} height={25} viewBox="0 0 24 24" fill={fillColor}>
+      <Path
+        fillRule="evenodd"
+        d="M 2.0 13.91 L 2.0 16.04 L 4.13 16.04 L 9.23 13.06 L 9.66 14.77 L 4.13 18.17 L 4.13 19.45 L 5.83 20.72 L 8.38 20.72 L 8.81 18.6 L 10.51 17.32 L 14.77 18.6 L 10.51 18.6 L 9.66 20.72 L 18.17 20.72 L 19.45 19.45 L 19.45 17.74 L 13.91 14.77 L 14.34 13.06 L 18.17 15.62 L 21.57 16.04 L 21.57 13.91 L 17.74 13.06 L 12.64 8.38 L 10.09 8.81 L 5.83 13.06 Z M 10.51 3.28 L 10.09 3.7 L 9.66 4.55 L 9.66 5.83 L 10.94 7.11 L 13.06 7.11 L 13.91 6.26 L 13.91 4.13 L 13.06 3.28 L 12.21 2.85 L 11.36 2.85 Z"
+      />
     </Svg>
   );
 }
 
-const GOAL_OPTIONS: {
+// Bottom Sparkle Cluster (Figma 4-point stars)
+function SparkleCluster() {
+  return (
+    <Svg width={38} height={38} viewBox="0 0 38 38" fill="none">
+      {/* Primary large 4-point star */}
+      <Path
+        d="M16 4C16 9.523 20.477 14 26 14C20.477 14 16 18.477 16 24C16 18.477 11.523 14 6 14C11.523 14 16 9.523 16 4Z"
+        fill="#38EDD8"
+        opacity="0.9"
+      />
+      {/* Top right smaller star */}
+      <Path
+        d="M29 4C29 6.761 31.239 9 34 9C31.239 9 29 11.239 29 14C29 11.239 26.761 9 24 9C26.761 9 29 6.761 29 4Z"
+        fill="#38EDD8"
+        opacity="0.65"
+      />
+      {/* Bottom right smaller star */}
+      <Path
+        d="M30 20C30 22.209 31.791 24 34 24C31.791 24 30 25.791 30 28C30 25.791 28.209 24 26 24C28.209 24 30 22.209 30 20Z"
+        fill="#38EDD8"
+        opacity="0.75"
+      />
+    </Svg>
+  );
+}
+
+interface GoalOption {
   id: FitnessGoal;
   label: string;
-  badgeBg: string;
   icon: (isSelected: boolean) => React.ReactNode;
-}[] = [
-  {
-    id: "lose_weight",
-    label: "LOSE WEIGHT",
-    badgeBg: "rgba(196, 181, 253, 0.12)",
-    icon: (isSelected) => (
-      <ScaleBoxIcon color={isSelected ? "#38BDF8" : "#C4B5FD"} />
-    ),
-  },
-  {
-    id: "build_muscle",
-    label: "BUILD MUSCLE",
-    badgeBg: "rgba(251, 146, 60, 0.12)",
-    icon: (isSelected) => (
-      <BicepArmIcon color={isSelected ? "#2DD4BF" : "#FB923C"} />
-    ),
-  },
-  {
-    id: "stay_fit",
-    label: "STAY FIT",
-    badgeBg: "rgba(45, 212, 191, 0.12)",
-    icon: (isSelected) => (
-      <HeartShapeIcon color={isSelected ? "#38BDF8" : "#2DD4BF"} />
-    ),
-  },
-  {
-    id: "gain_strength",
-    label: "GAIN STRENGTH",
-    badgeBg: "rgba(251, 146, 60, 0.12)",
-    icon: (isSelected) => (
-      <LightningIcon color={isSelected ? "#38BDF8" : "#FB923C"} />
-    ),
-  },
-  {
-    id: "improve_endurance",
-    label: "IMPROVE\nENDURANCE",
-    badgeBg: "rgba(148, 163, 184, 0.12)",
-    icon: (isSelected) => (
-      <StopwatchIcon color={isSelected ? "#38BDF8" : "#94A3B8"} />
-    ),
-  },
-  {
-    id: "improve_flexibility",
-    label: "IMPROVE\nFLEXIBILITY",
-    badgeBg: "rgba(45, 212, 191, 0.12)",
-    icon: (isSelected) => (
-      <MeditationIcon color={isSelected ? "#38BDF8" : "#2DD4BF"} />
-    ),
-  },
+}
+
+const GOAL_PAIRS: [GoalOption, GoalOption][] = [
+  [
+    {
+      id: "lose_weight",
+      label: "LOSE WEIGHT",
+      icon: (isSelected) => <ScaleBoxIcon isSelected={isSelected} />,
+    },
+    {
+      id: "build_muscle",
+      label: "BUILD MUSCLE",
+      icon: (isSelected) => <BicepArmIcon isSelected={isSelected} />,
+    },
+  ],
+  [
+    {
+      id: "stay_fit",
+      label: "STAY FIT",
+      icon: (isSelected) => <HeartShapeIcon isSelected={isSelected} />,
+    },
+    {
+      id: "gain_strength",
+      label: "GAIN STRENGTH",
+      icon: (isSelected) => <LightningIcon isSelected={isSelected} />,
+    },
+  ],
+  [
+    {
+      id: "improve_endurance",
+      label: "IMPROVE\nENDURANCE",
+      icon: (isSelected) => <StopwatchIcon isSelected={isSelected} />,
+    },
+    {
+      id: "improve_flexibility",
+      label: "IMPROVE\nFLEXIBILITY",
+      icon: (isSelected) => <MeditationIcon isSelected={isSelected} />,
+    },
+  ],
 ];
 
+interface GoalCardItemProps {
+  opt: GoalOption;
+  isSelected: boolean;
+  cardWidth: number;
+  cardHeight: number;
+  onSelect: (goal: FitnessGoal) => void;
+}
+
+const GoalCardItem = React.memo(function GoalCardItem({
+  opt,
+  isSelected,
+  cardWidth,
+  cardHeight,
+  onSelect,
+}: GoalCardItemProps) {
+  const handlePress = useCallback(() => {
+    onSelect(opt.id);
+  }, [onSelect, opt.id]);
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected: isSelected }}
+      onPress={handlePress}
+      unstable_pressDelay={0}
+      hitSlop={6}
+      style={({ pressed }) => [
+        { width: cardWidth, height: cardHeight },
+        pressed && styles.cardPressed,
+      ]}
+    >
+      {isSelected ? (
+        <LinearGradient
+          colors={["#818CF8", "#22D3EE", "#38EDD8"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.cardActiveGradient, { width: cardWidth, height: cardHeight }]}
+        >
+          <View style={styles.cardActiveInner}>
+            {/* Circular Icon Badge */}
+            <View style={styles.iconCircleActive}>{opt.icon(true)}</View>
+
+            {/* Goal Title */}
+            <Text style={styles.cardLabelActive} numberOfLines={2}>
+              {opt.label}
+            </Text>
+          </View>
+        </LinearGradient>
+      ) : (
+        <View style={[styles.cardInactive, { width: cardWidth, height: cardHeight }]}>
+          {/* Circular Icon Badge */}
+          <View style={styles.iconCircleInactive}>{opt.icon(false)}</View>
+
+          {/* Goal Title */}
+          <Text style={styles.cardLabelInactive} numberOfLines={2}>
+            {opt.label}
+          </Text>
+        </View>
+      )}
+    </Pressable>
+  );
+});
+
 export function Step3YourGoal() {
+  const { width: screenWidth } = useWindowDimensions();
   const primaryGoal = useProfileSetupStore((s) => s.data.primaryGoal);
+  const selectedGoal = primaryGoal || "build_muscle";
   const updateData = useProfileSetupStore((s) => s.updateData);
   const nextStep = useProfileSetupStore((s) => s.nextStep);
 
+  // Exact deterministic card calculations:
+  // 24dp padding on left & right = 48dp total
+  // 14dp gap between cards
+  const horizontalPadding = 24;
+  const cardGap = 14;
+  const cardWidth = Math.floor((screenWidth - horizontalPadding * 2 - cardGap) / 2);
+  const cardHeight = Math.round(cardWidth * 0.80);
+
   const handleSelectGoal = useCallback(
     (goal: FitnessGoal) => {
-      try {
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      } catch {
-        // ignore
-      }
       updateData({ primaryGoal: goal });
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        } catch {
+          // ignore
+        }
+      });
     },
     [updateData]
   );
 
   return (
     <View style={styles.container}>
-      {/* Title with cyan neon bloom */}
+      {/* Title Hero with radiant cyan neon glow */}
       <View style={styles.hero}>
         <Text style={styles.title}>YOUR</Text>
         <Text style={styles.title}>GOAL</Text>
       </View>
 
-      {/* 2x3 Grid of Goal Cards */}
-      <View style={styles.grid}>
-        {GOAL_OPTIONS.map((opt) => {
-          const isSelected = primaryGoal === opt.id;
-
-          return (
-            <Pressable
-              key={opt.id}
-              accessibilityRole="button"
-              accessibilityState={{ selected: isSelected }}
-              onPress={() => handleSelectGoal(opt.id)}
-              style={({ pressed }) => [
-                styles.card,
-                isSelected ? styles.cardActive : styles.cardInactive,
-                pressed && styles.pressed,
-              ]}
-            >
-              {/* Circular Icon Badge */}
-              <View
-                style={[
-                  styles.iconCircle,
-                  { backgroundColor: opt.badgeBg },
-                  isSelected && styles.iconCircleActive,
-                ]}
-              >
-                {opt.icon(isSelected)}
-              </View>
-
-              {/* Goal Title */}
-              <Text
-                style={[
-                  styles.cardLabel,
-                  isSelected && styles.cardLabelActive,
-                ]}
-                numberOfLines={2}
-              >
-                {opt.label}
-              </Text>
-            </Pressable>
-          );
-        })}
+      {/* 2x3 Grid of Goal Cards: Deterministic Symmetrical Flex */}
+      <View style={[styles.gridContainer, { width: cardWidth * 2 + cardGap }]}>
+        {GOAL_PAIRS.map((pair, rowIndex) => (
+          <View key={rowIndex} style={[styles.row, { gap: cardGap }]}>
+            {pair.map((opt) => (
+              <GoalCardItem
+                key={opt.id}
+                opt={opt}
+                isSelected={selectedGoal === opt.id}
+                cardWidth={cardWidth}
+                cardHeight={cardHeight}
+                onSelect={handleSelectGoal}
+              />
+            ))}
+          </View>
+        ))}
       </View>
 
       {/* Decorative Sparkle bottom right */}
-      <View style={styles.sparkleRow}>
-        <Sparkles size={22} color="#2DD4BF" style={styles.sparkleIcon} />
+      <View style={[styles.sparkleRow, { width: cardWidth * 2 + cardGap }]}>
+        <SparkleCluster />
       </View>
 
       {/* Continue CTA Button */}
-      <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+      <View style={{ width: "100%", paddingHorizontal: horizontalPadding }}>
+        <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 32,
+    width: "100%",
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignItems: "center",
   },
   hero: {
-    marginTop: 4,
-    marginBottom: 26,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 12,
+    marginBottom: 14,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 44,
-    lineHeight: 48,
+    fontSize: 38,
+    lineHeight: 40,
     fontWeight: "900",
-    letterSpacing: -0.5,
-    fontStyle: "italic",
-    textShadowColor: "rgba(95, 255, 215, 0.75)",
+    letterSpacing: 1.2,
+    textAlign: "center",
+    textTransform: "uppercase",
+    textShadowColor: "rgba(56, 237, 216, 0.8)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 18,
   },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    rowGap: 14,
-    columnGap: 14,
-    marginBottom: 16,
+  gridContainer: {
+    marginBottom: 2,
   },
-  card: {
-    width: "47.8%",
-    height: 154,
-    borderRadius: 24,
-    alignItems: "center",
+  row: {
+    flexDirection: "row",
+    marginBottom: 10,
     justifyContent: "center",
-    paddingHorizontal: 12,
   },
   cardInactive: {
-    backgroundColor: "#0E1724",
-    borderWidth: 1,
+    borderRadius: 22,
+    backgroundColor: "#11141C",
+    borderWidth: 1.4,
     borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  cardActive: {
-    backgroundColor: "rgba(14, 28, 42, 0.95)",
-    borderWidth: 1.5,
-    borderColor: "#2DD4BF",
-    shadowColor: "#2DD4BF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.45,
-    shadowRadius: 14,
-  },
-  iconCircle: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 14,
+    paddingHorizontal: 8,
+  },
+  cardActiveGradient: {
+    borderRadius: 22,
+    padding: 2,
+    shadowColor: "#22D3EE",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.65,
+    shadowRadius: 18,
+    elevation: 8,
+  },
+  cardActiveInner: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "#0B1522",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  iconCircleInactive: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255, 255, 255, 0.07)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
   },
   iconCircleActive: {
-    backgroundColor: "rgba(45, 212, 191, 0.18)",
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(34, 211, 238, 0.16)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
   },
-  cardLabel: {
-    color: "#94A3B8",
-    fontSize: 12,
-    lineHeight: 16,
+  cardLabelInactive: {
+    color: "#CBD5E1",
+    fontSize: 12.5,
+    lineHeight: 15,
     fontWeight: "800",
     letterSpacing: 1.4,
     textAlign: "center",
-    fontFamily: "monospace",
+    textTransform: "uppercase",
   },
   cardLabelActive: {
     color: "#FFFFFF",
+    fontSize: 12.5,
+    lineHeight: 15,
     fontWeight: "900",
+    letterSpacing: 1.4,
+    textAlign: "center",
+    textTransform: "uppercase",
   },
   sparkleRow: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    paddingRight: 16,
-    marginBottom: 20,
+    paddingRight: 6,
+    marginTop: 1,
+    marginBottom: 2,
   },
-  sparkleIcon: {
-    opacity: 0.85,
-  },
-  pressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.985 }],
+  cardPressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.98 }],
   },
 });
+

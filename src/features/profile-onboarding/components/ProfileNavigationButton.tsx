@@ -21,12 +21,14 @@ export function ProfileNavigationButton({
 }: ProfileNavigationButtonProps) {
   const handlePress = () => {
     if (disabled) return;
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      // ignore
-    }
     onPress();
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        // ignore
+      }
+    });
   };
 
   return (
@@ -35,6 +37,8 @@ export function ProfileNavigationButton({
         accessibilityRole="button"
         disabled={disabled}
         onPress={handlePress}
+        unstable_pressDelay={0}
+        hitSlop={6}
         style={({ pressed }) => [
           styles.buttonPressable,
           disabled && styles.buttonDisabled,
@@ -45,7 +49,7 @@ export function ProfileNavigationButton({
           colors={
             disabled
               ? ["rgba(53, 112, 173, 0.35)", "rgba(98, 162, 229, 0.35)"]
-              : ["#3570AD", "#4A88CC", "#62A2E5"]
+              : ["#3882F6", "#4E95EA", "#60A5FA"]
           }
           start={{ x: 0, y: 0.2 }}
           end={{ x: 1, y: 0.8 }}
@@ -54,9 +58,9 @@ export function ProfileNavigationButton({
           <Text style={[styles.text, disabled && styles.textDisabled]}>{title}</Text>
           {showArrow && (
             <ArrowRight
-              size={18}
+              size={20}
               color={disabled ? "rgba(255, 255, 255, 0.5)" : "#FFFFFF"}
-              strokeWidth={2.4}
+              strokeWidth={2.8}
               style={styles.arrow}
             />
           )}
@@ -71,17 +75,18 @@ export function ProfileNavigationButton({
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    marginTop: 10,
-    marginBottom: 6,
+    marginTop: 6,
+    marginBottom: 4,
   },
   buttonPressable: {
     width: "100%",
     height: 52,
     borderRadius: 26,
-    shadowColor: "#2B6CB0",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.45,
-    shadowRadius: 10,
+    shadowColor: "#3882F6",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 14,
+    elevation: 8,
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -97,12 +102,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 22,
+    paddingHorizontal: 24,
   },
   text: {
     color: "#FFFFFF",
-    fontSize: 15,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 22,
     fontWeight: "900",
     letterSpacing: 2.2,
     textTransform: "uppercase",
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.5)",
   },
   arrow: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
   subtext: {
     color: "#475569",

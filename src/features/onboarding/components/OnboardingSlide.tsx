@@ -15,7 +15,7 @@ interface OnboardingSlideProps {
   slide: OnboardingSlideItem;
 }
 
-export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
+export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ slide }) => {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64;
@@ -110,7 +110,7 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

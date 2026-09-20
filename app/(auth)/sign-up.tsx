@@ -46,12 +46,14 @@ export default function SignUpRoute() {
   };
 
   const handleCreateAccount = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      // Haptics fallback
-    }
     router.push("/(profile-setup)");
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        // Haptics fallback
+      }
+    });
   };
 
   const handleGoogleSignUp = () => {
@@ -206,6 +208,8 @@ export default function SignUpRoute() {
                 <View style={styles.createAccountWrapper}>
                   <Pressable
                     onPress={handleCreateAccount}
+                    unstable_pressDelay={0}
+                    hitSlop={6}
                     style={({ pressed }) => [
                       styles.fullWidth,
                       pressed && styles.buttonPressed,

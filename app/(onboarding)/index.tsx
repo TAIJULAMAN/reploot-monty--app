@@ -55,28 +55,31 @@ export default function OnboardingScreen() {
   };
 
   const scrollToSlide = (index: number) => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch {
-      // ignore
-    }
     setActivePage(index);
     setSlideIndex(index);
     flatListRef.current?.scrollToIndex({ index, animated: true });
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch {
+        // ignore
+      }
+    });
   };
 
   const handleNext = () => {
-    try {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      // ignore
-    }
-
     if (activePage < ONBOARDING_SLIDES.length - 1) {
       scrollToSlide(activePage + 1);
     } else {
       handleCompleteOnboarding();
     }
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        // ignore
+      }
+    });
   };
 
   const handleSkip = () => {
@@ -85,14 +88,21 @@ export default function OnboardingScreen() {
   };
 
   const handleCompleteOnboarding = () => {
-    try {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {
-      // ignore
-    }
     setHasSeenOnboarding(true);
     router.replace("/(auth)/sign-in");
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch {
+        // ignore
+      }
+    });
   };
+
+  const renderSlideItem = React.useCallback(
+    ({ item }: { item: OnboardingSlideItem }) => <OnboardingSlide slide={item} />,
+    []
+  );
 
   return (
     <View style={styles.container}>
@@ -118,7 +128,7 @@ export default function OnboardingScreen() {
         ref={flatListRef}
         data={ONBOARDING_SLIDES}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <OnboardingSlide slide={item} />}
+        renderItem={renderSlideItem}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -126,6 +136,11 @@ export default function OnboardingScreen() {
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
         initialScrollIndex={0}
+        windowSize={3}
+        maxToRenderPerBatch={2}
+        initialNumToRender={2}
+        removeClippedSubviews={true}
+        updateCellsBatchingPeriod={50}
         getItemLayout={(_, index) => ({
           length: width,
           offset: width * index,

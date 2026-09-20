@@ -29,6 +29,64 @@ const ACTIVITY_OPTIONS: {
   },
 ];
 
+interface ActivityOptionItemProps {
+  id: ActivityLevel;
+  title: string;
+  subtitle: string;
+  isSelected: boolean;
+  onSelect: (id: ActivityLevel) => void;
+}
+
+const ActivityOptionItem = React.memo(
+  ({ id, title, subtitle, isSelected, onSelect }: ActivityOptionItemProps) => {
+    return (
+      <Pressable
+        accessibilityRole="radio"
+        accessibilityState={{ selected: isSelected }}
+        unstable_pressDelay={0}
+        hitSlop={6}
+        onPress={() => onSelect(id)}
+        style={styles.activityPressable}
+      >
+        <View
+          style={[
+            styles.activityOptionRow,
+            isSelected
+              ? styles.activityOptionSelected
+              : styles.activityOptionUnselected,
+          ]}
+        >
+          <View style={styles.activityInfo}>
+            <Text
+              style={[
+                styles.activityTitle,
+                isSelected && styles.activityTitleActive,
+              ]}
+            >
+              {title}
+            </Text>
+            <Text style={styles.activitySubtitle}>{subtitle}</Text>
+          </View>
+
+          {/* Radio Indicator */}
+          <View
+            style={[
+              styles.radioCircle,
+              isSelected
+                ? styles.radioCircleSelected
+                : styles.radioCircleUnselected,
+            ]}
+          >
+            {isSelected ? (
+              <Check size={12} color="#0B0E17" strokeWidth={3.5} />
+            ) : null}
+          </View>
+        </View>
+      </Pressable>
+    );
+  }
+);
+
 export function Step2YourBody() {
   const heightCm = useProfileSetupStore((s) => s.data.heightCm);
   const weightKg = useProfileSetupStore((s) => s.data.weightKg);
@@ -41,11 +99,13 @@ export function Step2YourBody() {
 
   const handleSelectActivity = useCallback(
     (level: ActivityLevel) => {
-      try {
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      } catch {
-        // ignore
-      }
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        } catch {
+          // ignore
+        }
+      });
       updateData({ activityLevel: level });
     },
     [updateData]
@@ -54,11 +114,13 @@ export function Step2YourBody() {
   const handleHeightUnitToggle = useCallback(
     (unit: "cm" | "inch") => {
       if (unit === heightUnit) return;
-      try {
-        void Haptics.selectionAsync();
-      } catch {
-        // ignore
-      }
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.selectionAsync();
+        } catch {
+          // ignore
+        }
+      });
       setHeightUnit(unit);
     },
     [heightUnit]
@@ -67,11 +129,13 @@ export function Step2YourBody() {
   const handleWeightUnitToggle = useCallback(
     (unit: "kg" | "lbs") => {
       if (unit === weightUnit) return;
-      try {
-        void Haptics.selectionAsync();
-      } catch {
-        // ignore
-      }
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.selectionAsync();
+        } catch {
+          // ignore
+        }
+      });
       setWeightUnit(unit);
     },
     [weightUnit]
@@ -121,6 +185,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Centimeters"
+              unstable_pressDelay={0}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleHeightUnitToggle("cm")}
               style={[
@@ -140,6 +205,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Inches"
+              unstable_pressDelay={0}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleHeightUnitToggle("inch")}
               style={[
@@ -183,6 +249,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Kilograms"
+              unstable_pressDelay={0}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleWeightUnitToggle("kg")}
               style={[
@@ -202,6 +269,7 @@ export function Step2YourBody() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Switch to Pounds"
+              unstable_pressDelay={0}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               onPress={() => handleWeightUnitToggle("lbs")}
               style={[
@@ -242,53 +310,16 @@ export function Step2YourBody() {
         </View>
 
         <View style={styles.activityList}>
-          {ACTIVITY_OPTIONS.map((opt) => {
-            const isSelected = activityLevel === opt.id;
-            return (
-              <Pressable
-                key={opt.id}
-                accessibilityRole="radio"
-                accessibilityState={{ selected: isSelected }}
-                onPress={() => handleSelectActivity(opt.id)}
-                style={styles.activityPressable}
-              >
-                <View
-                  style={[
-                    styles.activityOptionRow,
-                    isSelected
-                      ? styles.activityOptionSelected
-                      : styles.activityOptionUnselected,
-                  ]}
-                >
-                  <View style={styles.activityInfo}>
-                    <Text
-                      style={[
-                        styles.activityTitle,
-                        isSelected && styles.activityTitleActive,
-                      ]}
-                    >
-                      {opt.title}
-                    </Text>
-                    <Text style={styles.activitySubtitle}>{opt.subtitle}</Text>
-                  </View>
-
-                  {/* Radio Indicator */}
-                  <View
-                    style={[
-                      styles.radioCircle,
-                      isSelected
-                        ? styles.radioCircleSelected
-                        : styles.radioCircleUnselected,
-                    ]}
-                  >
-                    {isSelected ? (
-                      <Check size={12} color="#0B0E17" strokeWidth={3.5} />
-                    ) : null}
-                  </View>
-                </View>
-              </Pressable>
-            );
-          })}
+          {ACTIVITY_OPTIONS.map((opt) => (
+            <ActivityOptionItem
+              key={opt.id}
+              id={opt.id}
+              title={opt.title}
+              subtitle={opt.subtitle}
+              isSelected={activityLevel === opt.id}
+              onSelect={handleSelectActivity}
+            />
+          ))}
         </View>
       </View>
 

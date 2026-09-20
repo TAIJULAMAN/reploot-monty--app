@@ -68,6 +68,8 @@ const WheelItem = React.memo(
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`Select ${val} ${unit}`}
+        unstable_pressDelay={0}
+        hitSlop={4}
         onPress={() => onPress(val)}
         style={[styles.itemRow, { height: itemHeight }]}
       >
@@ -90,7 +92,7 @@ const WheelItem = React.memo(
   }
 );
 
-export function VerticalWheelPicker({
+export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
   value,
   onChange,
   min,
@@ -140,11 +142,13 @@ export function VerticalWheelPicker({
       node?.scrollTo({ y: targetOffset, x: 0, animated: true });
       lastReportedValRef.current = targetVal;
       onChange(targetVal);
-      try {
-        void Haptics.selectionAsync();
-      } catch {
-        // ignore
-      }
+      requestAnimationFrame(() => {
+        try {
+          void Haptics.selectionAsync();
+        } catch {
+          // ignore
+        }
+      });
       setTimeout(() => {
         isUserInteractingRef.current = false;
       }, 300);
@@ -168,11 +172,13 @@ export function VerticalWheelPicker({
 
         if (currentVal !== undefined && currentVal !== lastReportedValRef.current) {
           lastReportedValRef.current = currentVal;
-          try {
-            void Haptics.selectionAsync();
-          } catch {
-            // ignore
-          }
+          requestAnimationFrame(() => {
+            try {
+              void Haptics.selectionAsync();
+            } catch {
+              // ignore
+            }
+          });
           onChange(currentVal);
         }
       },
@@ -252,7 +258,7 @@ export function VerticalWheelPicker({
       </Animated.ScrollView>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
