@@ -251,6 +251,8 @@ export function Step5YourCoach() {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    alignSelf: "stretch",
     paddingHorizontal: 20,
     paddingTop: 4,
     paddingBottom: 24,

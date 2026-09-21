@@ -256,6 +256,8 @@ export function Step1LetsStart() {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    alignSelf: "stretch",
     paddingHorizontal: 20,
     paddingBottom: 4,
   },

@@ -333,6 +333,8 @@ export function Step2YourBody() {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    alignSelf: "stretch",
     paddingHorizontal: 20,
     paddingTop: 4,
     paddingBottom: 24,
@@ -470,6 +472,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#2DD4BF",
   },
   ctaContainer: {
+    width: "100%",
+    alignSelf: "stretch",
     marginTop: 6,
     marginBottom: 16,
   },

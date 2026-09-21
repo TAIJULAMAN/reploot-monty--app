@@ -238,7 +238,7 @@ export function Step3YourGoal() {
   // Exact deterministic card calculations:
   // 24dp padding on left & right = 48dp total
   // 14dp gap between cards
-  const horizontalPadding = 24;
+  const horizontalPadding = 20;
   const cardGap = 14;
   const cardWidth = Math.floor((screenWidth - horizontalPadding * 2 - cardGap) / 2);
   const cardHeight = Math.round(cardWidth * 0.80);
@@ -299,6 +299,7 @@ export function Step3YourGoal() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    alignSelf: "stretch",
     paddingTop: 4,
     paddingBottom: 4,
     alignItems: "center",

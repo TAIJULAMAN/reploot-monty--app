@@ -75,13 +75,15 @@ export function ProfileNavigationButton({
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
+    alignSelf: "stretch",
     marginTop: 6,
     marginBottom: 4,
   },
   buttonPressable: {
     width: "100%",
-    height: 52,
-    borderRadius: 26,
+    alignSelf: "stretch",
+    height: 54,
+    borderRadius: 27,
     shadowColor: "#3882F6",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.5,
@@ -97,8 +99,9 @@ const styles = StyleSheet.create({
   },
   gradientPill: {
     width: "100%",
-    height: 52,
-    borderRadius: 26,
+    alignSelf: "stretch",
+    height: 54,
+    borderRadius: 27,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

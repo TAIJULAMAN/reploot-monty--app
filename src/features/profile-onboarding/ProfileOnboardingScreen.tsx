@@ -99,8 +99,8 @@ export function ProfileOnboardingScreen() {
           key={currentStep}
           entering={
             isForward
-              ? FadeInRight.duration(180).springify().damping(28).stiffness(320)
-              : FadeInLeft.duration(180).springify().damping(28).stiffness(320)
+              ? FadeInRight.duration(140)
+              : FadeInLeft.duration(140)
           }
           style={styles.stepAnimatedWrapper}
         >
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   },
   stepAnimatedWrapper: {
     width: "100%",
+    alignSelf: "stretch",
     alignItems: "center",
   },
 });

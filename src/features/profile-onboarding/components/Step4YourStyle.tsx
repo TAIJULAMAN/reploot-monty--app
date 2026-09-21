@@ -274,6 +274,8 @@ export function Step4YourStyle() {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    alignSelf: "stretch",
     paddingHorizontal: 20,
     paddingTop: 4,
     paddingBottom: 20,
