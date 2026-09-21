@@ -2,10 +2,14 @@ import "../global.css";
 import React from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useFonts, JetBrainsMono_700Bold } from "@expo-google-fonts/jetbrains-mono";
 import { AppProviders } from "@/app/providers/AppProviders";
 import { colors } from "@/theme/colors";
 
 export default function RootLayout() {
+  useFonts({
+    JetBrainsMono_700Bold,
+  });
   return (
     <AppProviders>
       <StatusBar style="light" />
