@@ -63,7 +63,7 @@ export function ProfileHeader({
       {/* Progress Track & Animated Glowing Fill */}
       <View style={styles.progressTrack}>
         <LinearGradient
-          colors={["#0EA5E9", "#38BDF8", "#44EAC3"]}
+          colors={["#6366F1", "#38BDF8", "#22D3EE"]}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
           style={[styles.progressFill, { width: `${progressPercent}%` }]}
@@ -76,15 +76,15 @@ export function ProfileHeader({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 16,
+    paddingTop: 2,
+    paddingBottom: 6,
   },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
-    minHeight: 48,
+    marginBottom: 6,
+    minHeight: 32,
   },
   backButton: {
     width: 44,

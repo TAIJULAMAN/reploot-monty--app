@@ -56,7 +56,7 @@ export function ProfileOnboardingScreen() {
           currentStep={currentStep}
           totalSteps={5}
           onBack={handleBack}
-          showBack={true}
+          showBack={currentStep > 1}
         />
       </View>
 
@@ -65,9 +65,10 @@ export function ProfileOnboardingScreen() {
         bounces={false}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 24, 40) },
+          { paddingBottom: Math.max(insets.bottom, 12) },
         ]}
       >
         {currentStep === 1 && <Step1LetsStart />}

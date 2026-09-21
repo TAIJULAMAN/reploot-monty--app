@@ -7,15 +7,20 @@ import {
   Pressable,
   Alert,
   Image,
+  useWindowDimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Camera, Mail, Phone, User as UserIcon, Zap } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Haptics from "expo-haptics";
+import Svg, { Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { AgeSlider } from "./AgeSlider";
 
 export function Step1LetsStart() {
+  const { width } = useWindowDimensions();
+  const cardWidth = Math.floor((width - 40 - 12) / 2);
   const { data, updateData, nextStep } = useProfileSetupStore();
 
   const handlePickAvatar = async () => {
@@ -54,78 +59,91 @@ export function Step1LetsStart() {
     updateData({ gender });
   };
 
-  const handleAdjustAge = (delta: number) => {
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    const newAge = Math.max(14, Math.min(80, data.age + delta));
-    updateData({ age: newAge });
-  };
-
-  const handleSetAge = (age: number) => {
-    try {
-      Haptics.selectionAsync();
-    } catch {
-      // ignore
-    }
-    updateData({ age });
-  };
 
   return (
     <View style={styles.container}>
-      {/* Headline with double-layer neon cyan bloom */}
+      {/* Title: LET'S ⚡ START */}
       <View style={styles.hero}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>LET'S</Text>
-          <Zap size={28} color="#38BDF8" fill="#38BDF8" style={styles.titleZap} />
+          <Zap size={24} color="#38BDF8" fill="#38BDF8" style={styles.titleZap} />
         </View>
         <Text style={styles.title}>START</Text>
       </View>
 
-      {/* Avatar Upload Frame */}
+      {/* Avatar Upload Section: Circular Neon Rim & Sparkles */}
       <View style={styles.avatarSection}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Upload profile photo"
-          onPress={handlePickAvatar}
-          style={({ pressed }) => [styles.avatarButton, pressed && styles.pressed]}
-        >
-          <LinearGradient
-            colors={["#38BDF8", "#6366F1", "#44EAC3"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.avatarRing}
+        <View style={styles.avatarWrapper}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Upload profile photo"
+            onPress={handlePickAvatar}
+            style={({ pressed }) => [styles.avatarButton, pressed && styles.pressed]}
           >
-            <View style={styles.avatarInner}>
-              {data.avatarUri ? (
-                <Image source={{ uri: data.avatarUri }} style={styles.avatarImage} />
-              ) : (
-                <UserIcon size={46} color="#A09EB5" strokeWidth={1.8} />
-              )}
-            </View>
-          </LinearGradient>
+            {/* Luminous Gradient Ring (Blue to Mint) */}
+            <LinearGradient
+              colors={["#4F46E5", "#38BDF8", "#2DD4BF"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.avatarRingGradient}
+            >
+              <View style={styles.avatarInner}>
+                {data.avatarUri ? (
+                  <Image source={{ uri: data.avatarUri }} style={styles.avatarImage} />
+                ) : (
+                  <UserIcon size={38} color="#64748B" strokeWidth={1.8} />
+                )}
+              </View>
+            </LinearGradient>
 
-          {/* Camera Badge */}
-          <View style={styles.cameraBadge}>
-            <Camera size={16} color="#FFFFFF" strokeWidth={2.2} />
+            {/* Camera Floating Badge */}
+            <View style={styles.cameraBadge}>
+              <LinearGradient
+                colors={["#7C3AED", "#6366F1"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.cameraGradient}
+              >
+                <Camera size={12} color="#FFFFFF" strokeWidth={2.2} />
+              </LinearGradient>
+            </View>
+          </Pressable>
+
+          {/* Floating Sparkle Stars Cluster on Right matching Figma */}
+          <View style={styles.sparkleCluster} pointerEvents="none">
+            <Svg width={42} height={42} viewBox="0 0 40 40" fill="none">
+              {/* Primary 4-point Star */}
+              <Path
+                d="M14 4 C14 10 17 13 23 13 C17 13 14 16 14 22 C14 16 11 13 5 13 C11 13 14 10 14 4 Z"
+                fill="rgba(190, 138, 136, 0.85)"
+              />
+              {/* Top-Right Secondary 4-point Star */}
+              <Path
+                d="M30 4 C30 8 32 10 36 10 C32 10 30 12 30 16 C30 12 28 10 24 10 C28 10 30 8 30 4 Z"
+                fill="rgba(190, 138, 136, 0.75)"
+              />
+              {/* Bottom-Right Smallest 4-point Star */}
+              <Path
+                d="M30 24 C30 27 31.5 28.5 34.5 28.5 C31.5 28.5 30 30 30 33 C30 30 28.5 28.5 25.5 28.5 C28.5 28.5 30 27 30 24 Z"
+                fill="rgba(190, 138, 136, 0.65)"
+              />
+            </Svg>
           </View>
-        </Pressable>
+        </View>
 
         <Text style={styles.uploadPhotoText}>UPLOAD PHOTO</Text>
       </View>
 
-      {/* Inputs Form */}
+      {/* Form Input Fields (Full Name, Email Address, Contact Number) */}
       <View style={styles.formGroup}>
         {/* Full Name */}
         <View style={styles.inputCard}>
-          <UserIcon size={20} color="#918EA1" strokeWidth={2} style={styles.inputIcon} />
+          <UserIcon size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
           <TextInput
             value={data.fullName}
             onChangeText={(fullName) => updateData({ fullName })}
             placeholder="Full Name"
-            placeholderTextColor="#918EA1"
+            placeholderTextColor="#6E6C7D"
             style={styles.input}
             selectionColor="#38BDF8"
           />
@@ -133,12 +151,12 @@ export function Step1LetsStart() {
 
         {/* Email Address */}
         <View style={styles.inputCard}>
-          <Mail size={20} color="#918EA1" strokeWidth={2} style={styles.inputIcon} />
+          <Mail size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
           <TextInput
             value={data.email}
             onChangeText={(email) => updateData({ email })}
             placeholder="Email Address"
-            placeholderTextColor="#918EA1"
+            placeholderTextColor="#6E6C7D"
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -149,12 +167,12 @@ export function Step1LetsStart() {
 
         {/* Contact Number */}
         <View style={styles.inputCard}>
-          <Phone size={20} color="#918EA1" strokeWidth={2} style={styles.inputIcon} />
+          <Phone size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
           <TextInput
             value={data.phoneNumber}
             onChangeText={(phoneNumber) => updateData({ phoneNumber })}
             placeholder="Contact Number"
-            placeholderTextColor="#918EA1"
+            placeholderTextColor="#6E6C7D"
             keyboardType="phone-pad"
             style={styles.input}
             selectionColor="#38BDF8"
@@ -162,70 +180,62 @@ export function Step1LetsStart() {
         </View>
       </View>
 
-      {/* Gender Selection Cards */}
+      {/* Gender Selection Cards (Male & Female side by side matching Figma) */}
       <View style={styles.genderRow}>
+        {/* Male Card */}
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel="Select Male"
           onPress={() => handleSelectGender("male")}
-          style={({ pressed }) => [
-            styles.genderCard,
-            data.gender === "male" && styles.genderCardActive,
-            pressed && styles.pressed,
-          ]}
+          style={({ pressed }) => [pressed && styles.pressed]}
         >
-          <Text style={[styles.genderSymbol, data.gender === "male" && styles.genderSymbolActive]}>
-            ♂
-          </Text>
-          <Text style={[styles.genderLabel, data.gender === "male" && styles.genderLabelActive]}>
-            MALE
-          </Text>
+          <View
+            style={[
+              styles.genderCard,
+              { width: cardWidth },
+              styles.maleBorder,
+              data.gender === "male" && styles.maleActiveCard,
+            ]}
+          >
+            <Text style={[styles.genderSymbol, styles.maleSymbol]}>♂</Text>
+            <Text style={styles.genderLabel}>MALE</Text>
+          </View>
         </Pressable>
 
+        {/* Female Card */}
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel="Select Female"
           onPress={() => handleSelectGender("female")}
-          style={({ pressed }) => [
-            styles.genderCard,
-            data.gender === "female" && styles.genderCardActive,
-            pressed && styles.pressed,
-          ]}
+          style={({ pressed }) => [pressed && styles.pressed]}
         >
-          <Text style={[styles.genderSymbol, data.gender === "female" && styles.genderSymbolActive]}>
-            ♀
-          </Text>
-          <Text style={[styles.genderLabel, data.gender === "female" && styles.genderLabelActive]}>
-            FEMALE
-          </Text>
+          <View
+            style={[
+              styles.genderCard,
+              { width: cardWidth },
+              styles.femaleBorder,
+              data.gender === "female" && styles.femaleActiveCard,
+            ]}
+          >
+            <Text style={[styles.genderSymbol, styles.femaleSymbol]}>♀</Text>
+            <Text style={styles.genderLabel}>FEMALE</Text>
+          </View>
         </Pressable>
       </View>
 
-      {/* Age Selector Card */}
+      {/* Age Selector Card: SELECT AGE | Slideable Number Carousel */}
       <View style={styles.ageCard}>
         <View style={styles.ageInfo}>
-          <Text style={styles.ageTitle}>SELECT AGE</Text>
-          <Text style={styles.ageSubtitle}>Years of power</Text>
+          <Text style={styles.ageTitle}>SELECT</Text>
+          <Text style={styles.ageTitle}>AGE</Text>
+          <Text style={styles.ageSubtitle}>Years of</Text>
+          <Text style={styles.ageSubtitle}>power</Text>
         </View>
 
-        <View style={styles.ageWheelRow}>
-          <Pressable onPress={() => handleAdjustAge(-2)} style={styles.ageSideWrapper}>
-            <Text style={styles.ageSideNum}>{data.age - 2}</Text>
-          </Pressable>
-          <Pressable onPress={() => handleAdjustAge(-1)} style={styles.ageSideWrapper}>
-            <Text style={styles.ageSideNum}>{data.age - 1}</Text>
-          </Pressable>
-
-          <View style={styles.ageActiveWrapper}>
-            <View style={styles.ageActiveIndicator} />
-            <Text style={styles.ageActiveNum}>{data.age}</Text>
-          </View>
-
-          <Pressable onPress={() => handleAdjustAge(1)} style={styles.ageSideWrapper}>
-            <Text style={styles.ageSideNum}>{data.age + 1}</Text>
-          </Pressable>
-          <Pressable onPress={() => handleAdjustAge(2)} style={styles.ageSideWrapper}>
-            <Text style={styles.ageSideNum}>{data.age + 2}</Text>
-          </Pressable>
-        </View>
+        <AgeSlider
+          value={data.age}
+          onChange={(age) => updateData({ age })}
+        />
       </View>
 
       {/* Continue CTA */}
@@ -241,54 +251,58 @@ export function Step1LetsStart() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingBottom: 24,
+    paddingBottom: 4,
   },
   hero: {
-    marginTop: 12,
-    marginBottom: 24,
+    marginTop: 0,
+    marginBottom: 6,
   },
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   titleZap: {
-    marginLeft: 8,
+    marginLeft: 6,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 38,
     fontWeight: "900",
     letterSpacing: -0.5,
-    textShadowColor: "rgba(95, 255, 215, 0.75)",
+    textShadowColor: "rgba(56, 189, 248, 0.75)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 18,
   },
   avatarSection: {
     alignItems: "center",
-    marginBottom: 28,
+    marginBottom: 8,
+  },
+  avatarWrapper: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarButton: {
     position: "relative",
   },
-  avatarRing: {
-    width: 124,
-    height: 124,
-    borderRadius: 62,
-    padding: 3,
+  avatarRingGradient: {
+    width: 94,
+    height: 94,
+    borderRadius: 47,
+    padding: 2.5,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#38BDF8",
+    shadowColor: "#2DD4BF",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowRadius: 8,
   },
   avatarInner: {
     width: "100%",
     height: "100%",
-    borderRadius: 60,
-    backgroundColor: "#161928",
+    borderRadius: 44.5,
+    backgroundColor: "#131520",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
@@ -299,38 +313,51 @@ const styles = StyleSheet.create({
   },
   cameraBadge: {
     position: "absolute",
-    bottom: 2,
-    right: 2,
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: "#6366F1",
+    bottom: 0,
+    right: 0,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 2.5,
+    borderColor: "#0E0F17",
+    overflow: "hidden",
+    shadowColor: "#7C3AED",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
+  cameraGradient: {
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "#0F1015",
+  },
+  sparkleCluster: {
+    position: "absolute",
+    right: -24,
+    top: 4,
   },
   uploadPhotoText: {
-    color: "#C8C4D8",
-    fontSize: 11,
-    lineHeight: 16,
+    color: "#94A3B8",
+    fontSize: 9.5,
+    lineHeight: 12,
     fontWeight: "800",
     letterSpacing: 2,
-    marginTop: 12,
+    marginTop: 6,
   },
   formGroup: {
-    gap: 12,
-    marginBottom: 20,
+    gap: 7,
+    marginBottom: 10,
   },
   inputCard: {
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    height: 46,
+    borderRadius: 15,
+    backgroundColor: "#1D1B24",
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
+    borderColor: "rgba(255, 255, 255, 0.08)",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: 15,
   },
   inputIcon: {
     marginRight: 12,
@@ -338,111 +365,97 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
     height: "100%",
   },
   genderRow: {
+    width: "100%",
     flexDirection: "row",
-    gap: 12,
-    marginBottom: 20,
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  genderPressable: {
+    width: "48%",
   },
   genderCard: {
-    flex: 1,
-    height: 120,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    width: "100%",
+    height: 110,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    backgroundColor: "#12131C",
     alignItems: "center",
     justifyContent: "center",
   },
-  genderCardActive: {
+  maleBorder: {
     borderColor: "#38BDF8",
-    backgroundColor: "rgba(56, 189, 248, 0.12)",
-    shadowColor: "#38BDF8",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 4,
+  },
+  maleActiveCard: {
+    borderColor: "#38BDF8",
+    backgroundColor: "#161D2E",
+  },
+  femaleBorder: {
+    borderColor: "#2DD4BF",
+  },
+  femaleActiveCard: {
+    borderColor: "#EC4899",
+    backgroundColor: "#221526",
   },
   genderSymbol: {
-    fontSize: 34,
-    color: "#918EA1",
+    fontSize: 32,
+    lineHeight: 36,
     fontWeight: "700",
-    marginBottom: 6,
+    marginBottom: 4,
   },
-  genderSymbolActive: {
+  maleSymbol: {
     color: "#38BDF8",
   },
+  femaleSymbol: {
+    color: "#EC4899",
+  },
   genderLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "900",
     letterSpacing: 2,
-    color: "#918EA1",
-  },
-  genderLabelActive: {
     color: "#FFFFFF",
   },
   ageCard: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
-    paddingHorizontal: 20,
-    paddingVertical: 18,
+    width: "100%",
+    height: 80,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: "#2DD4BF",
+    backgroundColor: "#12131C",
+    paddingLeft: 18,
+    paddingRight: 8,
+    paddingVertical: 6,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    marginBottom: 8,
+    shadowColor: "#2DD4BF",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
   },
   ageInfo: {
-    flex: 1,
+    width: 76,
+    justifyContent: "center",
   },
   ageTitle: {
     color: "#FFFFFF",
-    fontSize: 13,
+    fontSize: 10.5,
+    lineHeight: 13,
     fontWeight: "900",
-    letterSpacing: 1.8,
-    marginBottom: 4,
+    letterSpacing: 1.6,
   },
   ageSubtitle: {
-    color: "#918EA1",
-    fontSize: 12,
-    fontWeight: "500",
-  },
-  ageWheelRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  ageSideWrapper: {
-    padding: 6,
-  },
-  ageSideNum: {
-    color: "#918EA1",
-    fontSize: 17,
-    fontWeight: "700",
-    opacity: 0.45,
-  },
-  ageActiveWrapper: {
-    alignItems: "center",
-    paddingHorizontal: 6,
-  },
-  ageActiveIndicator: {
-    width: 6,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: "#38BDF8",
-    marginBottom: 2,
-  },
-  ageActiveNum: {
-    color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 38,
-    fontWeight: "900",
+    color: "#64748B",
+    fontSize: 8.5,
+    lineHeight: 11,
+    fontWeight: "600",
   },
   pressed: {
     opacity: 0.82,
-    transform: [{ scale: 0.99 }],
+    transform: [{ scale: 0.985 }],
   },
 });

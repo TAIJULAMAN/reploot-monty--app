@@ -36,7 +36,7 @@ export function ProfileNavigationButton({
         disabled={disabled}
         onPress={handlePress}
         style={({ pressed }) => [
-          styles.button,
+          styles.buttonPressable,
           disabled && styles.buttonDisabled,
           pressed && !disabled && styles.buttonPressed,
         ]}
@@ -44,17 +44,17 @@ export function ProfileNavigationButton({
         <LinearGradient
           colors={
             disabled
-              ? ["rgba(68, 116, 168, 0.4)", "rgba(110, 168, 228, 0.4)"]
-              : ["#4474A8", "#558DC2", "#6EA8E4"]
+              ? ["rgba(53, 112, 173, 0.35)", "rgba(98, 162, 229, 0.35)"]
+              : ["#3570AD", "#4A88CC", "#62A2E5"]
           }
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-          style={styles.gradient}
+          start={{ x: 0, y: 0.2 }}
+          end={{ x: 1, y: 0.8 }}
+          style={styles.gradientPill}
         >
           <Text style={[styles.text, disabled && styles.textDisabled]}>{title}</Text>
           {showArrow && (
             <ArrowRight
-              size={20}
+              size={18}
               color={disabled ? "rgba(255, 255, 255, 0.5)" : "#FFFFFF"}
               strokeWidth={2.4}
               style={styles.arrow}
@@ -71,44 +71,40 @@ export function ProfileNavigationButton({
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    alignItems: "center",
-    marginTop: 24,
-    marginBottom: 16,
+    marginTop: 10,
+    marginBottom: 6,
   },
-  button: {
+  buttonPressable: {
     width: "100%",
-    height: 62,
-    borderRadius: 31,
-    overflow: "hidden",
-    shadowColor: "#6C5CFF",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 8,
+    height: 52,
+    borderRadius: 26,
+    shadowColor: "#2B6CB0",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
   },
   buttonDisabled: {
     opacity: 0.5,
-    shadowOpacity: 0,
-    elevation: 0,
   },
   buttonPressed: {
     opacity: 0.88,
     transform: [{ scale: 0.985 }],
   },
-  gradient: {
-    flex: 1,
-    borderRadius: 31,
+  gradientPill: {
+    width: "100%",
+    height: 52,
+    borderRadius: 26,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: 22,
   },
   text: {
     color: "#FFFFFF",
-    fontSize: 17,
-    lineHeight: 22,
+    fontSize: 15,
+    lineHeight: 20,
     fontWeight: "900",
-    letterSpacing: 3,
+    letterSpacing: 2.2,
     textTransform: "uppercase",
   },
   textDisabled: {
@@ -118,13 +114,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   subtext: {
-    color: "#7E7B8E",
-    fontSize: 10,
-    lineHeight: 14,
+    color: "#475569",
+    fontSize: 9,
+    lineHeight: 13,
     fontWeight: "800",
-    letterSpacing: 1.2,
+    letterSpacing: 1.4,
     textTransform: "uppercase",
     textAlign: "center",
-    marginTop: 14,
+    marginTop: 8,
   },
 });
