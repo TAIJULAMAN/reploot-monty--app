@@ -163,6 +163,21 @@ export default function DevVerificationScreen() {
           subtitle="Bottom nav, level card, macro rings"
           onPress={() => router.push("/(tabs)/home")}
         />
+        <RoutePreviewButton
+          title="Gym Workouts: Select Your Path"
+          subtitle="Path selection, push, pull, library"
+          onPress={() => router.push("/workouts")}
+        />
+        <RoutePreviewButton
+          title="Workout Routine: Pull Day"
+          subtitle="AI-crafted routine, 5 exercises, XP & stats"
+          onPress={() => router.push("/workouts/pull")}
+        />
+        <RoutePreviewButton
+          title="Workout Library: Categories"
+          subtitle="Accurate design with 8 categories and library images"
+          onPress={() => router.push("/workouts/library")}
+        />
       </View>
     </Screen>
   );
