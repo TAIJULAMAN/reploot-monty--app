@@ -1,1 +1,7 @@
 export * from "@/shared/types/workout";
+export * from "./components";
+export * from "./data/workoutPaths";
+export * from "./data/pushDayData";
+export * from "./data/pullDayData";
+export * from "./data/workoutLibraryData";
+export * from "./data/workoutLibraryDetailData";
