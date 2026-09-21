@@ -1,27 +1,19 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { WorkoutModalitiesSection } from "@/features/home";
+import { useAuthStore } from "@/stores/authStore";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 import {
-  Flame,
-  Zap,
-  Play,
-  Clock,
-  Dumbbell,
   Activity,
   Award,
-  ChevronRight,
+  Clock,
+  Flame,
+  Play,
   Sparkles,
+  Zap,
 } from "lucide-react-native";
-import { useAuthStore } from "@/stores/authStore";
-import { colors } from "@/theme/colors";
+import React from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeTabRoute() {
   const insets = useSafeAreaInsets();
@@ -35,9 +27,15 @@ export default function HomeTabRoute() {
 
       {/* Cyber Ambient Background Glows */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: "#080A10" }]} />
+        <View
+          style={[StyleSheet.absoluteFill, { backgroundColor: "#080A10" }]}
+        />
         <LinearGradient
-          colors={["rgba(56, 189, 248, 0.12)", "rgba(99, 102, 241, 0.05)", "transparent"]}
+          colors={[
+            "rgba(56, 189, 248, 0.12)",
+            "rgba(99, 102, 241, 0.05)",
+            "transparent",
+          ]}
           start={{ x: 0.1, y: 0 }}
           end={{ x: 0.9, y: 0.5 }}
           style={styles.ambientTopGlow}
@@ -87,7 +85,8 @@ export default function HomeTabRoute() {
               <Text style={styles.aiCoachBadgeText}>AI COACH READY</Text>
             </View>
             <Text style={styles.aiCoachMessage}>
-              Biomechanics calibrated • Target routine ready for your next session.
+              Biomechanics calibrated • Target routine ready for your next
+              session.
             </Text>
           </LinearGradient>
         </View>
@@ -138,7 +137,12 @@ export default function HomeTabRoute() {
                 end={{ x: 1, y: 0 }}
                 style={styles.startWorkoutGradient}
               >
-                <Play size={18} color="#0B0E14" fill="#0B0E14" style={{ marginRight: 8 }} />
+                <Play
+                  size={18}
+                  color="#0B0E14"
+                  fill="#0B0E14"
+                  style={{ marginRight: 8 }}
+                />
                 <Text style={styles.startWorkoutText}>START WORKOUT</Text>
               </LinearGradient>
             </Pressable>
@@ -172,21 +176,8 @@ export default function HomeTabRoute() {
         </View>
 
         {/* Training Modalities */}
-        <Text style={styles.sectionHeading}>TRAINING MODALITIES</Text>
-        <View style={styles.modalitiesColumn}>
-          <ModalityCard
-            title="Gym Strength Routine"
-            subtitle="Full rack, barbell & dumbbell protocol"
-            icon={<Dumbbell size={20} color="#2DD4BF" />}
-            tag="HEAVY WEIGHTS"
-          />
-          <ModalityCard
-            title="Home Bodyweight & Bands"
-            subtitle="Zero equipment, explosive calisthenics"
-            icon={<Zap size={20} color="#38BDF8" />}
-            tag="NO EQUIPMENT"
-          />
-        </View>
+        {/* <Text style={styles.sectionHeading}>TRAINING MODALITIES</Text> */}
+        <WorkoutModalitiesSection style={styles.modalitiesSection} />
       </ScrollView>
     </View>
   );
@@ -214,32 +205,6 @@ function MetricCard({
       <Text style={[styles.metricValue, { color }]}>{current}</Text>
       <Text style={styles.metricTarget}>/ {target}</Text>
     </View>
-  );
-}
-
-function ModalityCard({
-  title,
-  subtitle,
-  icon,
-  tag,
-}: {
-  title: string;
-  subtitle: string;
-  icon: React.ReactNode;
-  tag: string;
-}) {
-  return (
-    <Pressable style={styles.modalityCard}>
-      <View style={styles.modalityIconWrapper}>{icon}</View>
-      <View style={styles.modalityInfo}>
-        <View style={styles.modalityTagRow}>
-          <Text style={styles.modalityTag}>{tag}</Text>
-        </View>
-        <Text style={styles.modalityTitle}>{title}</Text>
-        <Text style={styles.modalitySubtitle}>{subtitle}</Text>
-      </View>
-      <ChevronRight size={18} color="#64748B" />
-    </Pressable>
   );
 }
 
@@ -474,50 +439,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginTop: 2,
   },
-  modalitiesColumn: {
-    gap: 12,
-  },
-  modalityCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#0F1320",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.06)",
-    padding: 16,
-  },
-  modalityIconWrapper: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 14,
-  },
-  modalityInfo: {
-    flex: 1,
-  },
-  modalityTagRow: {
-    marginBottom: 4,
-  },
-  modalityTag: {
-    color: "#64748B",
-    fontSize: 9,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
-  modalityTitle: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "700",
-    marginBottom: 2,
-  },
-  modalitySubtitle: {
-    color: "#94A3B8",
-    fontSize: 12,
-    lineHeight: 16,
+  modalitiesSection: {
+    marginBottom: 24,
   },
 });
