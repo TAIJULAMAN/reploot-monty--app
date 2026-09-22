@@ -1,16 +1,30 @@
-import React from "react";
-import { View, Text, StyleSheet, Pressable, useWindowDimensions } from "react-native";
-import Svg, { Path, Circle, Rect } from "react-native-svg";
-import { LinearGradient } from "expo-linear-gradient";
+import { WorkoutStyle } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import Svg, { Circle, Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
-import { WorkoutStyle } from "@/shared/types/user";
 
-// Custom Dumbbell Icon matching Figma (angled barbell with weights)
 function GymDumbbellIcon({ color = "#FB923C" }: { color?: string }) {
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Path d="m6.5 6.5 11 11" />
       <Path d="m21 21-1-1" />
       <Path d="m3 3 1 1" />
@@ -21,28 +35,37 @@ function GymDumbbellIcon({ color = "#FB923C" }: { color?: string }) {
     </Svg>
   );
 }
-
-// Custom Home Icon matching Figma
 function HomeRoofIcon({ color = "#C4B5FD" }: { color?: string }) {
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Path d="M3 10.5L12 3l9 7.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <Path d="M9 22V12h6v10" />
     </Svg>
   );
 }
-
-// Check Circle matching Figma (cyan circle outline with checkmark)
 function CheckCircleIcon({ color = "#2DD4BF" }: { color?: string }) {
   return (
     <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
       <Circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.8" />
-      <Path d="M8 12.5L10.5 15L16 9" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <Path
+        d="M8 12.5L10.5 15L16 9"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </Svg>
   );
 }
-
-// Title Sparkle Cluster
 function TitleSparkleCluster() {
   return (
     <Svg width={28} height={28} viewBox="0 0 28 28" fill="none">
@@ -102,15 +125,19 @@ const DayPillItem = React.memo(
         )}
       </Pressable>
     );
-  }
+  },
 );
 
 export function Step4YourStyle() {
   const { width } = useWindowDimensions();
   const pillWidth = Math.floor((width - 40 - 24) / 3);
 
-  const selectedStyle = useProfileSetupStore((s) => s.data.workoutStyle || "gym");
-  const selectedDays = useProfileSetupStore((s) => s.data.workoutDaysPerWeek || 3);
+  const selectedStyle = useProfileSetupStore(
+    (s) => s.data.workoutStyle || "gym",
+  );
+  const selectedDays = useProfileSetupStore(
+    (s) => s.data.workoutDaysPerWeek || 3,
+  );
   const updateData = useProfileSetupStore((s) => s.updateData);
   const nextStep = useProfileSetupStore((s) => s.nextStep);
 
@@ -125,7 +152,7 @@ export function Step4YourStyle() {
       });
       updateData({ workoutStyle });
     },
-    [updateData]
+    [updateData],
   );
 
   const handleSelectDays = React.useCallback(
@@ -139,7 +166,7 @@ export function Step4YourStyle() {
       });
       updateData({ workoutDaysPerWeek });
     },
-    [updateData]
+    [updateData],
   );
 
   return (

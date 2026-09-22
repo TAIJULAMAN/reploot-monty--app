@@ -1,7 +1,6 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { AppText, Button, Screen } from "@/shared/components/ui";
 import { useRouter } from "expo-router";
-import { Screen, AppText, Button } from "@/shared/components/ui";
+import { StyleSheet, View } from "react-native";
 
 export default function ActionTabRoute() {
   const router = useRouter();
@@ -16,7 +15,8 @@ export default function ActionTabRoute() {
           START WORKOUT
         </AppText>
         <AppText variant="bodyMD" color="secondary" style={styles.description}>
-          Select Your Path: Gym Workout (Full Equipment) or Home Workout (Bodyweight & Dumbbells).
+          Select Your Path: Gym Workout (Full Equipment) or Home Workout
+          (Bodyweight & Dumbbells).
         </AppText>
 
         <Button

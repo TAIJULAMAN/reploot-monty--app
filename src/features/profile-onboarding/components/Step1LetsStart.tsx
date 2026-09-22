@@ -1,22 +1,27 @@
-import React from "react";
+import * as Haptics from "expo-haptics";
+import * as ImagePicker from "expo-image-picker";
+import { LinearGradient } from "expo-linear-gradient";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Pressable,
+  Camera,
+  Mail,
+  Phone,
+  User as UserIcon,
+  Zap,
+} from "lucide-react-native";
+import {
   Alert,
   Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
   useWindowDimensions,
+  View,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Camera, Mail, Phone, User as UserIcon, Zap } from "lucide-react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as Haptics from "expo-haptics";
 import Svg, { Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { AgeSlider } from "./AgeSlider";
+import { ProfileNavigationButton } from "./ProfileNavigationButton";
 
 export function Step1LetsStart() {
   const { width } = useWindowDimensions();
@@ -26,11 +31,12 @@ export function Step1LetsStart() {
   const handlePickAvatar = async () => {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permission =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permission.granted) {
         Alert.alert(
           "Permission Required",
-          "Please grant camera roll permissions to upload your profile avatar."
+          "Please grant camera roll permissions to upload your profile avatar.",
         );
         return;
       }
@@ -61,26 +67,30 @@ export function Step1LetsStart() {
     });
   };
 
-
   return (
     <View style={styles.container}>
-      {/* Title: LET'S ⚡ START */}
       <View style={styles.hero}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>LET'S</Text>
-          <Zap size={24} color="#38BDF8" fill="#38BDF8" style={styles.titleZap} />
+          <Zap
+            size={24}
+            color="#38BDF8"
+            fill="#38BDF8"
+            style={styles.titleZap}
+          />
         </View>
         <Text style={styles.title}>START</Text>
       </View>
-
-      {/* Avatar Upload Section: Circular Neon Rim & Sparkles */}
       <View style={styles.avatarSection}>
         <View style={styles.avatarWrapper}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Upload profile photo"
             onPress={handlePickAvatar}
-            style={({ pressed }) => [styles.avatarButton, pressed && styles.pressed]}
+            style={({ pressed }) => [
+              styles.avatarButton,
+              pressed && styles.pressed,
+            ]}
           >
             {/* Luminous Gradient Ring (Blue to Mint) */}
             <LinearGradient
@@ -91,7 +101,10 @@ export function Step1LetsStart() {
             >
               <View style={styles.avatarInner}>
                 {data.avatarUri ? (
-                  <Image source={{ uri: data.avatarUri }} style={styles.avatarImage} />
+                  <Image
+                    source={{ uri: data.avatarUri }}
+                    style={styles.avatarImage}
+                  />
                 ) : (
                   <UserIcon size={38} color="#64748B" strokeWidth={1.8} />
                 )}
@@ -135,12 +148,14 @@ export function Step1LetsStart() {
 
         <Text style={styles.uploadPhotoText}>UPLOAD PHOTO</Text>
       </View>
-
-      {/* Form Input Fields (Full Name, Email Address, Contact Number) */}
       <View style={styles.formGroup}>
-        {/* Full Name */}
         <View style={styles.inputCard}>
-          <UserIcon size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
+          <UserIcon
+            size={16}
+            color="#8E8B9E"
+            strokeWidth={2}
+            style={styles.inputIcon}
+          />
           <TextInput
             value={data.fullName}
             onChangeText={(fullName) => updateData({ fullName })}
@@ -153,7 +168,12 @@ export function Step1LetsStart() {
 
         {/* Email Address */}
         <View style={styles.inputCard}>
-          <Mail size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
+          <Mail
+            size={16}
+            color="#8E8B9E"
+            strokeWidth={2}
+            style={styles.inputIcon}
+          />
           <TextInput
             value={data.email}
             onChangeText={(email) => updateData({ email })}
@@ -169,7 +189,12 @@ export function Step1LetsStart() {
 
         {/* Contact Number */}
         <View style={styles.inputCard}>
-          <Phone size={16} color="#8E8B9E" strokeWidth={2} style={styles.inputIcon} />
+          <Phone
+            size={16}
+            color="#8E8B9E"
+            strokeWidth={2}
+            style={styles.inputIcon}
+          />
           <TextInput
             value={data.phoneNumber}
             onChangeText={(phoneNumber) => updateData({ phoneNumber })}
@@ -181,10 +206,7 @@ export function Step1LetsStart() {
           />
         </View>
       </View>
-
-      {/* Gender Selection Cards (Male & Female side by side matching Figma) */}
       <View style={styles.genderRow}>
-        {/* Male Card */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Select Male"
@@ -228,8 +250,6 @@ export function Step1LetsStart() {
           </View>
         </Pressable>
       </View>
-
-      {/* Age Selector Card: SELECT AGE | Slideable Number Carousel */}
       <View style={styles.ageCard}>
         <View style={styles.ageInfo}>
           <Text style={styles.ageTitle}>SELECT</Text>
@@ -238,13 +258,8 @@ export function Step1LetsStart() {
           <Text style={styles.ageSubtitle}>power</Text>
         </View>
 
-        <AgeSlider
-          value={data.age}
-          onChange={(age) => updateData({ age })}
-        />
+        <AgeSlider value={data.age} onChange={(age) => updateData({ age })} />
       </View>
-
-      {/* Continue CTA */}
       <ProfileNavigationButton
         title="CONTINUE"
         onPress={nextStep}

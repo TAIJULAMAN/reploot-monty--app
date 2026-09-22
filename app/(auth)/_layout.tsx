@@ -1,4 +1,3 @@
-import React from "react";
 import { Stack } from "expo-router";
 
 export default function AuthLayout() {
@@ -7,7 +6,7 @@ export default function AuthLayout() {
       screenOptions={{
         headerShown: false,
         animation: "slide_from_right",
-        animationDuration: 220,
+        animationDuration: 320,
         freezeOnBlur: true,
       }}
     />

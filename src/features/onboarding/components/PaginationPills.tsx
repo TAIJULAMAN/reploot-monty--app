@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Pressable, Animated } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
+import { Animated, Pressable, StyleSheet, View } from "react-native";
 
 interface PaginationPillsProps {
   total?: number;
@@ -49,7 +49,7 @@ const PillItem: React.FC<{
         toValue: isActive ? 46 : 22,
         tension: 50,
         friction: 8,
-        useNativeDriver: false, // width requires layout driver
+        useNativeDriver: false,
       }),
       Animated.timing(opacityAnim, {
         toValue: isActive ? 1 : 0.25,

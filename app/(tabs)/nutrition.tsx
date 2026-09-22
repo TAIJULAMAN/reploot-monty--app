@@ -1,7 +1,6 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { AppText, Button, Screen } from "@/shared/components/ui";
 import { useRouter } from "expo-router";
-import { Screen, AppText, Button } from "@/shared/components/ui";
+import { StyleSheet, View } from "react-native";
 
 export default function NutritionTabRoute() {
   const router = useRouter();
@@ -16,7 +15,8 @@ export default function NutritionTabRoute() {
           PRECISION NUTRITION
         </AppText>
         <AppText variant="bodyMD" color="secondary" style={styles.description}>
-          AI Food Scanner, Daily Macro Budgets, Hydration Quick Log, and Meal Planning.
+          AI Food Scanner, Daily Macro Budgets, Hydration Quick Log, and Meal
+          Planning.
         </AppText>
 
         <Button

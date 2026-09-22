@@ -1,13 +1,18 @@
-import React, { useCallback } from "react";
-import { View, Text, StyleSheet, Pressable, useWindowDimensions } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Svg, { Path, Circle, Rect } from "react-native-svg";
+import { FitnessGoal } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useCallback } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
-import { FitnessGoal } from "@/shared/types/user";
 
-// Custom SVG Icons matched 100% to Figma page 4
 function ScaleBoxIcon({ isSelected }: { isSelected: boolean }) {
   const strokeColor = isSelected ? "#FFFFFF" : "#E2E8F0";
   return (
@@ -74,10 +79,30 @@ function StopwatchIcon({ isSelected }: { isSelected: boolean }) {
   return (
     <Svg width={25} height={25} viewBox="0 0 24 24" fill="none">
       <Circle cx="12" cy="13.5" r="7.5" stroke={strokeColor} strokeWidth="2" />
-      <Path d="M12 9.5v4" stroke={strokeColor} strokeWidth="2.2" strokeLinecap="round" />
-      <Path d="M10 2.5h4" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
-      <Path d="M12 2.5v3" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
-      <Path d="M17.5 7.5l1.5-1.5" stroke={strokeColor} strokeWidth="2" strokeLinecap="round" />
+      <Path
+        d="M12 9.5v4"
+        stroke={strokeColor}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <Path
+        d="M10 2.5h4"
+        stroke={strokeColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <Path
+        d="M12 2.5v3"
+        stroke={strokeColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <Path
+        d="M17.5 7.5l1.5-1.5"
+        stroke={strokeColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </Svg>
   );
 }
@@ -94,23 +119,19 @@ function MeditationIcon({ isSelected }: { isSelected: boolean }) {
   );
 }
 
-// Bottom Sparkle Cluster (Figma 4-point stars)
 function SparkleCluster() {
   return (
     <Svg width={38} height={38} viewBox="0 0 38 38" fill="none">
-      {/* Primary large 4-point star */}
       <Path
         d="M16 4C16 9.523 20.477 14 26 14C20.477 14 16 18.477 16 24C16 18.477 11.523 14 6 14C11.523 14 16 9.523 16 4Z"
         fill="#38EDD8"
         opacity="0.9"
       />
-      {/* Top right smaller star */}
       <Path
         d="M29 4C29 6.761 31.239 9 34 9C31.239 9 29 11.239 29 14C29 11.239 26.761 9 24 9C26.761 9 29 6.761 29 4Z"
         fill="#38EDD8"
         opacity="0.65"
       />
-      {/* Bottom right smaller star */}
       <Path
         d="M30 20C30 22.209 31.791 24 34 24C31.791 24 30 25.791 30 28C30 25.791 28.209 24 26 24C28.209 24 30 22.209 30 20Z"
         fill="#38EDD8"
@@ -201,7 +222,10 @@ const GoalCardItem = React.memo(function GoalCardItem({
           colors={["#818CF8", "#22D3EE", "#38EDD8"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={[styles.cardActiveGradient, { width: cardWidth, height: cardHeight }]}
+          style={[
+            styles.cardActiveGradient,
+            { width: cardWidth, height: cardHeight },
+          ]}
         >
           <View style={styles.cardActiveInner}>
             {/* Circular Icon Badge */}
@@ -214,7 +238,12 @@ const GoalCardItem = React.memo(function GoalCardItem({
           </View>
         </LinearGradient>
       ) : (
-        <View style={[styles.cardInactive, { width: cardWidth, height: cardHeight }]}>
+        <View
+          style={[
+            styles.cardInactive,
+            { width: cardWidth, height: cardHeight },
+          ]}
+        >
           {/* Circular Icon Badge */}
           <View style={styles.iconCircleInactive}>{opt.icon(false)}</View>
 
@@ -234,14 +263,12 @@ export function Step3YourGoal() {
   const selectedGoal = primaryGoal || "build_muscle";
   const updateData = useProfileSetupStore((s) => s.updateData);
   const nextStep = useProfileSetupStore((s) => s.nextStep);
-
-  // Exact deterministic card calculations:
-  // 24dp padding on left & right = 48dp total
-  // 14dp gap between cards
   const horizontalPadding = 20;
   const cardGap = 14;
-  const cardWidth = Math.floor((screenWidth - horizontalPadding * 2 - cardGap) / 2);
-  const cardHeight = Math.round(cardWidth * 0.80);
+  const cardWidth = Math.floor(
+    (screenWidth - horizontalPadding * 2 - cardGap) / 2,
+  );
+  const cardHeight = Math.round(cardWidth * 0.8);
 
   const handleSelectGoal = useCallback(
     (goal: FitnessGoal) => {
@@ -254,18 +281,15 @@ export function Step3YourGoal() {
         }
       });
     },
-    [updateData]
+    [updateData],
   );
 
   return (
     <View style={styles.container}>
-      {/* Title Hero with radiant cyan neon glow */}
       <View style={styles.hero}>
         <Text style={styles.title}>YOUR</Text>
         <Text style={styles.title}>GOAL</Text>
       </View>
-
-      {/* 2x3 Grid of Goal Cards: Deterministic Symmetrical Flex */}
       <View style={[styles.gridContainer, { width: cardWidth * 2 + cardGap }]}>
         {GOAL_PAIRS.map((pair, rowIndex) => (
           <View key={rowIndex} style={[styles.row, { gap: cardGap }]}>
@@ -282,13 +306,9 @@ export function Step3YourGoal() {
           </View>
         ))}
       </View>
-
-      {/* Decorative Sparkle bottom right */}
       <View style={[styles.sparkleRow, { width: cardWidth * 2 + cardGap }]}>
         <SparkleCluster />
       </View>
-
-      {/* Continue CTA Button */}
       <View style={{ width: "100%", paddingHorizontal: horizontalPadding }}>
         <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
       </View>
@@ -405,4 +425,3 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
 });
-

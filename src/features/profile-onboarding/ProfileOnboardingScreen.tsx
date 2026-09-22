@@ -1,23 +1,18 @@
-import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import Svg, { Line as SvgLine } from "react-native-svg";
-import Animated, {
-  FadeInRight,
-  FadeInLeft,
-  FadeOutLeft,
-  FadeOutRight,
-} from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useRef } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import Animated, { FadeInLeft, FadeInRight } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useProfileSetupStore } from "./store/profileSetupStore";
+import Svg, { Line as SvgLine } from "react-native-svg";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { Step1LetsStart } from "./components/Step1LetsStart";
 import { Step2YourBody } from "./components/Step2YourBody";
 import { Step3YourGoal } from "./components/Step3YourGoal";
 import { Step4YourStyle } from "./components/Step4YourStyle";
 import { Step5YourCoach } from "./components/Step5YourCoach";
+import { useProfileSetupStore } from "./store/profileSetupStore";
 
 export function ProfileOnboardingScreen() {
   const router = useRouter();
@@ -43,36 +38,57 @@ export function ProfileOnboardingScreen() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Ambient Lighting Background (Hardware-accelerated self-contained gradients) */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: "#090A10" }]} />
-
-        {/* Top-left soft violet radial bloom */}
+        <View
+          style={[StyleSheet.absoluteFill, { backgroundColor: "#090A10" }]}
+        />
         <LinearGradient
-          colors={["rgba(99, 102, 241, 0.24)", "rgba(99, 102, 241, 0.06)", "transparent"]}
+          colors={[
+            "rgba(99, 102, 241, 0.24)",
+            "rgba(99, 102, 241, 0.06)",
+            "transparent",
+          ]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0.8, y: 0.7 }}
           style={[styles.glowOrb, { top: -60, left: -60 }]}
         />
-
-        {/* Bottom-right soft cyber mint bloom */}
         <LinearGradient
-          colors={["transparent", "rgba(56, 237, 216, 0.08)", "rgba(56, 237, 216, 0.22)"]}
+          colors={[
+            "transparent",
+            "rgba(56, 237, 216, 0.08)",
+            "rgba(56, 237, 216, 0.22)",
+          ]}
           start={{ x: 0.2, y: 0.3 }}
           end={{ x: 1, y: 1 }}
           style={[styles.glowOrb, { bottom: -60, right: -60 }]}
         />
-
-        {/* Subtle Cyber Diagonal Laser Lines */}
         <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine x1="420" y1="-20" x2="-40" y2="440" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
-          <SvgLine x1="460" y1="260" x2="-40" y2="760" stroke="rgba(56, 189, 248, 0.04)" strokeWidth="1" />
-          <SvgLine x1="480" y1="560" x2="-40" y2="1080" stroke="rgba(56, 237, 216, 0.04)" strokeWidth="1" />
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
         </Svg>
       </View>
-
-      {/* Top Fixed Header with Progress Tracker */}
       <View style={{ paddingTop: Math.max(insets.top + 6, 16) }}>
         <ProfileHeader
           currentStep={currentStep}
@@ -81,8 +97,6 @@ export function ProfileOnboardingScreen() {
           showBack={currentStep > 1}
         />
       </View>
-
-      {/* Scrollable Content for Active Step */}
       <ScrollView
         ref={scrollRef}
         bounces={false}
@@ -98,9 +112,7 @@ export function ProfileOnboardingScreen() {
         <Animated.View
           key={currentStep}
           entering={
-            isForward
-              ? FadeInRight.duration(140)
-              : FadeInLeft.duration(140)
+            isForward ? FadeInRight.duration(140) : FadeInLeft.duration(140)
           }
           style={styles.stepAnimatedWrapper}
         >

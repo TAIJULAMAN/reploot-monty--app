@@ -1,8 +1,7 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowRight } from "lucide-react-native";
-import * as Haptics from "expo-haptics";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface ProfileNavigationButtonProps {
   title?: string;
@@ -55,7 +54,9 @@ export function ProfileNavigationButton({
           end={{ x: 1, y: 0.8 }}
           style={styles.gradientPill}
         >
-          <Text style={[styles.text, disabled && styles.textDisabled]}>{title}</Text>
+          <Text style={[styles.text, disabled && styles.textDisabled]}>
+            {title}
+          </Text>
           {showArrow && (
             <ArrowRight
               size={20}

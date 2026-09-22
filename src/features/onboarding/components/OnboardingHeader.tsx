@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface OnboardingHeaderProps {
   showSkip?: boolean;
@@ -27,23 +27,20 @@ export const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
 
   return (
     <View
-      style={[
-        styles.container,
-        { paddingTop: Math.max(insets.top, 24) + 12 },
-      ]}
+      style={[styles.container, { paddingTop: Math.max(insets.top, 24) + 12 }]}
       pointerEvents="box-none"
     >
-      {/* Brand Wordmark */}
       <Pressable onPress={onLogoPress} hitSlop={12}>
         <Text style={styles.brandTitle}>KINETQX</Text>
       </Pressable>
-
-      {/* Skip Action Button */}
       {showSkip ? (
         <Pressable
           onPress={handleSkip}
           hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-          style={({ pressed }) => [styles.skipButton, pressed && styles.skipPressed]}
+          style={({ pressed }) => [
+            styles.skipButton,
+            pressed && styles.skipPressed,
+          ]}
         >
           <Text style={styles.skipText}>SKIP</Text>
         </Pressable>
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
   skipText: {
     color: "#CBD5E1",
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "400",
     letterSpacing: 2.5,
     textTransform: "uppercase",
   },

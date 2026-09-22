@@ -1,14 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Animated,
-  useWindowDimensions,
-} from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "@/theme/colors";
 
 interface SplashScreenProps {
   onDismiss: () => void;
@@ -20,12 +12,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   autoDismissTimeout = 1800,
 }) => {
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.96)).current;
 
   useEffect(() => {
-    // Fade in and slight scale up
     Animated.parallel([
       Animated.timing(opacityAnim, {
         toValue: 1,
@@ -40,7 +30,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       }),
     ]).start();
 
-    // Auto dismiss after timeout
     const timer = setTimeout(() => {
       handleFadeOut();
     }, autoDismissTimeout);

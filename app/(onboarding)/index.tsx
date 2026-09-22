@@ -1,50 +1,44 @@
-import React, { useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  useWindowDimensions,
-  Pressable,
-  Text,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import { LinearGradient } from "expo-linear-gradient";
-import * as Haptics from "expo-haptics";
-import { ArrowRight } from "lucide-react-native";
-import { useAppStore } from "@/stores/appStore";
 import {
   ONBOARDING_SLIDES,
-  OnboardingSlideItem,
-  useOnboardingStore,
-  SplashScreen,
   OnboardingHeader,
-  PaginationPills,
   OnboardingSlide,
+  OnboardingSlideItem,
+  PaginationPills,
+  SplashScreen,
+  useOnboardingStore,
 } from "@/features/onboarding";
-
+import { useAppStore } from "@/stores/appStore";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { ArrowRight } from "lucide-react-native";
+import React, { useRef, useState } from "react";
+import {
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function OnboardingScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
   const setHasSeenOnboarding = useAppStore((s) => s.setHasSeenOnboarding);
-  const {
-    currentSlideIndex,
-    setSlideIndex,
-    isSplashVisible,
-    setSplashVisible,
-  } = useOnboardingStore();
+  const { setSlideIndex, isSplashVisible, setSplashVisible } =
+    useOnboardingStore();
 
   const flatListRef = useRef<FlatList<OnboardingSlideItem>>(null);
   const [activePage, setActivePage] = useState(0);
 
   const isFinalSlide = activePage === ONBOARDING_SLIDES.length - 1;
 
-  // Handle scroll / swipe gesture
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const page = Math.round(offsetX / width);
@@ -61,9 +55,7 @@ export default function OnboardingScreen() {
     requestAnimationFrame(() => {
       try {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      } catch {
-        // ignore
-      }
+      } catch {}
     });
   };
 
@@ -83,7 +75,6 @@ export default function OnboardingScreen() {
   };
 
   const handleSkip = () => {
-    // Jump directly to final "TRAIN SMARTER" slide
     scrollToSlide(ONBOARDING_SLIDES.length - 1);
   };
 
@@ -92,7 +83,9 @@ export default function OnboardingScreen() {
     router.replace("/(auth)/sign-in");
     requestAnimationFrame(() => {
       try {
-        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        void Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
       } catch {
         // ignore
       }
@@ -100,30 +93,26 @@ export default function OnboardingScreen() {
   };
 
   const renderSlideItem = React.useCallback(
-    ({ item }: { item: OnboardingSlideItem }) => <OnboardingSlide slide={item} />,
-    []
+    ({ item }: { item: OnboardingSlideItem }) => (
+      <OnboardingSlide slide={item} />
+    ),
+    [],
   );
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
-      {/* Splash Screen Overlay (Page 2) */}
       {isSplashVisible && (
         <SplashScreen
           onDismiss={() => setSplashVisible(false)}
           autoDismissTimeout={1800}
         />
       )}
-
-      {/* Top Header with Logo & Skip (Pages 3-6) */}
       <OnboardingHeader
         showSkip={!isFinalSlide}
         onSkip={handleSkip}
         onLogoPress={() => setSplashVisible(true)}
       />
-
-      {/* Horizontal Paging Slides */}
       <FlatList
         ref={flatListRef}
         data={ONBOARDING_SLIDES}
@@ -148,8 +137,6 @@ export default function OnboardingScreen() {
         })}
         style={styles.flatList}
       />
-
-      {/* Bottom Floating Control Bar (HUD Indicators & Gradient Button) */}
       <View
         style={[
           styles.bottomControls,
@@ -157,7 +144,6 @@ export default function OnboardingScreen() {
         ]}
         pointerEvents="box-none"
       >
-        {/* Pagination Indicator Pills (Hidden on Slide 4 / Final Screen) */}
         {!isFinalSlide ? (
           <View style={styles.paginationWrapper}>
             <PaginationPills
@@ -170,7 +156,6 @@ export default function OnboardingScreen() {
           <View style={styles.paginationSpacer} />
         )}
 
-        {/* Dynamic Action Button (NEXT -> / GET STARTED ->) */}
         <View style={styles.buttonContainer}>
           <Pressable
             onPress={handleNext}
@@ -262,7 +247,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "800",
+    fontWeight: "600",
     letterSpacing: 2,
     textTransform: "uppercase",
   },

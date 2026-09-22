@@ -1,7 +1,6 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { AppText, Button, Screen } from "@/shared/components/ui";
 import { useRouter } from "expo-router";
-import { Screen, AppText, Button } from "@/shared/components/ui";
+import { StyleSheet, View } from "react-native";
 
 export default function CoachRoute() {
   const router = useRouter();
@@ -16,7 +15,8 @@ export default function CoachRoute() {
           YOUR COACH
         </AppText>
         <AppText variant="bodyMD" color="secondary" style={styles.description}>
-          AI personal trainer chat, contextual workout recommendations, and nutrition insights.
+          AI personal trainer chat, contextual workout recommendations, and
+          nutrition insights.
         </AppText>
 
         <Button

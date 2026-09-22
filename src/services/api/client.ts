@@ -1,4 +1,4 @@
-import { env } from "@/app/config/env";
+import { env } from "@/config/env";
 import { secureStorage } from "@/services/storage/secureStorage";
 import { ApiError, NetworkError } from "@/shared/utils/errors";
 
@@ -8,9 +8,6 @@ export interface RequestOptions extends RequestInit {
   skipAuth?: boolean;
 }
 
-/**
- * Standard typed API response envelope
- */
 export interface ApiResponse<T> {
   data: T;
   message?: string;
@@ -26,7 +23,10 @@ class ApiClient {
     this.defaultTimeout = defaultTimeout;
   }
 
-  private buildUrl(endpoint: string, params?: Record<string, string | number | boolean | undefined>): string {
+  private buildUrl(
+    endpoint: string,
+    params?: Record<string, string | number | boolean | undefined>,
+  ): string {
     const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
     const url = new URL(`${this.baseUrl}${cleanEndpoint}`);
 
@@ -41,7 +41,10 @@ class ApiClient {
     return url.toString();
   }
 
-  private async getHeaders(customHeaders?: HeadersInit, skipAuth = false): Promise<Headers> {
+  private async getHeaders(
+    customHeaders?: HeadersInit,
+    skipAuth = false,
+  ): Promise<Headers> {
     const headers = new Headers({
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -65,7 +68,12 @@ class ApiClient {
   }
 
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-    const { params, timeoutMs = this.defaultTimeout, skipAuth = false, ...fetchOptions } = options;
+    const {
+      params,
+      timeoutMs = this.defaultTimeout,
+      skipAuth = false,
+      ...fetchOptions
+    } = options;
     const url = this.buildUrl(endpoint, params);
     const headers = await this.getHeaders(fetchOptions.headers, skipAuth);
 
@@ -109,10 +117,15 @@ class ApiClient {
       }
 
       if (err instanceof Error && err.name === "AbortError") {
-        throw new ApiError("Request timed out. Please check your connection and retry.", 408);
+        throw new ApiError(
+          "Request timed out. Please check your connection and retry.",
+          408,
+        );
       }
 
-      throw new NetworkError((err as Error)?.message || "Failed to communicate with server");
+      throw new NetworkError(
+        (err as Error)?.message || "Failed to communicate with server",
+      );
     }
   }
 
@@ -120,7 +133,11 @@ class ApiClient {
     return this.request<T>(endpoint, { ...options, method: "GET" });
   }
 
-  post<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  post<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: "POST",
@@ -128,7 +145,11 @@ class ApiClient {
     });
   }
 
-  put<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  put<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: "PUT",
@@ -136,7 +157,11 @@ class ApiClient {
     });
   }
 
-  patch<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  patch<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: "PATCH",

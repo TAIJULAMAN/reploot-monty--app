@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { Check, Ruler, Scale, Zap } from "lucide-react-native";
+import { ActivityLevel } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
+import { Check, Ruler, Scale, Zap } from "lucide-react-native";
+import React, { useCallback, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { VerticalWheelPicker } from "./VerticalWheelPicker";
-import { ActivityLevel } from "@/shared/types/user";
 
 const ACTIVITY_OPTIONS: {
   id: ActivityLevel;
@@ -84,7 +84,7 @@ const ActivityOptionItem = React.memo(
         </View>
       </Pressable>
     );
-  }
+  },
 );
 
 export function Step2YourBody() {
@@ -108,7 +108,7 @@ export function Step2YourBody() {
       });
       updateData({ activityLevel: level });
     },
-    [updateData]
+    [updateData],
   );
 
   const handleHeightUnitToggle = useCallback(
@@ -123,7 +123,7 @@ export function Step2YourBody() {
       });
       setHeightUnit(unit);
     },
-    [heightUnit]
+    [heightUnit],
   );
 
   const handleWeightUnitToggle = useCallback(
@@ -138,7 +138,7 @@ export function Step2YourBody() {
       });
       setWeightUnit(unit);
     },
-    [weightUnit]
+    [weightUnit],
   );
 
   // Derived display values
@@ -150,7 +150,7 @@ export function Step2YourBody() {
       const cm = heightUnit === "cm" ? val : Math.round(val * 2.54);
       updateData({ heightCm: cm });
     },
-    [heightUnit, updateData]
+    [heightUnit, updateData],
   );
 
   const displayedWeight =
@@ -161,7 +161,7 @@ export function Step2YourBody() {
       const kg = weightUnit === "kg" ? val : Math.round(val / 2.20462);
       updateData({ weightKg: kg });
     },
-    [weightUnit, updateData]
+    [weightUnit, updateData],
   );
 
   return (
@@ -304,7 +304,12 @@ export function Step2YourBody() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.titleGroup}>
-            <Zap size={16} color="#2DD4BF" fill="#2DD4BF" style={styles.headerIcon} />
+            <Zap
+              size={16}
+              color="#2DD4BF"
+              fill="#2DD4BF"
+              style={styles.headerIcon}
+            />
             <Text style={styles.headerTitle}>ACTIVITY LEVEL</Text>
           </View>
         </View>

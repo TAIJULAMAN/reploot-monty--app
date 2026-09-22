@@ -11,7 +11,6 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react-native";
-import React from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -24,8 +23,6 @@ export default function HomeTabRoute() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Ambient Background Glows */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
         <View
           style={[StyleSheet.absoluteFill, { backgroundColor: "#080A10" }]}
@@ -47,32 +44,27 @@ export default function HomeTabRoute() {
           style={styles.ambientMidGlow}
         />
       </View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContainer,
           {
             paddingTop: Math.max(insets.top + 12, 24),
-            paddingBottom: 110, // Generous padding so TabBar never covers content
+            paddingBottom: 110,
           },
         ]}
       >
-        {/* Top Header Row */}
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.greetingSub}>WELCOME BACK</Text>
             <Text style={styles.greetingName}>{userName.toUpperCase()} ⚡</Text>
           </View>
-
-          {/* Streak Counter Pill */}
           <View style={styles.streakPill}>
             <Flame size={16} color="#F59E0B" fill="#F59E0B" />
             <Text style={styles.streakText}>12 DAYS</Text>
           </View>
         </View>
 
-        {/* AI Coach Status Banner */}
         <View style={styles.aiCoachBanner}>
           <LinearGradient
             colors={["rgba(45, 212, 191, 0.16)", "rgba(99, 102, 241, 0.08)"]}
@@ -90,8 +82,6 @@ export default function HomeTabRoute() {
             </Text>
           </LinearGradient>
         </View>
-
-        {/* Hero Workout Card */}
         <View style={styles.heroCardContainer}>
           <LinearGradient
             colors={["#161B2E", "#0F1320"]}
@@ -148,8 +138,6 @@ export default function HomeTabRoute() {
             </Pressable>
           </LinearGradient>
         </View>
-
-        {/* Daily Kinetic Metrics Row */}
         <Text style={styles.sectionHeading}>DAILY METRICS</Text>
         <View style={styles.metricsGrid}>
           <MetricCard
@@ -174,9 +162,6 @@ export default function HomeTabRoute() {
             icon={<Award size={18} color="#818CF8" />}
           />
         </View>
-
-        {/* Training Modalities */}
-        {/* <Text style={styles.sectionHeading}>TRAINING MODALITIES</Text> */}
         <WorkoutModalitiesSection style={styles.modalitiesSection} />
       </ScrollView>
     </View>
