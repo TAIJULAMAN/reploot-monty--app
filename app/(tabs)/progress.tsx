@@ -1,7 +1,6 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { AppText, Button, Screen } from "@/shared/components/ui";
 import { useRouter } from "expo-router";
-import { Screen, AppText, Button } from "@/shared/components/ui";
+import { StyleSheet, View } from "react-native";
 
 export default function ProgressTabRoute() {
   const router = useRouter();
@@ -16,7 +15,8 @@ export default function ProgressTabRoute() {
           YOUR PROGRESS
         </AppText>
         <AppText variant="bodyMD" color="secondary" style={styles.description}>
-          Level Analytics, XP Tracking, Personal Records, Weight Trends, and Achievement Badges.
+          Level Analytics, XP Tracking, Personal Records, Weight Trends, and
+          Achievement Badges.
         </AppText>
 
         <Button

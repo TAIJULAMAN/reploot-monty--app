@@ -1,21 +1,14 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-} from "react-native";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Zap } from "lucide-react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { OnboardingSlideItem } from "../data/onboardingData";
 
 interface OnboardingSlideProps {
   slide: OnboardingSlideItem;
 }
 
-export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ slide }) => {
+export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64;
@@ -23,7 +16,6 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ sli
 
   return (
     <View style={[styles.container, { width, height }]}>
-      {/* Background Image */}
       <Image
         source={slide.image}
         style={StyleSheet.absoluteFill}
@@ -32,10 +24,8 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ sli
         priority="high"
       />
 
-      {/* Atmospheric Amber Embers & Cyber Line matching Figma reference */}
       {slide.id === "trainer" && (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          {/* Subtle Angled Cyber HUD Grid Line */}
           <View style={styles.cyberLine} />
 
           {/* Ember 1: Warm glowing particle at top-right */}
@@ -54,29 +44,7 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ sli
           </View>
         </View>
       )}
-
-      {/* Top subtle gradient for status bar / header readability */}
-      <LinearGradient
-        colors={["rgba(17, 19, 30, 0.45)", "rgba(17, 19, 30, 0)"]}
-        locations={[0, 1]}
-        style={styles.topGradient}
-        pointerEvents="none"
-      />
-
-      {/* Onboarding Overlay - Matching exact Figma specification:
-          linear-gradient(180deg, rgba(17, 19, 30, 0) 0%, rgba(17, 19, 30, 0.5) 50%, #11131E 100%) */}
-      <LinearGradient
-        colors={["rgba(17, 19, 30, 0)", "rgba(17, 19, 30, 0.5)", "#11131E"]}
-        locations={[0, 0.5, 1]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
-      />
-
-      {/* Slide Typography & Highlights */}
       <View style={[styles.textContainer, { bottom: bottomOffset }]}>
-        {/* Title Stack */}
         <View style={styles.titleStack}>
           {slide.titleLines.map((line, index) => (
             <Text key={index} style={styles.titleLine}>
@@ -85,7 +53,6 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ sli
           ))}
         </View>
 
-        {/* Subtitle with Badges and Colored Highlights */}
         <View style={styles.subtitleWrapper}>
           {slide.badgeIcon === "lightning" && (
             <View style={styles.badgeIcon}>
@@ -110,7 +77,7 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(({ sli
       </View>
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -166,10 +133,10 @@ const styles = StyleSheet.create({
   },
   titleLine: {
     color: "#FFFFFF",
-    fontSize: 44,
-    lineHeight: 46,
+    fontSize: 60,
+    lineHeight: 60,
     fontWeight: "900",
-    letterSpacing: -0.6,
+    letterSpacing: 1,
     textAlign: "center",
     textTransform: "uppercase",
     textShadowColor: "rgba(0, 0, 0, 0.8)",

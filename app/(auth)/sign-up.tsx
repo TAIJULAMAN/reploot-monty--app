@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { ArrowLeft, Lock, Mail, ShieldCheck, User } from "lucide-react-native";
+import { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import * as Haptics from "expo-haptics";
-import { ArrowLeft, User, Mail, Lock, ShieldCheck } from "lucide-react-native";
 
 import {
-  SignUpBackground,
+  AppleIcon,
   ArrowheadDecoration,
-  WarmSparkleDecoration,
   AuthDarkPillInput,
   GoogleIcon,
-  AppleIcon,
+  SignUpBackground,
+  WarmSparkleDecoration,
 } from "@/features/auth";
 
 export default function SignUpRoute() {

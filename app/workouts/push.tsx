@@ -1,4 +1,3 @@
-import React from "react";
 import { PushDayScreen } from "@/features/workouts";
 
 export default function PushDayRoute() {

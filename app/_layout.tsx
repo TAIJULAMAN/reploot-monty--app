@@ -1,10 +1,12 @@
-import "../global.css";
-import React from "react";
+import { AppProviders } from "@/providers/AppProviders";
+import { colors } from "@/theme/colors";
+import {
+  JetBrainsMono_700Bold,
+  useFonts,
+} from "@expo-google-fonts/jetbrains-mono";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useFonts, JetBrainsMono_700Bold } from "@expo-google-fonts/jetbrains-mono";
-import { AppProviders } from "@/app/providers/AppProviders";
-import { colors } from "@/theme/colors";
+import "../global.css";
 
 export default function RootLayout() {
   useFonts({

@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, useWindowDimensions } from "react-native";
-import Svg, { Path, Circle, Defs, LinearGradient as SvgGradient, Stop } from "react-native-svg";
+import { useAppStore } from "@/stores/appStore";
+import { useAuthStore } from "@/stores/authStore";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import * as Haptics from "expo-haptics";
+import { useEffect, useState } from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import Svg, {
+  Circle,
+  Defs,
+  Path,
+  Stop,
+  LinearGradient as SvgGradient,
+} from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
-import { useAuthStore } from "@/stores/authStore";
-import { useAppStore } from "@/stores/appStore";
 
 const brainAsset = require("../../../../assets/profile-setup/ai-brain-neural.jpg");
 
-// Sparkle cluster in gold/bronze matching lower-left in Figma
 function GoldSparkleCluster() {
   return (
     <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
@@ -28,8 +39,6 @@ function GoldSparkleCluster() {
     </Svg>
   );
 }
-
-// Cyan Sparkle Stars for status row
 function CyanStatusSparkles() {
   return (
     <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -45,8 +54,6 @@ function CyanStatusSparkles() {
     </Svg>
   );
 }
-
-// Lightning bolt matching Figma
 function HeaderZapIcon() {
   return (
     <Svg width={22} height={26} viewBox="0 0 24 24" fill="#71717A">
@@ -54,11 +61,18 @@ function HeaderZapIcon() {
     </Svg>
   );
 }
-
-// AI Brain Orbit Icon
 function BrainOrbitIcon() {
   return (
-    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#FFFFFF"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04" />
       <Path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04" />
     </Svg>
@@ -85,7 +99,9 @@ export function Step5YourCoach() {
           setIsReady(true);
           requestAnimationFrame(() => {
             try {
-              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              void Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
             } catch {
               // ignore
             }
@@ -113,7 +129,9 @@ export function Step5YourCoach() {
 
     requestAnimationFrame(() => {
       try {
-        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        void Haptics.notificationAsync(
+          Haptics.NotificationFeedbackType.Success,
+        );
       } catch {
         // ignore
       }
@@ -134,16 +152,15 @@ export function Step5YourCoach() {
     progress < 30
       ? statusMessages[0]
       : progress < 60
-      ? statusMessages[1]
-      : progress < 85
-      ? statusMessages[2]
-      : progress < 100
-      ? statusMessages[3]
-      : statusMessages[4];
+        ? statusMessages[1]
+        : progress < 85
+          ? statusMessages[2]
+          : progress < 100
+            ? statusMessages[3]
+            : statusMessages[4];
 
   return (
     <View style={styles.container}>
-      {/* Title & Zap Icon */}
       <View style={styles.hero}>
         <Text style={styles.title}>YOUR COACH</Text>
         <View style={styles.readyRow}>
@@ -154,10 +171,17 @@ export function Step5YourCoach() {
         </View>
       </View>
 
-      {/* 3D Holographic AI Neural Brain Chamber */}
-      <View style={[styles.chamberContainer, { width: chamberSize, height: chamberSize }]}>
-        {/* Concentric Gradient Ring with SVG */}
-        <Svg width={chamberSize} height={chamberSize} style={StyleSheet.absoluteFill}>
+      <View
+        style={[
+          styles.chamberContainer,
+          { width: chamberSize, height: chamberSize },
+        ]}
+      >
+        <Svg
+          width={chamberSize}
+          height={chamberSize}
+          style={StyleSheet.absoluteFill}
+        >
           <Defs>
             <SvgGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
               <Stop offset="0%" stopColor="#C084FC" stopOpacity="0.85" />
@@ -214,21 +238,13 @@ export function Step5YourCoach() {
           <GoldSparkleCluster />
         </View>
       </View>
-
-      {/* Routine Generation Status Row */}
       <View style={styles.statusSection}>
         <View style={styles.routineRow}>
           <CyanStatusSparkles />
           <Text style={styles.routineText}>BUILDING WORKOUT ROUTINE ...</Text>
         </View>
-
-        {/* Subtle Divider Line */}
         <View style={styles.statusDivider} />
-
-        {/* Subtitle description */}
         <Text style={styles.statusSubtitle}>{currentStatus}</Text>
-
-        {/* Cyan/Blue Progress Bar */}
         <View style={styles.progressTrack}>
           <LinearGradient
             colors={["#2DD4BF", "#38BDF8", "#3B82F6"]}
@@ -238,8 +254,6 @@ export function Step5YourCoach() {
           />
         </View>
       </View>
-
-      {/* CTA Button */}
       <ProfileNavigationButton
         title={isReady ? "ENTER KINETIC ARENA" : "CALIBRATING AI COACH..."}
         disabled={!isReady}

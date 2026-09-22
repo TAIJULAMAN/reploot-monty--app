@@ -1,15 +1,15 @@
-import React, { useRef, useEffect, useMemo, useCallback } from "react";
+import * as Haptics from "expo-haptics";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   Animated,
-  NativeSyntheticEvent,
   NativeScrollEvent,
+  NativeSyntheticEvent,
   Pressable,
   ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import * as Haptics from "expo-haptics";
 
 interface VerticalWheelPickerProps {
   value: number;
@@ -40,20 +40,16 @@ const WheelItem = React.memo(
       (index + 1) * itemHeight,
       (index + 2) * itemHeight,
     ];
-
     const opacity = scrollY.interpolate({
       inputRange,
       outputRange: [0.12, 0.38, 1.0, 0.38, 0.12],
       extrapolate: "clamp",
     });
-
     const scale = scrollY.interpolate({
       inputRange,
       outputRange: [0.68, 0.78, 1.0, 0.78, 0.68],
       extrapolate: "clamp",
     });
-
-    // Only display unit badge when item is locked into the active center viewfinder
     const unitOpacity = scrollY.interpolate({
       inputRange: [
         (index - 0.45) * itemHeight,
@@ -89,7 +85,7 @@ const WheelItem = React.memo(
         </Animated.View>
       </Pressable>
     );
-  }
+  },
 );
 
 export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
@@ -104,7 +100,7 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
 
   const values = useMemo(
     () => Array.from({ length: max - min + 1 }, (_, i) => min + i),
-    [min, max]
+    [min, max],
   );
 
   const initialOffset = Math.max(0, (value - min) * itemHeight);
@@ -122,7 +118,8 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
     const targetOffset = Math.max(0, (value - min) * itemHeight);
     scrollY.setValue(targetOffset);
 
-    const node = (scrollViewRef.current as any)?.getNode?.() ?? scrollViewRef.current;
+    const node =
+      (scrollViewRef.current as any)?.getNode?.() ?? scrollViewRef.current;
     node?.scrollTo({ y: targetOffset, x: 0, animated: false });
 
     const timer = setTimeout(() => {
@@ -138,7 +135,8 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
       isUserInteractingRef.current = true;
       isProgrammaticScrollRef.current = false;
       const targetOffset = Math.max(0, (targetVal - min) * itemHeight);
-      const node = (scrollViewRef.current as any)?.getNode?.() ?? scrollViewRef.current;
+      const node =
+        (scrollViewRef.current as any)?.getNode?.() ?? scrollViewRef.current;
       node?.scrollTo({ y: targetOffset, x: 0, animated: true });
       lastReportedValRef.current = targetVal;
       onChange(targetVal);
@@ -153,7 +151,7 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
         isUserInteractingRef.current = false;
       }, 300);
     },
-    [min, itemHeight, onChange]
+    [min, itemHeight, onChange],
   );
 
   const onScroll = Animated.event(
@@ -170,7 +168,10 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
         const clampedIndex = Math.max(0, Math.min(values.length - 1, index));
         const currentVal = values[clampedIndex];
 
-        if (currentVal !== undefined && currentVal !== lastReportedValRef.current) {
+        if (
+          currentVal !== undefined &&
+          currentVal !== lastReportedValRef.current
+        ) {
           lastReportedValRef.current = currentVal;
           requestAnimationFrame(() => {
             try {
@@ -182,7 +183,7 @@ export const VerticalWheelPicker = React.memo(function VerticalWheelPicker({
           onChange(currentVal);
         }
       },
-    }
+    },
   );
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {

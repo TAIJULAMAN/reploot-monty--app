@@ -1,7 +1,6 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { AppText, Button, Screen } from "@/shared/components/ui";
 import { useRouter } from "expo-router";
-import { Screen, AppText, Button } from "@/shared/components/ui";
+import { StyleSheet, View } from "react-native";
 
 export default function ModalRoute() {
   const router = useRouter();
@@ -16,7 +15,8 @@ export default function ModalRoute() {
           ACTION MODAL
         </AppText>
         <AppText variant="bodyMD" color="secondary" style={styles.description}>
-          Standardized modal container for quick actions, hydration logs, and filters.
+          Standardized modal container for quick actions, hydration logs, and
+          filters.
         </AppText>
 
         <Button

@@ -1,34 +1,34 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Linking,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import {
   ArrowLeft,
-  Mail,
-  Lock,
   Eye,
   EyeOff,
-  Zap,
+  Lock,
+  Mail,
   RotateCcw,
   Star,
+  Zap,
 } from "lucide-react-native";
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
   ForgotPasswordBackground,
-  SparkleDecoration,
   NeonBorderInput,
   SecurityStrengthBar,
+  SparkleDecoration,
 } from "@/features/auth";
 
 type ForgotPasswordStep = "request" | "check_email" | "new_password";
@@ -167,7 +167,8 @@ export default function ForgotPasswordRoute() {
                 <Text style={styles.heroTitle}>PASSWORD</Text>
 
                 <Text style={styles.subtitle}>
-                  No sweat! Enter your email and we'll get you back to the grind.
+                  No sweat! Enter your email and we'll get you back to the
+                  grind.
                 </Text>
               </View>
 
@@ -198,16 +199,19 @@ export default function ForgotPasswordRoute() {
                     end={{ x: 1, y: 0.5 }}
                     style={styles.actionGradient}
                   >
-                    <Text style={styles.actionButtonText}>
-                      SEND RESET LINK
-                    </Text>
+                    <Text style={styles.actionButtonText}>SEND RESET LINK</Text>
                   </LinearGradient>
                 </Pressable>
               </View>
 
               {/* Atmospheric Floating Lightning Bolt */}
               <View style={styles.bottomZapPosition}>
-                <Zap size={30} color="#10B981" fill="#10B981" style={styles.zapIcon} />
+                <Zap
+                  size={30}
+                  color="#10B981"
+                  fill="#10B981"
+                  style={styles.zapIcon}
+                />
               </View>
             </View>
           )}
@@ -233,7 +237,8 @@ export default function ForgotPasswordRoute() {
                 </View>
 
                 <Text style={styles.subtitle}>
-                  We sent a magic link to your inbox. Tap it to get back in the game.
+                  We sent a magic link to your inbox. Tap it to get back in the
+                  game.
                 </Text>
               </View>
 
@@ -254,9 +259,7 @@ export default function ForgotPasswordRoute() {
                   >
                     <View style={styles.mailButtonContent}>
                       <Mail size={20} color="#FFFFFF" style={styles.mailIcon} />
-                      <Text style={styles.actionButtonText}>
-                        OPEN MAIL APP
-                      </Text>
+                      <Text style={styles.actionButtonText}>OPEN MAIL APP</Text>
                     </View>
                   </LinearGradient>
                 </Pressable>
@@ -271,7 +274,11 @@ export default function ForgotPasswordRoute() {
                 ]}
                 hitSlop={12}
               >
-                <RotateCcw size={15} color="#94A3B8" style={styles.resendIcon} />
+                <RotateCcw
+                  size={15}
+                  color="#94A3B8"
+                  style={styles.resendIcon}
+                />
                 <Text style={styles.resendText}>RESEND EMAIL</Text>
               </Pressable>
 
@@ -371,9 +378,7 @@ export default function ForgotPasswordRoute() {
                     end={{ x: 1, y: 0.5 }}
                     style={styles.actionGradient}
                   >
-                    <Text style={styles.actionButtonText}>
-                      UPDATE PASSWORD
-                    </Text>
+                    <Text style={styles.actionButtonText}>UPDATE PASSWORD</Text>
                   </LinearGradient>
                 </Pressable>
               </View>

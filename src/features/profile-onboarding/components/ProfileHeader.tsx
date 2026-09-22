@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, Pressable, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
-import { ArrowLeft } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { ArrowLeft } from "lucide-react-native";
+import { useEffect } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 interface ProfileHeaderProps {
   currentStep: number;
@@ -23,7 +23,10 @@ export function ProfileHeader({
   onBack,
   showBack = true,
 }: ProfileHeaderProps) {
-  const progressPercent = Math.min(Math.round((currentStep / totalSteps) * 100), 100);
+  const progressPercent = Math.min(
+    Math.round((currentStep / totalSteps) * 100),
+    100,
+  );
   const animatedProgress = useSharedValue(progressPercent);
 
   useEffect(() => {
@@ -50,7 +53,6 @@ export function ProfileHeader({
 
   return (
     <View style={styles.container}>
-      {/* Top Bar with circular frosted back button on left, KINETQX Wordmark on right */}
       <View style={styles.topRow}>
         {showBack ? (
           <Pressable
@@ -59,7 +61,10 @@ export function ProfileHeader({
             unstable_pressDelay={0}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             onPress={handlePressBack}
-            style={({ pressed }) => [styles.backButton, pressed && styles.backButtonPressed]}
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.backButtonPressed,
+            ]}
           >
             <ArrowLeft size={20} color="#FFFFFF" strokeWidth={2.4} />
           </Pressable>
@@ -71,16 +76,14 @@ export function ProfileHeader({
           <Text style={styles.brandText}>KINETQX</Text>
         </View>
       </View>
-
-      {/* Step Info Row: STEP X OF 5 on left, XX% Complete on right */}
       <View style={styles.stepInfoRow}>
         <Text style={styles.stepCounterText}>
           STEP {currentStep} OF {totalSteps}
         </Text>
-        <Text style={styles.progressPercentText}>{progressPercent}% Complete</Text>
+        <Text style={styles.progressPercentText}>
+          {progressPercent}% Complete
+        </Text>
       </View>
-
-      {/* Progress Track & Animated Glowing Fill */}
       <View style={styles.progressTrack}>
         <Animated.View style={[styles.progressFillWrapper, animatedStyle]}>
           <LinearGradient

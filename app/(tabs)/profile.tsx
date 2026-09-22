@@ -1,29 +1,27 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Alert,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  User,
-  LogOut,
-  ChevronRight,
-  Shield,
-  Bell,
-  Heart,
-  Award,
-  Zap,
-  Activity,
-} from "lucide-react-native";
-import * as Haptics from "expo-haptics";
 import { useAuthStore } from "@/stores/authStore";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import {
+  Activity,
+  Bell,
+  ChevronRight,
+  Heart,
+  LogOut,
+  Shield,
+  User,
+  Zap,
+} from "lucide-react-native";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfileTabRoute() {
   const router = useRouter();
@@ -46,24 +44,20 @@ export default function ProfileTabRoute() {
       // ignore
     }
 
-    Alert.alert(
-      "Sign Out",
-      "Are you sure you want to sign out of Kinetqx?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
+    Alert.alert("Sign Out", "Are you sure you want to sign out of Kinetqx?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Sign Out",
+        style: "destructive",
+        onPress: async () => {
+          await signOut();
+          router.replace("/(auth)/sign-in");
         },
-        {
-          text: "Sign Out",
-          style: "destructive",
-          onPress: async () => {
-            await signOut();
-            router.replace("/(auth)/sign-in");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   return (
@@ -72,9 +66,15 @@ export default function ProfileTabRoute() {
 
       {/* Cyber Ambient Background Glows */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: "#080A10" }]} />
+        <View
+          style={[StyleSheet.absoluteFill, { backgroundColor: "#080A10" }]}
+        />
         <LinearGradient
-          colors={["rgba(99, 102, 241, 0.12)", "rgba(56, 189, 248, 0.05)", "transparent"]}
+          colors={[
+            "rgba(99, 102, 241, 0.12)",
+            "rgba(56, 189, 248, 0.05)",
+            "transparent",
+          ]}
           start={{ x: 0.8, y: 0 }}
           end={{ x: 0.1, y: 0.5 }}
           style={styles.ambientTopGlow}
@@ -120,7 +120,9 @@ export default function ProfileTabRoute() {
                 <Text style={styles.userEmail}>{email}</Text>
                 <View style={styles.tierBadge}>
                   <Zap size={11} color="#2DD4BF" fill="#2DD4BF" />
-                  <Text style={styles.tierBadgeText}>ELITE ATHLETE • LVL 42</Text>
+                  <Text style={styles.tierBadgeText}>
+                    ELITE ATHLETE • LVL 42
+                  </Text>
                 </View>
               </View>
             </View>
@@ -199,7 +201,9 @@ export default function ProfileTabRoute() {
         {/* App Version Info */}
         <View style={styles.versionFooter}>
           <Text style={styles.versionText}>KINETQX CYBER-FITNESS v1.0.0</Text>
-          <Text style={styles.versionSub}>Engineered with Expo SDK 57 & NativeWind</Text>
+          <Text style={styles.versionSub}>
+            Engineered with Expo SDK 57 & NativeWind
+          </Text>
         </View>
       </ScrollView>
     </View>

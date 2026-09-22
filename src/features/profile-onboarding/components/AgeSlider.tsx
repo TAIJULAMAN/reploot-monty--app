@@ -1,17 +1,23 @@
-import React, { useRef, useState, useEffect, useMemo, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Pressable,
-  useWindowDimensions,
-  LayoutChangeEvent,
-  ScrollView,
-} from "react-native";
 import * as Haptics from "expo-haptics";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  Animated,
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 interface AgeSliderProps {
   value: number;
@@ -87,18 +93,14 @@ export function AgeSlider({
   maxAge = DEFAULT_MAX_AGE,
 }: AgeSliderProps) {
   const { width: windowWidth } = useWindowDimensions();
-
-  // Estimated initial width to avoid layout flash on frame 0
-  // Card is (windowWidth - 40), inner padding is 36, ageInfo is 78
   const estimatedSliderWidth = Math.max(180, windowWidth - 40 - 36 - 78);
   const initialSpacer = Math.max(0, (estimatedSliderWidth - ITEM_WIDTH) / 2);
-
   const [spacerWidth, setSpacerWidth] = useState(initialSpacer);
   const scrollViewRef = useRef<ScrollView | null>(null);
 
   const ages = useMemo(
     () => Array.from({ length: maxAge - minAge + 1 }, (_, i) => minAge + i),
-    [minAge, maxAge]
+    [minAge, maxAge],
   );
 
   // Initial offset frozen on mount so re-renders don't reset scroll position
@@ -147,7 +149,7 @@ export function AgeSlider({
         // ignore
       }
     },
-    [minAge, onChange]
+    [minAge, onChange],
   );
 
   const onScroll = Animated.event(
@@ -170,7 +172,7 @@ export function AgeSlider({
           onChange(currentAge);
         }
       },
-    }
+    },
   );
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
