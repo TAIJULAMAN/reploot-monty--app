@@ -162,8 +162,8 @@ export function Step5YourCoach() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <Text style={styles.title}>YOUR COACH</Text>
-        <View style={styles.readyRow}>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>YOUR COACH</Text>
           <Text style={styles.title}>READY</Text>
           <View style={styles.zapWrap}>
             <HeaderZapIcon />
@@ -273,28 +273,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   hero: {
-    marginTop: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 12,
     marginBottom: 20,
     width: "100%",
   },
+  titleWrapper: {
+    position: "relative",
+    alignItems: "center",
+  },
   title: {
     color: "#FFFFFF",
-    fontSize: 40,
-    lineHeight: 44,
+    fontSize: 50,
+    lineHeight: 50,
     fontWeight: "900",
     letterSpacing: -0.5,
-    fontStyle: "italic",
-    textShadowColor: "rgba(95, 255, 215, 0.75)",
+    textAlign: "center",
+    textShadowColor: "rgba(56, 237, 216, 0.8)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 18,
   },
-  readyRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   zapWrap: {
-    marginLeft: 10,
-    opacity: 0.65,
+    position: "absolute",
+    bottom: -5,
+    right: -25,
+    opacity: 0.8,
   },
   chamberContainer: {
     position: "relative",

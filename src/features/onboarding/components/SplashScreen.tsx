@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { useEffect, useRef } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -60,7 +61,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       >
         {/* Brand Title Centered */}
         <View style={styles.centerContainer}>
-          <Text style={styles.brandTitle}>KINETQX</Text>
+          <Image
+            source={require("../../../../assets/logo.png")}
+            style={styles.logoImage}
+            contentFit="contain"
+          />
         </View>
 
         {/* Bottom Tagline with tracking */}
@@ -92,12 +97,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  brandTitle: {
-    color: "#38BDF8",
-    fontSize: 44,
-    fontWeight: "900",
-    letterSpacing: 2,
-    textTransform: "uppercase",
+  logoImage: {
+    width: 280,
+    height: 70,
   },
   bottomContainer: {
     position: "absolute",

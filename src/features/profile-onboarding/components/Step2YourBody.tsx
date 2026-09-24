@@ -1,91 +1,14 @@
 import { ActivityLevel } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
-import { Check, Ruler, Scale, Zap } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useCallback, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
+import { ActivityLevelCard } from "./ActivityLevelCard";
+import { HeightSelectionCard } from "./HeightSelectionCard";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
-import { VerticalWheelPicker } from "./VerticalWheelPicker";
+import { WeightSelectionCard } from "./WeightSelectionCard";
 
-const ACTIVITY_OPTIONS: {
-  id: ActivityLevel;
-  title: string;
-  subtitle: string;
-}[] = [
-  {
-    id: "beginner",
-    title: "Beginner",
-    subtitle: "0-1 workouts / week",
-  },
-  {
-    id: "moderately_active",
-    title: "Moderately Active",
-    subtitle: "2-4 workouts / week",
-  },
-  {
-    id: "very_active",
-    title: "Very Active",
-    subtitle: "5+ workouts / week",
-  },
-];
 
-interface ActivityOptionItemProps {
-  id: ActivityLevel;
-  title: string;
-  subtitle: string;
-  isSelected: boolean;
-  onSelect: (id: ActivityLevel) => void;
-}
-
-const ActivityOptionItem = React.memo(
-  ({ id, title, subtitle, isSelected, onSelect }: ActivityOptionItemProps) => {
-    return (
-      <Pressable
-        accessibilityRole="radio"
-        accessibilityState={{ selected: isSelected }}
-        unstable_pressDelay={0}
-        hitSlop={6}
-        onPress={() => onSelect(id)}
-        style={styles.activityPressable}
-      >
-        <View
-          style={[
-            styles.activityOptionRow,
-            isSelected
-              ? styles.activityOptionSelected
-              : styles.activityOptionUnselected,
-          ]}
-        >
-          <View style={styles.activityInfo}>
-            <Text
-              style={[
-                styles.activityTitle,
-                isSelected && styles.activityTitleActive,
-              ]}
-            >
-              {title}
-            </Text>
-            <Text style={styles.activitySubtitle}>{subtitle}</Text>
-          </View>
-
-          {/* Radio Indicator */}
-          <View
-            style={[
-              styles.radioCircle,
-              isSelected
-                ? styles.radioCircleSelected
-                : styles.radioCircleUnselected,
-            ]}
-          >
-            {isSelected ? (
-              <Check size={12} color="#0B0E17" strokeWidth={3.5} />
-            ) : null}
-          </View>
-        </View>
-      </Pressable>
-    );
-  },
-);
 
 export function Step2YourBody() {
   const heightCm = useProfileSetupStore((s) => s.data.heightCm);
@@ -166,167 +89,31 @@ export function Step2YourBody() {
 
   return (
     <View style={styles.container}>
-      {/* Title: YOUR BODY */}
       <View style={styles.hero}>
         <Text style={styles.title}>YOUR</Text>
         <Text style={styles.title}>BODY</Text>
       </View>
 
-      {/* HEIGHT CARD */}
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <View style={styles.titleGroup}>
-            <Ruler size={16} color="#2DD4BF" style={styles.headerIcon} />
-            <Text style={styles.headerTitle}>HEIGHT</Text>
-          </View>
-
-          {/* Unit Toggle Pill: CM | INCH */}
-          <View style={styles.togglePill}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Switch to Centimeters"
-              unstable_pressDelay={0}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              onPress={() => handleHeightUnitToggle("cm")}
-              style={[
-                styles.toggleOption,
-                heightUnit === "cm" && styles.toggleOptionActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  heightUnit === "cm" && styles.toggleTextActive,
-                ]}
-              >
-                CM
-              </Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Switch to Inches"
-              unstable_pressDelay={0}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              onPress={() => handleHeightUnitToggle("inch")}
-              style={[
-                styles.toggleOption,
-                heightUnit === "inch" && styles.toggleOptionActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  heightUnit === "inch" && styles.toggleTextActive,
-                ]}
-              >
-                INCH
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-
-        {/* Vertical Slideable Wheel Picker */}
-        <VerticalWheelPicker
-          value={displayedHeight}
-          onChange={handleHeightChange}
-          min={heightUnit === "cm" ? 120 : 48}
-          max={heightUnit === "cm" ? 230 : 90}
-          unit={heightUnit.toUpperCase()}
-          itemHeight={44}
-        />
-      </View>
+      <HeightSelectionCard
+        heightUnit={heightUnit}
+        displayedHeight={displayedHeight}
+        onHeightUnitToggle={handleHeightUnitToggle}
+        onHeightChange={handleHeightChange}
+      />
 
       {/* WEIGHT CARD */}
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <View style={styles.titleGroup}>
-            <Scale size={16} color="#2DD4BF" style={styles.headerIcon} />
-            <Text style={styles.headerTitle}>WEIGHT</Text>
-          </View>
-
-          {/* Unit Toggle Pill: KG | LBS */}
-          <View style={styles.togglePill}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Switch to Kilograms"
-              unstable_pressDelay={0}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              onPress={() => handleWeightUnitToggle("kg")}
-              style={[
-                styles.toggleOption,
-                weightUnit === "kg" && styles.toggleOptionActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  weightUnit === "kg" && styles.toggleTextActive,
-                ]}
-              >
-                KG
-              </Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Switch to Pounds"
-              unstable_pressDelay={0}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              onPress={() => handleWeightUnitToggle("lbs")}
-              style={[
-                styles.toggleOption,
-                weightUnit === "lbs" && styles.toggleOptionActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.toggleText,
-                  weightUnit === "lbs" && styles.toggleTextActive,
-                ]}
-              >
-                LBS
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-
-        {/* Vertical Slideable Wheel Picker */}
-        <VerticalWheelPicker
-          value={displayedWeight}
-          onChange={handleWeightChange}
-          min={weightUnit === "kg" ? 35 : 77}
-          max={weightUnit === "kg" ? 180 : 396}
-          unit={weightUnit.toUpperCase()}
-          itemHeight={44}
-        />
-      </View>
+      <WeightSelectionCard
+        weightUnit={weightUnit}
+        displayedWeight={displayedWeight}
+        onWeightUnitToggle={handleWeightUnitToggle}
+        onWeightChange={handleWeightChange}
+      />
 
       {/* ACTIVITY LEVEL CARD */}
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <View style={styles.titleGroup}>
-            <Zap
-              size={16}
-              color="#2DD4BF"
-              fill="#2DD4BF"
-              style={styles.headerIcon}
-            />
-            <Text style={styles.headerTitle}>ACTIVITY LEVEL</Text>
-          </View>
-        </View>
-
-        <View style={styles.activityList}>
-          {ACTIVITY_OPTIONS.map((opt) => (
-            <ActivityOptionItem
-              key={opt.id}
-              id={opt.id}
-              title={opt.title}
-              subtitle={opt.subtitle}
-              isSelected={activityLevel === opt.id}
-              onSelect={handleSelectActivity}
-            />
-          ))}
-        </View>
-      </View>
+      <ActivityLevelCard
+        activityLevel={activityLevel}
+        onSelectActivity={handleSelectActivity}
+      />
 
       {/* Continue CTA */}
       <View style={styles.ctaContainer}>
@@ -345,137 +132,24 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   hero: {
-    marginTop: 2,
-    marginBottom: 16,
+    marginTop: 20,
+    marginBottom: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 36,
-    lineHeight: 40,
+    fontSize: 55,
+    lineHeight: 50,
     fontWeight: "900",
     letterSpacing: -0.5,
-    textShadowColor: "rgba(56, 189, 248, 0.7)",
+    textShadowColor: "rgba(56, 237, 216, 0.6)",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 16,
+    textShadowRadius: 18,
     includeFontPadding: false,
+    textAlign: "center",
   },
-  card: {
-    borderRadius: 24,
-    borderWidth: 1.2,
-    borderColor: "rgba(255, 255, 255, 0.09)",
-    backgroundColor: "#111420",
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 14,
-    marginBottom: 16,
-  },
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  titleGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerIcon: {
-    marginRight: 9,
-  },
-  headerTitle: {
-    color: "#94A3B8",
-    fontSize: 11.5,
-    fontWeight: "900",
-    letterSpacing: 2,
-  },
-  togglePill: {
-    flexDirection: "row",
-    backgroundColor: "#181B28",
-    borderRadius: 14,
-    padding: 3,
-  },
-  toggleOption: {
-    paddingHorizontal: 13,
-    paddingVertical: 5.5,
-    borderRadius: 11,
-  },
-  toggleOptionActive: {
-    backgroundColor: "#38BDF8",
-  },
-  toggleText: {
-    color: "#64748B",
-    fontSize: 10.5,
-    fontWeight: "900",
-    letterSpacing: 0.6,
-    includeFontPadding: false,
-  },
-  toggleTextActive: {
-    color: "#0B0E17",
-  },
-  activityList: {
-    gap: 10,
-    marginTop: 8,
-    marginBottom: 4,
-  },
-  activityPressable: {
-    width: "100%",
-  },
-  activityOptionRow: {
-    width: "100%",
-    borderRadius: 18,
-    paddingHorizontal: 16,
-    paddingVertical: 13,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  activityOptionUnselected: {
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.07)",
-    backgroundColor: "#161926",
-  },
-  activityOptionSelected: {
-    borderWidth: 1.6,
-    borderColor: "#2DD4BF",
-    backgroundColor: "#152536",
-  },
-  activityInfo: {
-    flex: 1,
-  },
-  activityTitle: {
-    color: "#CBD5E1",
-    fontSize: 14.5,
-    fontWeight: "800",
-    marginBottom: 3,
-    includeFontPadding: false,
-  },
-  activityTitleActive: {
-    color: "#FFFFFF",
-  },
-  activitySubtitle: {
-    color: "#8290A4",
-    fontSize: 11.5,
-    fontWeight: "500",
-    includeFontPadding: false,
-  },
-  radioCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 14,
-  },
-  radioCircleUnselected: {
-    borderWidth: 2,
-    borderColor: "#475569",
-    backgroundColor: "transparent",
-  },
-  radioCircleSelected: {
-    borderWidth: 2,
-    borderColor: "#2DD4BF",
-    backgroundColor: "#2DD4BF",
-  },
+
   ctaContainer: {
     width: "100%",
     alignSelf: "stretch",

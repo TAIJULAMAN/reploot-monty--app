@@ -1,29 +1,29 @@
 {
   "expo": {
-    "name": "KINETQX",
-    "slug": "kinetqx-app",
+    "name": "REPLOOT",
+    "slug": "reloot",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "kinetqx",
+    "icon": "./assets/logo.png",
+    "scheme": "reloot",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#070A11",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kinetqx.app"
+      "bundleIdentifier": "com.reloot.app"
     },
     "android": {
-      "package": "com.kinetqx.app",
+      "package": "com.reloot.app",
       "adaptiveIcon": {
         "backgroundColor": "#070A11",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/logo.png",
+        "backgroundImage": "./assets/logo.png",
+        "monochromeImage": "./assets/logo.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
     },
     "plugins": [
       "expo-router",

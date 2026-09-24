@@ -1,6 +1,5 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import { ArrowLeft } from "lucide-react-native";
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -9,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { AuthHeader } from "@/features/auth";
 
 interface ProfileHeaderProps {
   currentStep: number;
@@ -53,29 +53,11 @@ export function ProfileHeader({
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRow}>
-        {showBack ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            unstable_pressDelay={0}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            onPress={handlePressBack}
-            style={({ pressed }) => [
-              styles.backButton,
-              pressed && styles.backButtonPressed,
-            ]}
-          >
-            <ArrowLeft size={20} color="#FFFFFF" strokeWidth={2.4} />
-          </Pressable>
-        ) : (
-          <View style={styles.emptySpacer} />
-        )}
-
-        <View style={styles.wordmarkWrapper}>
-          <Text style={styles.brandText}>KINETQX</Text>
-        </View>
-      </View>
+      <AuthHeader
+        onBack={handlePressBack}
+        showBackButton={showBack}
+        style={styles.topRow}
+      />
       <View style={styles.stepInfoRow}>
         <Text style={styles.stepCounterText}>
           STEP {currentStep} OF {totalSteps}
@@ -105,42 +87,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    minHeight: 42,
-  },
-  backButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 1.2,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  backButtonPressed: {
-    opacity: 0.75,
-    transform: [{ scale: 0.96 }],
-  },
-  emptySpacer: {
-    width: 42,
-    height: 42,
-  },
-  wordmarkWrapper: {
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-  brandText: {
-    color: "#38BDF8",
-    fontSize: 22,
-    lineHeight: 26,
-    fontWeight: "900",
-    letterSpacing: 2.6,
-    textShadowColor: "rgba(56, 189, 248, 0.6)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 14,
+    marginBottom: 0,
   },
   stepInfoRow: {
     flexDirection: "row",

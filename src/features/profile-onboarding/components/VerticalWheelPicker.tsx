@@ -281,9 +281,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   itemContent: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "baseline",
+    alignItems: "center",
     justifyContent: "center",
+    position: "relative",
   },
   numberText: {
     color: "#FFFFFF",
@@ -293,13 +295,16 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     letterSpacing: -0.5,
     includeFontPadding: false,
+    textAlign: "center",
   },
   unitText: {
+    position: "absolute",
+    left: "50%",
+    marginLeft: 140,
     color: "#2DD4BF",
-    fontSize: 15,
-    fontWeight: "900",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1,
-    marginLeft: 8,
     includeFontPadding: false,
   },
 });

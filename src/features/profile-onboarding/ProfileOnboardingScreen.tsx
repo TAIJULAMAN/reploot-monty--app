@@ -39,28 +39,12 @@ export function ProfileOnboardingScreen() {
     <View style={styles.screen}>
       <StatusBar style="light" />
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <View
-          style={[StyleSheet.absoluteFill, { backgroundColor: "#090A10" }]}
-        />
         <LinearGradient
-          colors={[
-            "rgba(99, 102, 241, 0.24)",
-            "rgba(99, 102, 241, 0.06)",
-            "transparent",
-          ]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0.8, y: 0.7 }}
-          style={[styles.glowOrb, { top: -60, left: -60 }]}
-        />
-        <LinearGradient
-          colors={[
-            "transparent",
-            "rgba(56, 237, 216, 0.08)",
-            "rgba(56, 237, 216, 0.22)",
-          ]}
-          start={{ x: 0.2, y: 0.3 }}
-          end={{ x: 1, y: 1 }}
-          style={[styles.glowOrb, { bottom: -60, right: -60 }]}
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
         />
         <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
           <SvgLine

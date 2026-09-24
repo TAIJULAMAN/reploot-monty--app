@@ -48,7 +48,7 @@ export function ProfileNavigationButton({
           colors={
             disabled
               ? ["rgba(53, 112, 173, 0.35)", "rgba(98, 162, 229, 0.35)"]
-              : ["#3882F6", "#4E95EA", "#60A5FA"]
+              : ["#4282BE", "#72ABE8"]
           }
           start={{ x: 0, y: 0.2 }}
           end={{ x: 1, y: 0.8 }}
@@ -110,9 +110,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 22,
-    fontWeight: "900",
+    fontWeight: "400",
     letterSpacing: 2.2,
     textTransform: "uppercase",
   },
@@ -124,9 +124,9 @@ const styles = StyleSheet.create({
   },
   subtext: {
     color: "#475569",
-    fontSize: 9,
+    fontSize: 10,
     lineHeight: 13,
-    fontWeight: "800",
+    fontWeight: "400",
     letterSpacing: 1.4,
     textTransform: "uppercase",
     textAlign: "center",

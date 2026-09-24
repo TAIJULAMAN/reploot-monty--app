@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ArrowLeft, Lock, Mail, ShieldCheck, User } from "lucide-react-native";
+import { Lock, Mail, ShieldCheck, User } from "lucide-react-native";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -18,6 +18,7 @@ import {
   AppleIcon,
   ArrowheadDecoration,
   AuthDarkPillInput,
+  AuthHeader,
   GoogleIcon,
   SignUpBackground,
   WarmSparkleDecoration,
@@ -106,23 +107,8 @@ export default function SignUpRoute() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Top Bar: Circular Outlined Back Button & KINETQX Wordmark */}
-          <View style={styles.topBar}>
-            <Pressable
-              onPress={handleBack}
-              style={({ pressed }) => [
-                styles.backButton,
-                pressed && styles.buttonPressed,
-              ]}
-              hitSlop={12}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <ArrowLeft size={20} color="#FFFFFF" strokeWidth={2.2} />
-            </Pressable>
-
-            <Text style={styles.wordmark}>KINETQX</Text>
-          </View>
+          {/* Extracted Shared Auth Header */}
+          <AuthHeader onBack={handleBack} />
 
           {/* Hero Section: JOIN + Turquoise Arrowhead, TODAY + Warm Gradient Bar */}
           <View style={styles.heroSection}>
@@ -204,7 +190,6 @@ export default function SignUpRoute() {
                   containerStyle={styles.confirmPasswordField}
                 />
 
-                {/* Primary Create Account CTA Button - Dedicated Static Container */}
                 <View style={styles.createAccountWrapper}>
                   <Pressable
                     onPress={handleCreateAccount}
@@ -312,31 +297,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  /* Top Navigation Bar */
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.32)",
-    backgroundColor: "rgba(255, 255, 255, 0.09)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  wordmark: {
-    color: "#0284C7",
-    fontSize: 21,
-    fontWeight: "900",
-    letterSpacing: 2,
-    textTransform: "uppercase",
-  },
-
   /* Hero Section */
   heroSection: {
     position: "relative",
@@ -420,8 +380,8 @@ const styles = StyleSheet.create({
   },
   createAccountText: {
     color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "800",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 2.2,
     textTransform: "uppercase",
   },

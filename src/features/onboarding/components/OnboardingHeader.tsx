@@ -1,4 +1,5 @@
 import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,7 +32,11 @@ export const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
       pointerEvents="box-none"
     >
       <Pressable onPress={onLogoPress} hitSlop={12}>
-        <Text style={styles.brandTitle}>KINETQX</Text>
+        <Image
+          source={require("../../../../assets/logo.png")}
+          style={styles.logoImage}
+          contentFit="contain"
+        />
       </Pressable>
       {showSkip ? (
         <Pressable
@@ -64,12 +69,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 12,
   },
-  brandTitle: {
-    color: "#288BE5",
-    fontSize: 21,
-    fontWeight: "900",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
+  logoImage: {
+    width: 120,
+    height: 24, // roughly matches previous text size
   },
   skipButton: {
     paddingVertical: 6,

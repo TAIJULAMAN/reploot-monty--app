@@ -100,6 +100,9 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingVertical: 0,
     ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
       android: {
         textAlignVertical: "center",
         includeFontPadding: false,

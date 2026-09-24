@@ -89,11 +89,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
       onPressLogo();
       return;
     }
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/(tabs)/home");
-    }
+    router.replace("/(tabs)/home");
   };
 
   const handleSearchPress = () => {
@@ -107,7 +103,11 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
-    onPressNotifications?.();
+    if (onPressNotifications) {
+      onPressNotifications();
+    } else {
+      router.push("/notifications");
+    }
   };
 
   const handleAvatarPress = () => {
@@ -117,7 +117,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
     if (onPressAvatar) {
       onPressAvatar();
     } else {
-      router.push("/(tabs)/home");
+      router.push("/(tabs)/profile");
     }
   };
 
@@ -166,13 +166,15 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
             accessibilityRole="button"
             accessibilityLabel="Go to home"
           >
-            <Text
-              style={
-                resolvedVariant === "logo" ? styles.logoText : styles.pageTitle
-              }
-            >
-              {title}
-            </Text>
+            {resolvedVariant === "logo" ? (
+              <Image
+                source={require("../../../../assets/logo.png")}
+                style={styles.logoImage}
+                contentFit="contain"
+              />
+            ) : (
+              <Text style={styles.pageTitle}>{title}</Text>
+            )}
           </Pressable>
         )}
 
@@ -282,11 +284,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  logoText: {
-    color: "#38BDF8",
-    fontSize: 22,
-    fontWeight: "900",
-    letterSpacing: 1.5,
+  logoImage: {
+    height: 24,
+    width: 120, // Adjust this based on actual aspect ratio
   },
   pageTitle: {
     color: "#FFFFFF",
