@@ -1,6 +1,5 @@
 import { WorkoutStyle } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
   Pressable,
@@ -9,11 +8,9 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import Svg, { Circle, Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 
-import { CheckCircleIcon } from "./CheckCircleIcon";
 import { DayPillItem } from "./DayPillItem";
 import { GymDumbbellIcon } from "./GymDumbbellIcon";
 import { HomeRoofIcon } from "./HomeRoofIcon";

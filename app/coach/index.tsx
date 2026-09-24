@@ -25,8 +25,8 @@ export default function CoachRoute() {
     >
       {/* Header */}
       <View style={styles.header}>
-        <Pressable 
-          style={styles.backBtn} 
+        <Pressable
+          style={styles.backBtn}
           onPress={() => {
             if (router.canGoBack()) {
               router.back();

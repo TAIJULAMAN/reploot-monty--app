@@ -35,7 +35,7 @@ export const TopProfileCard = () => {
               source={require("../../../../assets/flame.svg")}
               style={{ width: 16, height: 16 }}
               contentFit="contain"
-            />{" "}
+            />
             <Text style={styles.streakText}>12 DAY STREAK</Text>
           </View>
         </View>

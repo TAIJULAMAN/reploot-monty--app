@@ -33,7 +33,10 @@ export default function HomeTabRoute() {
         <NutritionDashboardCard />
         <AiCoachFloatingCard />
       </ScrollView>
-      <Pressable style={styles.fabContainer} onPress={() => router.push("/coach")}>
+      <Pressable
+        style={styles.fabContainer}
+        onPress={() => router.push("/coach")}
+      >
         <Image
           source={require("../../assets/coachOnline/floatingButton.png")}
           style={{ width: 120, height: 120 }}

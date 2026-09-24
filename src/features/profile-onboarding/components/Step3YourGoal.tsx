@@ -22,8 +22,6 @@ import { SparkleCluster } from "./SparkleCluster";
 import { StopwatchIcon } from "./StopwatchIcon";
 import { GoalCardItem, GoalOption } from "./GoalCardItem";
 
-
-
 const GOAL_PAIRS: [GoalOption, GoalOption][] = [
   [
     {

@@ -8,8 +8,6 @@ import { HeightSelectionCard } from "./HeightSelectionCard";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 import { WeightSelectionCard } from "./WeightSelectionCard";
 
-
-
 export function Step2YourBody() {
   const heightCm = useProfileSetupStore((s) => s.data.heightCm);
   const weightKg = useProfileSetupStore((s) => s.data.weightKg);
