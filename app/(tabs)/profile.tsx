@@ -5,11 +5,14 @@ import { QRCodeCard } from "@/features/profile/components/QRCodeCard";
 import { TopProfileCard } from "@/features/profile/components/TopProfileCard";
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import { LinearGradient } from "expo-linear-gradient";
-import { ChevronRight, CreditCard, Settings } from "lucide-react-native";
+import { Image } from "expo-image";
+import { ChevronRight } from "lucide-react-native";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 
 export default function ProfileTabRoute() {
+  const router = useRouter();
   return (
     <LinearGradient
       colors={["#181623", "#0F1115", "#0B1516"]}
@@ -38,14 +41,28 @@ export default function ProfileTabRoute() {
         <PlanCard />
 
         {/* List Buttons */}
-        <Pressable style={styles.listItem}>
-          <CreditCard size={18} color="#2DD4BF" />
+        <Pressable 
+          style={styles.listItem}
+          onPress={() => router.push("/profile/payment-history")}
+        >
+          <Image
+            source={require("../../assets/paymentHistory.png")}
+            style={{ width: 40, height: 40 }}
+            contentFit="contain"
+          />
           <Text style={styles.listItemText}>PAYMENT HISTORY</Text>
           <ChevronRight size={18} color="#64748B" />
         </Pressable>
 
-        <Pressable style={[styles.listItem, { marginBottom: 40 }]}>
-          <Settings size={18} color="#2DD4BF" />
+        <Pressable 
+          style={[styles.listItem, { marginBottom: 40 }]}
+          onPress={() => router.push("/profile/account-settings")}
+        >
+          <Image
+            source={require("../../assets/accountSetting.png")}
+            style={{ width: 40, height: 40 }}
+            contentFit="contain"
+          />
           <Text style={styles.listItemText}>ACCOUNT SETTINGS</Text>
           <ChevronRight size={18} color="#64748B" />
         </Pressable>

@@ -1,19 +1,25 @@
-import { Activity } from "lucide-react-native";
+import { Image } from "expo-image";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
 export const FitnessSummaryCard = () => {
+  const router = useRouter();
   return (
     <View style={styles.card}>
       <View style={[styles.cardHeader, { justifyContent: "space-between" }]}>
         <Text style={[styles.cardTitle, { marginLeft: 0 }]}>
           FITNESS SUMMARY
         </Text>
-        <Activity size={16} color="#2DD4BF" />
+        <Image
+          source={require("../../../../assets/fitness.svg")}
+          style={{ width: 24, height: 24 }}
+          contentFit="contain"
+        />
       </View>
       <View style={styles.summaryGrid}>
         <View style={styles.summaryBox}>
-          <Text style={styles.summaryLabel}>HEIGHT</Text>
+          <Text style={styles.summaryLabel}>WEIGHT</Text>
           <Text style={styles.summaryValueWhite}>
             78 <Text style={styles.summaryUnit}>kg</Text>
           </Text>
@@ -29,11 +35,11 @@ export const FitnessSummaryCard = () => {
         <View style={styles.summaryBox}>
           <Text style={styles.summaryLabel}>CALORIES</Text>
           <Text style={styles.summaryValueOrange}>
-            45,200 <Text style={styles.summaryUnit}>kcal</Text>
+            45,200 <Text style={styles.summaryUnit2}>kcal</Text>
           </Text>
         </View>
       </View>
-      <Pressable style={styles.darkBtn}>
+      <Pressable style={styles.darkBtn} onPress={() => router.push("/profile/fitness-profile")}>
         <Text style={styles.darkBtnText}>VIEW FITNESS PROFILE</Text>
       </Pressable>
     </View>
@@ -55,9 +61,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardTitle: {
-    color: "#94A3B8",
-    fontSize: 12,
-    fontWeight: "800",
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "600",
     letterSpacing: 1,
     marginLeft: 8,
   },
@@ -75,37 +81,42 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   summaryLabel: {
-    color: "#64748B",
-    fontSize: 9,
-    fontWeight: "800",
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "400",
     letterSpacing: 1,
     marginBottom: 8,
   },
   summaryValueWhite: {
-    color: "#FFFFFF",
+    color: "#44EAC3",
     fontSize: 18,
-    fontWeight: "800",
+    fontWeight: "400",
   },
   summaryValueTeal: {
     color: "#2DD4BF",
     fontSize: 14,
-    fontWeight: "800",
+    fontWeight: "400",
     lineHeight: 18,
   },
   summaryValuePurple: {
-    color: "#A78BFA",
+    color: "#44EAC3",
     fontSize: 18,
-    fontWeight: "800",
+    fontWeight: "400",
   },
   summaryValueOrange: {
-    color: "#F97316",
+    color: "#FF8E80",
     fontSize: 18,
-    fontWeight: "800",
+    fontWeight: "400",
   },
   summaryUnit: {
-    color: "#64748B",
+    color: "#44EAC3 ",
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "400",
+  },
+  summaryUnit2: {
+    color: "#FF8E80",
+    fontSize: 12,
+    fontWeight: "400",
   },
   darkBtn: {
     backgroundColor: "#161B24",
@@ -117,8 +128,8 @@ const styles = StyleSheet.create({
   },
   darkBtnText: {
     color: "#E2E8F0",
-    fontSize: 12,
-    fontWeight: "800",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1.5,
   },
 });

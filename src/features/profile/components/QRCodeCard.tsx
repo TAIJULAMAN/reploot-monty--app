@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { QrCode, ScanLine } from "lucide-react-native";
+import { Image } from "expo-image";
+import { QrCode } from "lucide-react-native";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -11,24 +12,20 @@ export const QRCodeCard = () => {
         <Text style={styles.cardTitle}>MY KINETQX PROFILE QR</Text>
       </View>
       <View style={styles.qrPlaceholderContainer}>
-        <LinearGradient
-          colors={[
-            "rgba(99,102,241,0.4)",
-            "rgba(45,212,191,0.4)",
-            "rgba(249,115,22,0.4)",
-          ]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.qrGlowCircle}
-        >
-          <View style={styles.qrInnerCircle}>
-            <ScanLine size={32} color="#FFFFFF" />
-          </View>
-        </LinearGradient>
+        <Image 
+          source={require("../../../../assets/qr.png")} 
+          style={{ width: 140, height: 140 }} 
+          contentFit="contain" 
+        />
       </View>
-      <Pressable style={styles.buttonWrapper}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.buttonWrapper,
+          pressed && { opacity: 0.8 },
+        ]}
+      >
         <LinearGradient
-          colors={["#0284C7", "#38BDF8"]}
+          colors={["#3568A5", "#4B85C4", "#69A6E3"]}
           style={styles.btnGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -52,12 +49,13 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20,
   },
   cardTitle: {
     color: "#94A3B8",
-    fontSize: 12,
-    fontWeight: "800",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1,
     marginLeft: 8,
   },
@@ -94,8 +92,8 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: "#FFFFFF",
-    fontSize: 13,
-    fontWeight: "800",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1,
   },
 });

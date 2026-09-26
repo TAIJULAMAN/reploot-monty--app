@@ -1,8 +1,10 @@
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
 export const TopProfileCard = () => {
+  const router = useRouter();
   return (
     <View style={styles.card}>
       <View style={styles.topProfileRow}>
@@ -26,7 +28,7 @@ export const TopProfileCard = () => {
                 style={{ width: 10, height: 10, marginRight: 4 }}
                 contentFit="contain"
               />
-              <Text style={styles.globalBadgeText}>#42{"\n"}GLOBAL</Text>
+              <Text style={styles.globalBadgeText}>#42 GLOBAL</Text>
             </View>
           </View>
           <Text style={styles.ageText}>24 YEARS OLD</Text>
@@ -56,6 +58,7 @@ export const TopProfileCard = () => {
       </View>
 
       <Pressable
+        onPress={() => router.push("/profile/edit-profile")}
         style={({ pressed }) => [
           styles.buttonWrapper,
           pressed && { opacity: 0.8 },
@@ -164,8 +167,8 @@ const styles = StyleSheet.create({
   },
   globalBadgeText: {
     color: "#FFB68C",
-    fontSize: 8,
-    fontWeight: "800",
+    fontSize: 12,
+    fontWeight: "600",
     textAlign: "center",
   },
   ageText: {

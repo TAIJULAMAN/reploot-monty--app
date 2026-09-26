@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { CheckCircle } from "lucide-react-native";
+import { Image } from "expo-image";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -8,7 +8,11 @@ export const PlanCard = () => {
     <View style={styles.card}>
       <View style={[styles.cardHeader, { justifyContent: "space-between" }]}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <CheckCircle size={16} color="#2DD4BF" />
+          <Image
+            source={require("../../../../assets/check.svg")}
+            style={{ width: 16, height: 16 }}
+            contentFit="contain"
+          />
           <Text style={[styles.cardTitle, { marginLeft: 8 }]}>PLAN</Text>
         </View>
         <View style={styles.activePill}>
@@ -19,9 +23,14 @@ export const PlanCard = () => {
         <Text style={styles.planName}>KINETQX PREMIUM</Text>
         <Text style={styles.planDate}>Renewal: Dec 12, 2024</Text>
       </View>
-      <Pressable style={styles.buttonWrapper}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.buttonWrapper,
+          pressed && { opacity: 0.8 },
+        ]}
+      >
         <LinearGradient
-          colors={["#0284C7", "#38BDF8"]}
+          colors={["#3568A5", "#4B85C4", "#69A6E3"]}
           style={styles.btnGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -48,20 +57,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardTitle: {
-    color: "#94A3B8",
-    fontSize: 12,
-    fontWeight: "800",
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1,
     marginLeft: 8,
   },
   activePill: {
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#C5C0FF30",
     paddingHorizontal: 10,
+    borderColor: "#C5C0FF",
     paddingVertical: 4,
     borderRadius: 12,
   },
   activePillText: {
-    color: "#CBD5E1",
+    color: "#C5C0FF",
     fontSize: 10,
     fontWeight: "800",
   },
@@ -71,13 +81,13 @@ const styles = StyleSheet.create({
   planName: {
     color: "#38BDF8",
     fontSize: 16,
-    fontWeight: "800",
+    fontWeight: "400",
     marginBottom: 4,
   },
   planDate: {
-    color: "#64748B",
-    fontSize: 12,
-    fontWeight: "500",
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "400",
   },
   buttonWrapper: {
     width: "100%",
@@ -91,8 +101,8 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: "#FFFFFF",
-    fontSize: 13,
-    fontWeight: "800",
+    fontSize: 14,
+    fontWeight: "400",
     letterSpacing: 1,
   },
 });
