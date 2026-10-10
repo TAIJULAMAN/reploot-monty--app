@@ -1,8 +1,7 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { Mail, RotateCcw, Star, Zap } from "lucide-react-native";
 import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { Mail, RotateCcw } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { SparkleDecoration } from "./SparkleDecoration";
 
 export interface ForgotPasswordCheckEmailStepProps {
   onOpenMailApp: () => void;
@@ -15,62 +14,67 @@ export function ForgotPasswordCheckEmailStep({
 }: ForgotPasswordCheckEmailStepProps) {
   return (
     <View style={styles.contentContainer}>
-      <View style={styles.checkEmailZapPosition}>
-        <Zap size={26} color="#2DD4BF" fill="#2DD4BF" />
-      </View>
-
       <View style={styles.heroSection}>
         <Text style={styles.heroTitle}>CHECK</Text>
         <View style={styles.emailRow}>
           <Text style={styles.heroTitle}>EMAIL</Text>
-          <View style={styles.emailSparklePosition}>
-            <SparkleDecoration size={32} color="#2DD4BF" />
-          </View>
         </View>
 
+        <LinearGradient
+          colors={["#FED7AA", "#FFEDD5", "rgba(254, 215, 170, 0)"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.todayUnderline}
+        />
         <Text style={styles.subtitle}>
           We sent a magic link to your inbox. Tap it to get back in the game.
         </Text>
       </View>
 
-      <View style={styles.actionButtonWrapper}>
-        <Pressable
-          onPress={onOpenMailApp}
-          style={({ pressed }) => [
-            styles.fullWidth,
-            pressed && styles.buttonPressed,
-          ]}
-        >
+      <View style={styles.cardContainer}>
+        <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={["#3568A5", "#4B85C4", "#69A6E3"]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.actionGradient}
+            colors={["#462D24", "#2E2644", "#1B1D38"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
           >
-            <View style={styles.mailButtonContent}>
-              <Mail size={20} color="#FFFFFF" style={styles.mailIcon} />
-              <Text style={styles.actionButtonText}>OPEN MAIL APP</Text>
+            <View style={styles.actionButtonWrapper}>
+              <Pressable
+                onPress={onOpenMailApp}
+                style={({ pressed }) => [
+                  styles.fullWidth,
+                  pressed && styles.buttonPressed,
+                ]}
+              >
+                <LinearGradient
+                  colors={["#3568A5", "#4B85C4", "#69A6E3"]}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                  style={styles.actionGradient}
+                >
+                  <View style={styles.mailButtonContent}>
+                    <Mail size={20} color="#FFFFFF" style={styles.mailIcon} />
+                    <Text style={styles.actionButtonText}>OPEN MAIL APP</Text>
+                  </View>
+                </LinearGradient>
+              </Pressable>
             </View>
+
+            <Pressable
+              onPress={onResendEmail}
+              style={({ pressed }) => [
+                styles.resendButton,
+                pressed && styles.buttonPressed,
+              ]}
+              hitSlop={12}
+            >
+              <RotateCcw size={15} color="#94A3B8" style={styles.resendIcon} />
+              <Text style={styles.resendText}>RESEND EMAIL</Text>
+            </Pressable>
           </LinearGradient>
-        </Pressable>
+        </View>
       </View>
-
-      <Pressable
-        onPress={onResendEmail}
-        style={({ pressed }) => [
-          styles.resendButton,
-          pressed && styles.buttonPressed,
-        ]}
-        hitSlop={12}
-      >
-        <RotateCcw size={15} color="#94A3B8" style={styles.resendIcon} />
-        <Text style={styles.resendText}>RESEND EMAIL</Text>
-      </Pressable>
-
-      <View style={styles.checkEmailStarPosition}>
-        <Star size={20} color="#2DD4BF" fill="#2DD4BF" opacity={0.35} />
-      </View>
-
       <View style={styles.encryptionFooter}>
         <Text style={styles.encryptionText}>KINETIC AI ENCRYPTION ACTIVE</Text>
       </View>
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 38,
     lineHeight: 42,
-    fontWeight: "900",
+    fontWeight: "700",
     letterSpacing: 0.5,
     textTransform: "uppercase",
     textShadowColor: "rgba(34, 211, 238, 0.75)",
@@ -112,6 +116,13 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginBottom: 4,
   },
+  todayUnderline: {
+    width: 96,
+    height: 4,
+    borderRadius: 2,
+    marginTop: 6,
+    marginLeft: 2,
+  },
   subtitle: {
     color: "#94A3B8",
     fontSize: 15,
@@ -119,10 +130,30 @@ const styles = StyleSheet.create({
     marginTop: 14,
     maxWidth: 320,
   },
+  cardContainer: {
+    position: "relative",
+    width: "100%",
+  },
+  cardWrapper: {
+    borderRadius: 32,
+    borderWidth: 1.2,
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    overflow: "hidden",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.45,
+    shadowRadius: 20,
+    elevation: 8,
+  },
+  cardGradient: {
+    paddingHorizontal: 20,
+    paddingTop: 28,
+    paddingBottom: 28,
+  },
   actionButtonWrapper: {
     width: "100%",
-    height: 54,
-    borderRadius: 27,
+    height: 52,
+    borderRadius: 26,
     overflow: "hidden",
   },
   fullWidth: {
@@ -135,8 +166,8 @@ const styles = StyleSheet.create({
   },
   actionGradient: {
     width: "100%",
-    height: 54,
-    borderRadius: 27,
+    height: 52,
+    borderRadius: 26,
     alignItems: "center",
     justifyContent: "center",
   },

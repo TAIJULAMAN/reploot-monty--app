@@ -10,7 +10,8 @@ import {
   ProgressBar,
   Screen,
 } from "@/shared/components/ui";
-import { useAppStore } from "@/stores/appStore";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setOnline, setHasSeenOnboarding } from "@/store/slices/appSlice";
 import { mockUser } from "@/mocks/user.mock";
 import { queryKeys } from "@/services/api/queryKeys";
 import { colors } from "@/theme/colors";
@@ -18,7 +19,9 @@ import { Sparkles, CheckCircle, Zap, Shield, ChevronRight } from "lucide-react-n
 
 export default function DevVerificationScreen() {
   const router = useRouter();
-  const { isOnline, setOnline, hasSeenOnboarding, setHasSeenOnboarding } = useAppStore();
+  const dispatch = useAppDispatch();
+  const isOnline = useAppSelector((state) => state.app.isOnline);
+  const hasSeenOnboarding = useAppSelector((state) => state.app.hasSeenOnboarding);
 
   // Demonstrate React Query server-state caching with mock data
   const { data: user, isLoading } = useQuery({

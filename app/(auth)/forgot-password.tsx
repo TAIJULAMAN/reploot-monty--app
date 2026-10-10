@@ -13,10 +13,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
   AuthHeader,
-  ForgotPasswordBackground,
   ForgotPasswordCheckEmailStep,
   ForgotPasswordNewPasswordStep,
   ForgotPasswordRequestStep,
+  SignUpBackground,
 } from "@/features/auth";
 
 type ForgotPasswordStep = "request" | "check_email" | "new_password";
@@ -89,8 +89,7 @@ export default function ForgotPasswordRoute() {
 
   return (
     <View style={styles.root}>
-      <ForgotPasswordBackground />
-
+      <SignUpBackground />
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}

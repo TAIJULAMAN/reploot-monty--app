@@ -8,7 +8,8 @@ import {
   SplashScreen,
   useOnboardingStore,
 } from "@/features/onboarding";
-import { useAppStore } from "@/stores/appStore";
+import { useAppDispatch } from "@/store/hooks";
+import { setHasSeenOnboarding } from "@/store/slices/appSlice";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -27,7 +28,7 @@ export default function OnboardingScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
-  const setHasSeenOnboarding = useAppStore((s) => s.setHasSeenOnboarding);
+  const dispatch = useAppDispatch();
   const { setSlideIndex, isSplashVisible, setSplashVisible } =
     useOnboardingStore();
 
@@ -75,8 +76,8 @@ export default function OnboardingScreen() {
   };
 
   const handleCompleteOnboarding = () => {
-    setHasSeenOnboarding(true);
-    router.replace("/(auth)/sign-in");
+    dispatch(setHasSeenOnboarding(true));
+    router.replace("/(auth)/sign-up");
     requestAnimationFrame(() => {
       try {
         void Haptics.notificationAsync(

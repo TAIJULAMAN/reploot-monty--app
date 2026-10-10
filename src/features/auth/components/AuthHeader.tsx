@@ -5,10 +5,10 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from "react-native";
+import { Image } from "expo-image";
 
 export interface AuthHeaderProps {
   onBack?: () => void;
@@ -61,9 +61,11 @@ export function AuthHeader({
         <View style={styles.placeholder} />
       )}
 
-      <Text style={[styles.wordmark, { color: wordmarkColor }]}>
-        {brandText}
-      </Text>
+      <Image
+        source={require("../../../../assets/logo.png")}
+        style={styles.logoImage}
+        contentFit="contain"
+      />
     </View>
   );
 }
@@ -93,10 +95,8 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
   },
-  wordmark: {
-    fontSize: 21,
-    fontWeight: "900",
-    letterSpacing: 2,
-    textTransform: "uppercase",
+  logoImage: {
+    width: 140,
+    height: 32,
   },
 });

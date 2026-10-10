@@ -1,11 +1,11 @@
-import { useAuthStore } from "@/stores/authStore";
+import { useAppSelector } from "@/store/hooks";
 import { Image } from "expo-image";
 import { Bell, Search } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export const HomeHeaderNav = () => {
-  const user = useAuthStore((s) => s.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   return (
     <View style={styles.container}>

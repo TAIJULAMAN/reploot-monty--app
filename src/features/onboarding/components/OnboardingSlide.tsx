@@ -2,6 +2,8 @@ import { Image } from "expo-image";
 import { Zap } from "lucide-react-native";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { OnboardingSlideItem } from "../data/onboardingData";
 
 interface OnboardingSlideProps {
@@ -27,18 +29,12 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
       {slide.id === "trainer" && (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <View style={styles.cyberLine} />
-
-          {/* Ember 1: Warm glowing particle at top-right */}
           <View style={[styles.emberGlow, { top: "18%", right: "32%" }]}>
             <View style={styles.emberCore} />
           </View>
-
-          {/* Ember 2: Warm glowing particle at mid-left */}
           <View style={[styles.emberGlow, { top: "34%", left: "11%" }]}>
             <View style={styles.emberCore} />
           </View>
-
-          {/* Ember 3: Warm glowing particle at bottom-right */}
           <View style={[styles.emberGlow, { top: "84%", right: "18%" }]}>
             <View style={styles.emberCore} />
           </View>
@@ -47,9 +43,22 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
       <View style={[styles.textContainer, { bottom: bottomOffset }]}>
         <View style={styles.titleStack}>
           {slide.titleLines.map((line, index) => (
-            <Text key={index} style={styles.titleLine}>
-              {line}
-            </Text>
+            <MaskedView
+              key={index}
+              style={styles.maskedView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text style={styles.titleLine}>{line}</Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
           ))}
         </View>
 
@@ -59,20 +68,33 @@ export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
               <Zap size={16} color="#A855F7" fill="#A855F7" />
             </View>
           )}
-          <Text style={styles.subtitle}>
-            {slide.subtitleParts.map((part, index) => (
-              <Text
-                key={index}
-                style={[
-                  styles.subtitlePartDefault,
-                  part.color ? { color: part.color } : null,
-                  part.isBold ? { fontWeight: "700" } : null,
-                ]}
-              >
-                {part.text}
-              </Text>
-            ))}
-          </Text>
+          <MaskedView
+            style={styles.maskedSubtitleView}
+            maskElement={
+              <View style={styles.maskWrapper}>
+                <Text style={styles.subtitle}>
+                  {slide.subtitleParts.map((part, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.subtitlePartDefault,
+                        part.isBold ? { fontWeight: "700" } : null,
+                      ]}
+                    >
+                      {part.text}
+                    </Text>
+                  ))}
+                </Text>
+              </View>
+            }
+          >
+            <LinearGradient
+              colors={["#00f2fe", "#4facfe"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            />
+          </MaskedView>
         </View>
       </View>
     </View>
@@ -131,17 +153,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
+  maskedView: {
+    height: 64,
+    width: 320,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  gradient: {
+    flex: 1,
+  },
   titleLine: {
     color: "#FFFFFF",
-    fontSize: 60,
+    fontSize: 56,
     lineHeight: 60,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: 1,
+    letterSpacing: 2,
     textAlign: "center",
     textTransform: "uppercase",
-    textShadowColor: "rgba(0, 0, 0, 0.8)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
   subtitleWrapper: {
     flexDirection: "row",
@@ -154,18 +194,22 @@ const styles = StyleSheet.create({
     marginRight: 6,
     marginTop: 3,
   },
+  maskedSubtitleView: {
+    height: 44, // enough for 2 lines of subtitle
+    width: 300,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   subtitle: {
     textAlign: "center",
     fontSize: 15,
     lineHeight: 22,
   },
   subtitlePartDefault: {
-    color: "#E2E8F0",
+    color: "#FFFFFF",
     fontSize: 15,
     lineHeight: 22,
+    fontFamily: "monospace",
     fontWeight: "400",
-    textShadowColor: "rgba(0, 0, 0, 0.85)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 6,
   },
 });

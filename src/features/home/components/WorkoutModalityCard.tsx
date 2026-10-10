@@ -97,7 +97,7 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
 const styles = StyleSheet.create({
   cardContainer: {
     width: "100%",
-    aspectRatio: 342 / 240,
+    minHeight: 240,
     borderRadius: 26,
     overflow: "hidden",
     backgroundColor: "#070A11",

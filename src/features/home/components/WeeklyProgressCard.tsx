@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ArrowRight, Zap } from "lucide-react-native";
+import { ArrowRight, Star, Zap } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
 
 export const WeeklyProgressCard = () => {
@@ -7,19 +7,15 @@ export const WeeklyProgressCard = () => {
     <View style={styles.cardContainer}>
       <View style={styles.headerRow}>
         {/* LVL 42 Box */}
-        <LinearGradient
-          colors={["#707BFF", "#5260FF"]}
-          style={styles.levelBox}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <Text style={styles.levelTextSmall}>LVL</Text>
-          <Text style={styles.levelTextBig}>42</Text>
-        </LinearGradient>
-
-        <View style={styles.tierStreakCol}>
-          <Text style={styles.eliteTierText}>ELITE</Text>
-          <Text style={styles.eliteTierText}>TIER</Text>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.streakTopRow}>
+            <Star size={28} color="#38EDD8" strokeWidth={2.5} />
+            <Text style={[styles.streakNumber, { color: "#38EDD8" }]}>42</Text>
+          </View>
+          <View style={styles.streakBottomRow}>
+            <Text style={styles.streakLabel}>ELITE</Text>
+            <Text style={styles.streakLabel}>TIER</Text>
+          </View>
         </View>
 
         {/* 12 DAY STREAK */}
@@ -132,11 +128,11 @@ const styles = StyleSheet.create({
   },
   levelTextSmall: {
     color: "#FFFFFF",
-    fontSize: 28,
-    fontWeight: "900",
-    lineHeight: 28,
-    letterSpacing: 2,
-    marginBottom: 2,
+    fontSize: 32,
+    fontWeight: "700",
+    lineHeight: 32,
+    letterSpacing: 1,
+    marginBottom: 1,
   },
   levelTextBig: {
     color: "#FFFFFF",

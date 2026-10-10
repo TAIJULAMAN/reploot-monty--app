@@ -4,17 +4,18 @@ import { AiWorkoutCard } from "@/features/home/components/AiWorkoutCard";
 import { HomeGreeting } from "@/features/home/components/HomeGreeting";
 import { NutritionDashboardCard } from "@/features/home/components/NutritionDashboardCard";
 import { WeeklyProgressCard } from "@/features/home/components/WeeklyProgressCard";
+import { TodaysMissionsCard } from "@/features/home/components/TodaysMissionsCard";
 import { WorkoutHeader } from "@/features/workouts";
-import { useAuthStore } from "@/stores/authStore";
+import { useAppSelector } from "@/store/hooks";
 import { StatusBar } from "expo-status-bar";
 import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function HomeTabRoute() {
-  const user = useAuthStore((s) => s.user);
+  const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
 
-  const userName = user?.fullName?.split(" ")[0] || "ALEX";
+  const userName = user?.fullName?.split(" ")[0] || "USER";
 
   return (
     <View style={styles.screen}>
@@ -26,6 +27,7 @@ export default function HomeTabRoute() {
       >
         <HomeGreeting name={userName} />
         <WeeklyProgressCard />
+        <TodaysMissionsCard />
         <View style={styles.sectionSpacing}>
           <WorkoutModalitiesSection />
         </View>

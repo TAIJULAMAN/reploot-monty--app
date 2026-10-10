@@ -1,13 +1,18 @@
 import React from "react";
 import { Redirect } from "expo-router";
-import { useAppStore } from "@/stores/appStore";
+import { useAppSelector } from "@/store/hooks";
 
 export default function RootIndex() {
-  const hasSeenOnboarding = useAppStore((s) => s.hasSeenOnboarding);
+  const hasSeenOnboarding = useAppSelector((state) => state.app.hasSeenOnboarding);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   if (!hasSeenOnboarding) {
     return <Redirect href="/(onboarding)" />;
   }
 
-  return <Redirect href="/(auth)/sign-in" />;
+  if (isAuthenticated) {
+    return <Redirect href="/(tabs)/home" />;
+  }
+
+  return <Redirect href="/(auth)/sign-up" />;
 }

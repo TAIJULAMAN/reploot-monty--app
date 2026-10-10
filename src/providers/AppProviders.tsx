@@ -4,6 +4,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/services/api/queryClient";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "@/store";
 import { colors } from "@/theme/colors";
 
 export interface AppProvidersProps {
@@ -14,9 +16,11 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
       <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <View style={styles.container}>{children}</View>
-        </QueryClientProvider>
+        <ReduxProvider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <View style={styles.container}>{children}</View>
+          </QueryClientProvider>
+        </ReduxProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

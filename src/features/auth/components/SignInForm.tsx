@@ -76,7 +76,7 @@ export function SignInForm({
             ]}
           >
             <LinearGradient
-              colors={["#3568A5", "#4B85C4", "#69A6E3"]}
+              colors={["#00f2fe", "#4facfe"]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
               style={styles.continueGradient}
@@ -167,21 +167,25 @@ const styles = StyleSheet.create({
   continueWrapper: {
     width: "100%",
     height: 52,
-    borderRadius: 26,
+    borderRadius: 12,
     overflow: "hidden",
     marginBottom: 22,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
   },
   continueGradient: {
     width: "100%",
-    height: 52,
-    borderRadius: 26,
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
   continueText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "400",
+    color: "#11131E",
+    fontSize: 16,
+    fontFamily: "monospace",
+    fontWeight: "900",
     letterSpacing: 2.2,
     textTransform: "uppercase",
   },

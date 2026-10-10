@@ -88,9 +88,7 @@ export default function SignUpRoute() {
 
   return (
     <View style={styles.root}>
-      {/* Dark Ambient Background with Warm Bronze Glow & Overhead Curved Arc */}
       <SignUpBackground />
-
       <KeyboardAvoidingView
         style={styles.flexOne}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -107,23 +105,15 @@ export default function SignUpRoute() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Extracted Shared Auth Header */}
           <AuthHeader onBack={handleBack} />
-
-          {/* Hero Section: JOIN + Turquoise Arrowhead, TODAY + Warm Gradient Bar */}
           <View style={styles.heroSection}>
-            {/* Row 1: JOIN + Upward Turquoise Arrowhead */}
             <View style={styles.titleRow}>
               <Text style={styles.heroTitle}>JOIN</Text>
               <View style={styles.arrowheadSlot}>
                 <ArrowheadDecoration size={38} color="#2DD4BF" />
               </View>
             </View>
-
-            {/* Row 2: TODAY */}
             <Text style={styles.heroTitle}>TODAY</Text>
-
-            {/* Fading Peach / Amber Underline Accent */}
             <LinearGradient
               colors={["#FED7AA", "#FFEDD5", "rgba(254, 215, 170, 0)"]}
               start={{ x: 0, y: 0.5 }}
@@ -131,14 +121,7 @@ export default function SignUpRoute() {
               style={styles.todayUnderline}
             />
           </View>
-
-          {/* Authentication Panel */}
           <View style={styles.cardContainer}>
-            {/* Warm Sparkle Cluster on Right Edge next to Full Name */}
-            <View style={styles.cardSparklePosition}>
-              <WarmSparkleDecoration size={26} color="#E2B89D" opacity={0.8} />
-            </View>
-
             <View style={styles.cardWrapper}>
               <LinearGradient
                 colors={["#462D24", "#2E2644", "#1B1D38"]}
@@ -146,7 +129,6 @@ export default function SignUpRoute() {
                 end={{ x: 1, y: 1 }}
                 style={styles.cardGradient}
               >
-                {/* Full Name Field */}
                 <AuthDarkPillInput
                   label="FULL NAME"
                   value={fullName}
@@ -156,8 +138,6 @@ export default function SignUpRoute() {
                   autoCorrect={false}
                   rightIcon={<User size={19} color="#CBD5E1" />}
                 />
-
-                {/* Email Field */}
                 <AuthDarkPillInput
                   label="EMAIL"
                   value={email}
@@ -168,8 +148,6 @@ export default function SignUpRoute() {
                   autoCorrect={false}
                   rightIcon={<Mail size={19} color="#CBD5E1" />}
                 />
-
-                {/* Password Field */}
                 <AuthDarkPillInput
                   label="PASSWORD"
                   value={password}
@@ -178,8 +156,6 @@ export default function SignUpRoute() {
                   secureTextEntry
                   rightIcon={<Lock size={19} color="#CBD5E1" />}
                 />
-
-                {/* Confirm Password Field */}
                 <AuthDarkPillInput
                   label="CONFIRM PASSWORD"
                   value={confirmPassword}
@@ -189,7 +165,6 @@ export default function SignUpRoute() {
                   rightIcon={<ShieldCheck size={19} color="#CBD5E1" />}
                   containerStyle={styles.confirmPasswordField}
                 />
-
                 <View style={styles.createAccountWrapper}>
                   <Pressable
                     onPress={handleCreateAccount}
@@ -212,15 +187,11 @@ export default function SignUpRoute() {
                     </LinearGradient>
                   </Pressable>
                 </View>
-
-                {/* OR CONTINUE WITH Divider */}
                 <View style={styles.dividerRow}>
                   <View style={styles.dividerLine} />
-                  <Text style={styles.dividerText}>OR CONTINUE WITH</Text>
+                  <Text style={styles.dividerText}>OR</Text>
                   <View style={styles.dividerLine} />
                 </View>
-
-                {/* Social: Continue with Google */}
                 <View style={styles.socialButtonWrapper}>
                   <Pressable
                     onPress={handleGoogleSignUp}
@@ -239,8 +210,6 @@ export default function SignUpRoute() {
                     </View>
                   </Pressable>
                 </View>
-
-                {/* Social: Continue with Apple */}
                 <View style={styles.appleButtonWrapper}>
                   <Pressable
                     onPress={handleAppleSignUp}
@@ -262,8 +231,6 @@ export default function SignUpRoute() {
               </LinearGradient>
             </View>
           </View>
-
-          {/* Bottom Account CTA - Dedicated Pressable with HitTarget */}
           <View style={styles.bottomCtaContainer}>
             <Text style={styles.bottomCtaText}>Already have an account? </Text>
             <Pressable
@@ -315,7 +282,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 38,
     lineHeight: 42,
-    fontWeight: "900",
+    fontWeight: "700",
     letterSpacing: 0.5,
     textTransform: "uppercase",
     textShadowColor: "rgba(34, 211, 238, 0.65)",

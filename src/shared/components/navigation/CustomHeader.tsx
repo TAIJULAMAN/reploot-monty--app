@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/authStore";
+import { useAppSelector } from "@/store/hooks";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -60,7 +60,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   const resolvedVariant = titleVariant ?? (showBackButton ? "text" : "logo");
 

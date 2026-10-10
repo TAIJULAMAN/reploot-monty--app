@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   togglePillText: {
     color: "#94A3B8",
     fontSize: 10,
-    fontWeight: "800",
+    fontWeight: "400",
     letterSpacing: 1,
   },
   togglePillTextActive: {

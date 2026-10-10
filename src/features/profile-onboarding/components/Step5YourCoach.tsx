@@ -1,5 +1,6 @@
-import { useAppStore } from "@/stores/appStore";
-import { useAuthStore } from "@/stores/authStore";
+import { useAppDispatch } from "@/store/hooks";
+import { setHasSeenOnboarding } from "@/store/slices/appSlice";
+import { setUser } from "@/store/slices/authSlice";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -82,8 +83,7 @@ function BrainOrbitIcon() {
 export function Step5YourCoach() {
   const router = useRouter();
   const { data } = useProfileSetupStore();
-  const setUser = useAuthStore((s) => s.setUser);
-  const setHasSeenOnboarding = useAppStore((s) => s.setHasSeenOnboarding);
+  const dispatch = useAppDispatch();
   const { width } = useWindowDimensions();
 
   const chamberSize = Math.min(width - 80, 280);
@@ -116,8 +116,8 @@ export function Step5YourCoach() {
   }, []);
 
   const handleFinish = () => {
-    setHasSeenOnboarding(true);
-    setUser({
+    dispatch(setHasSeenOnboarding(true));
+    dispatch(setUser({
       id: "user_kinetic_" + Date.now(),
       email: data.email || "runner@kinetic.ai",
       fullName: data.fullName || "Kinetic Runner",
@@ -125,7 +125,7 @@ export function Step5YourCoach() {
       phoneNumber: data.phoneNumber,
       createdAt: new Date().toISOString(),
       hasCompletedOnboarding: true,
-    });
+    }));
 
     requestAnimationFrame(() => {
       try {

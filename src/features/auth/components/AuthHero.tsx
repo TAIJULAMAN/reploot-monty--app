@@ -1,5 +1,7 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 
 export interface AuthHeroProps {
   line1?: string;
@@ -17,8 +19,22 @@ export function AuthHero({ line1 = "WELCOME", line2 = "BACK" }: AuthHeroProps) {
         />
       </View>
 
-      <Text style={styles.heroTitle}>{line1}</Text>
-      <Text style={styles.heroTitle}>{line2}</Text>
+      <MaskedView
+        style={styles.maskedView}
+        maskElement={
+          <View style={styles.maskWrapper}>
+            <Text style={styles.heroTitle}>{line1}</Text>
+            <Text style={styles.heroTitle}>{line2}</Text>
+          </View>
+        }
+      >
+        <LinearGradient
+          colors={["#00f2fe", "#4facfe"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </MaskedView>
 
       <View style={styles.dumbbellPosition}>
         <Image
@@ -34,7 +50,7 @@ export function AuthHero({ line1 = "WELCOME", line2 = "BACK" }: AuthHeroProps) {
 const styles = StyleSheet.create({
   heroSection: {
     position: "relative",
-    marginBottom: 6,
+    marginBottom: 16,
     paddingLeft: 2,
   },
   sparklePosition: {
@@ -43,22 +59,36 @@ const styles = StyleSheet.create({
     left: -2,
     zIndex: 2,
   },
+  maskedView: {
+    height: 100, // Enough height for both lines
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start", // Left align for auth hero
+  },
+  gradient: {
+    flex: 1,
+  },
   heroTitle: {
     color: "#FFFFFF",
-    fontSize: 38,
-    lineHeight: 40,
-    fontWeight: "800",
+    fontSize: 42,
+    lineHeight: 44,
+    fontFamily: "monospace",
+    fontWeight: "900",
     letterSpacing: 1,
     textTransform: "uppercase",
-    textShadowColor: "rgba(255, 255, 255, 0.35)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 12,
-    marginTop: 12,
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    marginTop: 4,
   },
   dumbbellPosition: {
     position: "absolute",
     right: 22,
-    top: 60,
+    top: 50,
     zIndex: 1,
   },
 });

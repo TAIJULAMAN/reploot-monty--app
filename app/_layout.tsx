@@ -8,12 +8,21 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
 
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+
+function AuthGuard() {
+  useProtectedRoute();
+  return null;
+}
+
 export default function RootLayout() {
   useFonts({
     JetBrainsMono_700Bold,
   });
+  
   return (
     <AppProviders>
+      <AuthGuard />
       <StatusBar style="light" />
       <Stack
         screenOptions={{
