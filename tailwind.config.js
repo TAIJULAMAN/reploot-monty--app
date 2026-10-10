@@ -1,10 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
-  content: [
-    "./app/**/*.{js,jsx,ts,tsx}",
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./app/**/*.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
@@ -56,8 +53,8 @@ module.exports = {
         full: "9999px",
       },
       spacing: {
-        "4.5": "18px",
-        "18": "72px",
+        4.5: "18px",
+        18: "72px",
       },
     },
   },
