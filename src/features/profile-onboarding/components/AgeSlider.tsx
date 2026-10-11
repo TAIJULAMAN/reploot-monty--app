@@ -271,6 +271,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 34,
     lineHeight: 38,
+    fontFamily: "monospace",
     fontWeight: "900",
   },
 });

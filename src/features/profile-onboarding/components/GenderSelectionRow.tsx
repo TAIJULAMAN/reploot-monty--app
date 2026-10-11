@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
   },
   genderLabel: {
     fontSize: 14,
-    fontWeight: "400",
+    fontFamily: "monospace",
+    fontWeight: "900",
     letterSpacing: 2,
     color: "#FFFFFF",
   },
