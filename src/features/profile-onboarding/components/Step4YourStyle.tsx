@@ -95,7 +95,6 @@ export function Step4YourStyle() {
 
       {/* 2 Location Cards: GYM vs HOME */}
       <View style={styles.locationGroup}>
-        {/* GYM Card */}
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: selectedStyle === "gym" }}
@@ -111,8 +110,6 @@ export function Step4YourStyle() {
             subtitle="Full equipment access"
           />
         </Pressable>
-
-        {/* HOME Card */}
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: selectedStyle === "home" }}
@@ -217,69 +214,6 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 16,
     marginBottom: 36,
-  },
-  cardInactive: {
-    width: "100%",
-    height: 94,
-    borderRadius: 24,
-    backgroundColor: "#11141C",
-    borderWidth: 1.4,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-  },
-  cardActiveGradient: {
-    width: "100%",
-    height: 94,
-    borderRadius: 24,
-    padding: 2,
-    shadowColor: "#22D3EE",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.65,
-    shadowRadius: 18,
-    elevation: 8,
-  },
-  cardActiveInner: {
-    flex: 1,
-    width: "100%",
-    backgroundColor: "#161D27",
-    borderRadius: 22,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14,
-  },
-  iconSquare: {
-    width: 60,
-    height: 60,
-    borderRadius: 18,
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 18,
-  },
-  locationTextGroup: {
-    flex: 1,
-  },
-  locationTitle: {
-    color: "#CBD5E1",
-    fontSize: 16,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-    marginBottom: 4,
-  },
-  locationTitleActive: {
-    color: "#FFFFFF",
-    fontWeight: "900",
-  },
-  locationSubtitle: {
-    color: "#94A3B8",
-    fontSize: 13,
-    fontWeight: "400",
-  },
-  badgeContainer: {
-    marginLeft: 8,
-    marginRight: 4,
   },
   frequencySection: {
     width: "100%",
