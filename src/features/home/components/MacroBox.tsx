@@ -57,22 +57,22 @@ export const MacroBox = ({
 const styles = StyleSheet.create({
   macroBox: {
     width: "48%",
-    backgroundColor: "#161925",
+    backgroundColor: "#0D1017",
     borderRadius: 16,
-    padding: 16,
+    padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.04)",
+    borderColor: "rgba(255, 255, 255, 0.06)",
   },
   macroHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 14,
   },
   macroPercentPill: {
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 10,
+    paddingVertical: 3,
+    borderRadius: 8,
     borderWidth: 1,
   },
   macroPercentText: {
@@ -82,34 +82,34 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
   },
   macroLabel: {
-    color: "#8E93A6",
+    color: "#94A3B8",
     fontSize: 10,
     fontWeight: "700",
     letterSpacing: 1,
     fontFamily: "monospace",
-    marginBottom: 6,
+    marginBottom: 4,
   },
   macroValues: {
-    marginBottom: 14,
+    marginBottom: 12,
   },
   macroCurrent: {
     fontSize: 14,
-    fontWeight: "800",
+    fontWeight: "900",
     fontFamily: "monospace",
   },
   macroSlash: {
-    color: "#C2C6DC",
-    fontSize: 12,
+    color: "#64748B",
+    fontSize: 11,
     fontWeight: "600",
     fontFamily: "monospace",
   },
   macroProgressBar: {
-    height: 6,
+    height: 5,
     backgroundColor: "rgba(255, 255, 255, 0.06)",
     borderRadius: 3,
   },
   macroProgressFill: {
-    height: 6,
+    height: 5,
     borderRadius: 3,
   },
 });

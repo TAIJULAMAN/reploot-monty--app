@@ -1,12 +1,25 @@
+import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { ArrowRight } from "lucide-react-native";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export const AiCoachFloatingCard = () => {
+  const router = useRouter();
+
+  const handleAskCoach = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    router.push("/coach");
+  };
+
   return (
     <View style={styles.wrapper}>
       <LinearGradient
-        colors={["#1B2335", "#2773D0"]}
+        colors={["#121826", "#18243D", "#0F1626"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.bannerContainer}
@@ -18,18 +31,34 @@ export const AiCoachFloatingCard = () => {
           </View>
           <Image
             source={require("../../../../assets/coachOnline/coachOnline.png")}
-            style={{ width: 60, height: 60 }}
-            resizeMode="cover"
+            style={styles.coachAvatar}
+            contentFit="cover"
           />
         </View>
+
         <Text style={styles.messageText}>
           Need guidance? Your <Text style={styles.highlightText}>AI Coach</Text>{" "}
           is ready to <Text style={styles.highlightTextBlue}>optimize</Text>{" "}
           your session.
         </Text>
-        <Pressable style={styles.askButton}>
-          <Text style={styles.askButtonText}>ASK AI COACH</Text>
-          <ArrowRight size={14} color="#0F172A" strokeWidth={3} />
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.askButton,
+            pressed && styles.pressed,
+          ]}
+          onPress={handleAskCoach}
+          accessibilityRole="button"
+        >
+          <LinearGradient
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.askButtonGradient}
+          >
+            <Text style={styles.askButtonText}>ASK AI COACH</Text>
+            <ArrowRight size={14} color="#0B0E14" strokeWidth={2.8} />
+          </LinearGradient>
         </Pressable>
       </LinearGradient>
     </View>
@@ -44,104 +73,83 @@ const styles = StyleSheet.create({
   },
   bannerContainer: {
     borderRadius: 24,
-    padding: 24,
+    padding: 22,
     borderWidth: 1,
-    borderColor: "rgba(56, 189, 248, 0.3)",
+    borderColor: "rgba(56, 189, 248, 0.22)",
     overflow: "hidden",
+    backgroundColor: "#11141C",
   },
   topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 16,
+    marginBottom: 14,
   },
   onlinePill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(45, 212, 191, 0.15)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    backgroundColor: "rgba(56, 237, 216, 0.1)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(45, 212, 191, 0.3)",
+    borderColor: "rgba(56, 237, 216, 0.3)",
     gap: 6,
-    shadowColor: "#2DD4BF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 10,
-    elevation: 6,
   },
   onlineDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#2DD4BF",
-    shadowColor: "#2DD4BF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 4,
+    backgroundColor: "#38EDD8",
   },
   onlineText: {
-    color: "#2DD4BF",
-    fontSize: 14,
-    fontWeight: "400",
+    color: "#38EDD8",
+    fontSize: 10,
+    fontWeight: "700",
+    fontFamily: "monospace",
     letterSpacing: 1,
-    textShadowColor: "rgba(45, 212, 191, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
   },
-  miniBotIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 16,
-    backgroundColor: "rgba(56, 189, 248, 0.15)",
-    alignItems: "center",
-    justifyContent: "center",
+  coachAvatar: {
+    width: 56,
+    height: 56,
   },
   messageText: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    lineHeight: 20,
-    fontWeight: "600",
-    marginBottom: 24,
-    paddingRight: 30,
+    color: "#F1F5F9",
+    fontSize: 18,
+    lineHeight: 25,
+    fontWeight: "700",
+    marginBottom: 20,
+    paddingRight: 24,
   },
   highlightText: {
-    color: "#2DD4BF",
-    fontWeight: "800",
-    textShadowColor: "rgba(45, 212, 191, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+    color: "#38EDD8",
+    fontWeight: "900",
   },
   highlightTextBlue: {
-    color: "#A78BFA",
-    fontWeight: "800",
-    textShadowColor: "rgba(167, 139, 250, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+    color: "#00f2fe",
+    fontWeight: "900",
   },
   askButton: {
-    backgroundColor: "#FFFFFF",
     alignSelf: "flex-start",
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  askButtonGradient: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 20,
     gap: 8,
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    elevation: 8,
   },
   askButtonText: {
-    color: "#0F172A",
-    fontSize: 14,
-    fontWeight: "600",
-    letterSpacing: 1,
-    textShadowColor: "rgba(15, 23, 42, 0.4)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
+    color: "#0B0E14",
+    fontSize: 12,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
   },
 });
