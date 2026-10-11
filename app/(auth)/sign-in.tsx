@@ -48,10 +48,11 @@ export default function SignInRoute() {
         id: "1",
         email: email || "runner@kinetic.ai",
         fullName: "Alex Runner",
-        hasCompletedOnboarding: true,
+        hasCompletedOnboarding: false,
         createdAt: new Date().toISOString(),
       }),
     );
+    router.replace("/(profile-setup)");
     requestAnimationFrame(() => {
       try {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -70,12 +71,14 @@ export default function SignInRoute() {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {}
+    handleLogin();
   };
 
   const handleAppleLogin = () => {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {}
+    handleLogin();
   };
 
   const handleCreateAccount = () => {

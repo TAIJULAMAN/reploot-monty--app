@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store/hooks";
 export function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isLoading, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (isLoading) return;
@@ -13,10 +13,15 @@ export function useProtectedRoute() {
     const inTabsGroup = segments[0] === "(tabs)";
     const inProfileSetup = segments[0] === "(profile-setup)";
     const inAuthGroup = segments[0] === "(auth)";
-    if (!isAuthenticated && (inTabsGroup || inProfileSetup)) {
-      router.replace("/(auth)/sign-up");
+
+    if (!isAuthenticated && inTabsGroup) {
+      router.replace("/(auth)/sign-in");
     } else if (isAuthenticated && inAuthGroup) {
-      router.replace("/(tabs)/home");
+      if (user?.hasCompletedOnboarding) {
+        router.replace("/(tabs)/home");
+      } else {
+        router.replace("/(profile-setup)");
+      }
     }
-  }, [isAuthenticated, segments, isLoading, router]);
+  }, [isAuthenticated, user, segments, isLoading, router]);
 }
