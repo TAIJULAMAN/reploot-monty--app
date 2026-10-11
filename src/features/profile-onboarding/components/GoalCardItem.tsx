@@ -87,11 +87,6 @@ const styles = StyleSheet.create({
   cardActiveGradient: {
     borderRadius: 22,
     padding: 2,
-    shadowColor: "#22D3EE",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.65,
-    shadowRadius: 18,
-    elevation: 8,
   },
   cardActiveInner: {
     flex: 1,

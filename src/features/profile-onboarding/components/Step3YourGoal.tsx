@@ -12,7 +12,6 @@ import { HeartShapeIcon } from "./HeartShapeIcon";
 import { LightningIcon } from "./LightningIcon";
 import { MeditationIcon } from "./MeditationIcon";
 import { ScaleBoxIcon } from "./ScaleBoxIcon";
-import { SparkleCluster } from "./SparkleCluster";
 import { StopwatchIcon } from "./StopwatchIcon";
 import { GoalCardItem, GoalOption } from "./GoalCardItem";
 
@@ -54,14 +53,6 @@ const GOAL_PAIRS: [GoalOption, GoalOption][] = [
     },
   ],
 ];
-
-interface GoalCardItemProps {
-  opt: GoalOption;
-  isSelected: boolean;
-  cardWidth: number;
-  cardHeight: number;
-  onSelect: (goal: FitnessGoal) => void;
-}
 
 export function Step3YourGoal() {
   const { width: screenWidth } = useWindowDimensions();
@@ -136,9 +127,6 @@ export function Step3YourGoal() {
           </View>
         ))}
       </View>
-      {/* <View style={[styles.sparkleRow, { width: cardWidth * 2 + cardGap }]}>
-        <SparkleCluster />
-      </View> */}
       <View style={{ width: "100%", paddingHorizontal: horizontalPadding }}>
         <OnboardingButton text="CONTINUE" onPress={nextStep} />
       </View>
@@ -207,79 +195,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 10,
     justifyContent: "center",
-  },
-  cardInactive: {
-    borderRadius: 22,
-    backgroundColor: "#11141C",
-    borderWidth: 1.4,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 8,
-  },
-  cardActiveGradient: {
-    borderRadius: 22,
-    padding: 2,
-    shadowColor: "#22D3EE",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.65,
-    shadowRadius: 18,
-    elevation: 8,
-  },
-  cardActiveInner: {
-    flex: 1,
-    width: "100%",
-    backgroundColor: "#161D27",
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 8,
-  },
-  iconCircleInactive: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(255, 255, 255, 0.07)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  iconCircleActive: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(34, 211, 238, 0.16)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  cardLabelInactive: {
-    color: "#CBD5E1",
-    fontSize: 14,
-    lineHeight: 15,
-    fontWeight: "400",
-    letterSpacing: 1.4,
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-  cardLabelActive: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    lineHeight: 15,
-    fontWeight: "400",
-    letterSpacing: 1.4,
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-  sparkleRow: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingRight: 6,
-    marginTop: 1,
-    marginBottom: 2,
-  },
-  cardPressed: {
-    opacity: 0.88,
-    transform: [{ scale: 0.98 }],
   },
 });
