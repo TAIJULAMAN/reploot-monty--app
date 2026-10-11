@@ -1,5 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { Calendar } from "lucide-react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 export interface HomeGreetingProps {
   name: string;
@@ -17,10 +20,31 @@ export const HomeGreeting = ({ name }: HomeGreetingProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.greetingSub}>GOOD MORNING, {name.toUpperCase()}</Text>
-      <Text style={styles.greetingTitle}>TRAIN TODAY</Text>
-      <Text style={styles.greetingTitle}>TODAY</Text>
+      <View style={styles.titleWrapper}>
+        <MaskedView
+          style={styles.maskedTitleView}
+          maskElement={
+            <View style={styles.maskWrapper}>
+              <Text
+                style={styles.title}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                TRAIN TODAY
+              </Text>
+            </View>
+          }
+        >
+          <LinearGradient
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          />
+        </MaskedView>
+      </View>
       <View style={styles.dateContainer}>
-        <Calendar size={14} color="#fff" />
+        <Calendar size={14} color="#38BDF8" />
         <Text style={styles.dateText}>{formattedDate}</Text>
       </View>
     </View>
@@ -31,36 +55,53 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     marginTop: 16,
-    marginBottom: 28,
+    marginBottom: 24,
   },
   greetingSub: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "400",
-    letterSpacing: 2.5,
-    fontFamily: "monospace",
-    marginBottom: 8,
-  },
-  greetingTitle: {
-    color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 44,
+    color: "#94A3B8",
+    fontSize: 13,
     fontWeight: "700",
-    letterSpacing: -0.5,
-    textShadowColor: "rgba(56, 237, 216, 0.7)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 16,
+    letterSpacing: 2,
+    fontFamily: "monospace",
+    marginBottom: 6,
+  },
+  titleWrapper: {
+    alignItems: "flex-start",
+    width: "100%",
+  },
+  maskedTitleView: {
+    height: 52,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  gradient: {
+    flex: 1,
+  },
+  title: {
+    color: "#FFFFFF",
+    fontSize: 38,
+    lineHeight: 44,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 1.5,
+    textAlign: "left",
+    textTransform: "uppercase",
   },
   dateContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
+    marginTop: 10,
     gap: 6,
   },
   dateText: {
-    color: "#fff",
+    color: "#64748B",
     fontSize: 12,
-    fontWeight: "500",
+    fontWeight: "600",
     letterSpacing: 1.5,
     fontFamily: "monospace",
   },

@@ -101,17 +101,12 @@ export const WeeklyProgressCard = () => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#222333", // Darker purplish background
+    backgroundColor: "#11141C",
     borderRadius: 24,
     padding: 24,
     marginHorizontal: 20,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.05)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 8,
+    borderColor: "rgba(255, 255, 255, 0.08)",
     marginBottom: 24,
   },
   headerRow: {
@@ -230,11 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6E7196", // Purplish gray
   },
   barActiveGlow: {
-    shadowColor: "#38EDD8",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 12,
-    elevation: 8,
+    borderRadius: 6,
   },
   barActive: {
     // Gradient used inside view
