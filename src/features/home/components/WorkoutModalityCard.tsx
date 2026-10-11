@@ -72,23 +72,24 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
         style={StyleSheet.absoluteFill}
       />
 
-      {/* Circular Arrow Button on Right */}
-      <View style={styles.arrowButtonWrapper} pointerEvents="none">
-        <Image
-          source={arrowImage}
-          style={styles.arrowImage}
-          contentFit="contain"
-        />
-      </View>
+      {/* Bottom Content Row (Text and Opposite Arrow Button) */}
+      <View style={styles.bottomRow}>
+        <View style={styles.textContainer}>
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
+          <Text style={styles.subtitle} numberOfLines={2}>
+            {subtitle}
+          </Text>
+        </View>
 
-      {/* Bottom Text Content */}
-      <View style={styles.textContainer}>
-        <Text style={styles.title} numberOfLines={1}>
-          {title}
-        </Text>
-        <Text style={styles.subtitle} numberOfLines={2}>
-          {subtitle}
-        </Text>
+        <View style={styles.arrowButtonWrapper} pointerEvents="none">
+          <Image
+            source={arrowImage}
+            style={styles.arrowImage}
+            contentFit="contain"
+          />
+        </View>
       </View>
     </Pressable>
   );
@@ -109,27 +110,29 @@ const styles = StyleSheet.create({
     opacity: 0.92,
     transform: [{ scale: 0.985 }],
   },
-  arrowButtonWrapper: {
-    position: "absolute",
-    right: 18,
-    top: "52%",
-    marginTop: -27,
-    width: 54,
-    height: 54,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2,
-  },
-  arrowImage: {
-    width: 52,
-    height: 52,
-  },
-  textContainer: {
+  bottomRow: {
     position: "absolute",
     left: 20,
+    right: 20,
     bottom: 20,
-    right: 76,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     zIndex: 2,
+  },
+  textContainer: {
+    flex: 1,
+    marginRight: 16,
+  },
+  arrowButtonWrapper: {
+    width: 52,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  arrowImage: {
+    width: 50,
+    height: 50,
   },
   title: {
     color: "#FFFFFF",
