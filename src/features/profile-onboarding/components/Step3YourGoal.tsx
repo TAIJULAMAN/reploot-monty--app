@@ -5,7 +5,7 @@ import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 import { BicepArmIcon } from "./BicepArmIcon";
 import { HeartShapeIcon } from "./HeartShapeIcon";
@@ -140,7 +140,7 @@ export function Step3YourGoal() {
         <SparkleCluster />
       </View> */}
       <View style={{ width: "100%", paddingHorizontal: horizontalPadding }}>
-        <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+        <OnboardingButton text="CONTINUE" onPress={nextStep} />
       </View>
     </View>
   );

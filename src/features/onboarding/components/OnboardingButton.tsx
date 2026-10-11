@@ -1,49 +1,77 @@
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowRight } from "lucide-react-native";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface OnboardingButtonProps {
-  isFinalSlide: boolean;
+  isFinalSlide?: boolean;
   onPress: () => void;
   text?: string;
+  disabled?: boolean;
+  subtext?: string;
 }
 
 export function OnboardingButton({
-  isFinalSlide,
+  isFinalSlide = false,
   onPress,
   text,
+  disabled = false,
+  subtext,
 }: OnboardingButtonProps) {
   const displayText = text ?? (isFinalSlide ? "GET STARTED" : "NEXT");
+
+  const handlePress = () => {
+    if (disabled) return;
+    requestAnimationFrame(() => {
+      try {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        // ignore
+      }
+    });
+    onPress();
+  };
 
   return (
     <View style={styles.buttonContainer}>
       <Pressable
-        onPress={onPress}
+        accessibilityRole="button"
+        disabled={disabled}
+        onPress={handlePress}
         style={({ pressed }) => [
           styles.buttonWrapper,
-          pressed && styles.buttonPressed,
+          disabled && styles.buttonDisabled,
+          pressed && !disabled && styles.buttonPressed,
         ]}
       >
         <LinearGradient
           colors={
-            isFinalSlide
-              ? ["#0284C7", "#0EA5E9", "#38BDF8"]
-              : ["#3568A0", "#4B85C4", "#69A6E3"]
+            disabled
+              ? ["rgba(53, 104, 160, 0.4)", "rgba(105, 166, 227, 0.4)"]
+              : isFinalSlide
+                ? ["#0284C7", "#0EA5E9", "#38BDF8"]
+                : ["#3568A0", "#4B85C4", "#69A6E3"]
           }
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
           style={styles.buttonGradient}
         >
-          <Text style={styles.buttonText}>{displayText}</Text>
+          <Text
+            style={[styles.buttonText, disabled && styles.buttonTextDisabled]}
+          >
+            {displayText}
+          </Text>
           <ArrowRight
             size={19}
-            color="#FFFFFF"
+            color={disabled ? "rgba(255, 255, 255, 0.4)" : "#FFFFFF"}
             strokeWidth={2.4}
             style={styles.arrowIcon}
           />
         </LinearGradient>
       </Pressable>
+
+      {subtext ? <Text style={styles.subtext}>{subtext}</Text> : null}
     </View>
   );
 }
@@ -51,8 +79,9 @@ export function OnboardingButton({
 const styles = StyleSheet.create({
   buttonContainer: {
     width: "100%",
-    height: 60,
     position: "relative",
+    marginTop: 4,
+    marginBottom: 4,
   },
   buttonWrapper: {
     width: "100%",
@@ -65,6 +94,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
     zIndex: 2,
+  },
+  buttonDisabled: {
+    opacity: 0.55,
   },
   buttonPressed: {
     opacity: 0.88,
@@ -82,11 +114,24 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     letterSpacing: 2,
     textTransform: "uppercase",
+    fontFamily: "monospace",
+  },
+  buttonTextDisabled: {
+    color: "rgba(255, 255, 255, 0.5)",
   },
   arrowIcon: {
     marginLeft: 8,
+  },
+  subtext: {
+    color: "#64748B",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 1.2,
+    textAlign: "center",
+    marginTop: 8,
+    fontFamily: "monospace",
   },
 });

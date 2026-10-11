@@ -7,7 +7,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ActivityLevelCard } from "./ActivityLevelCard";
 import { HeightSelectionCard } from "./HeightSelectionCard";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 import { WeightSelectionCard } from "./WeightSelectionCard";
 
 export function Step2YourBody() {
@@ -141,7 +141,7 @@ export function Step2YourBody() {
 
       {/* Continue CTA */}
       <View style={styles.ctaContainer}>
-        <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+        <OnboardingButton text="CONTINUE" onPress={nextStep} />
       </View>
     </View>
   );

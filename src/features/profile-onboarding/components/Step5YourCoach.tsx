@@ -21,7 +21,7 @@ import Svg, {
   LinearGradient as SvgGradient,
 } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 const brainAsset = require("../../../../assets/profile-setup/ai-brain-neural.jpg");
 
@@ -276,8 +276,9 @@ export function Step5YourCoach() {
           />
         </View>
       </View>
-      <ProfileNavigationButton
-        title={isReady ? "ENTER REPLOOT ARENA" : "CALIBRATING AI COACH..."}
+      <OnboardingButton
+        isFinalSlide
+        text={isReady ? "ENTER REPLOOT ARENA" : "CALIBRATING AI COACH..."}
         disabled={!isReady}
         onPress={handleFinish}
       />

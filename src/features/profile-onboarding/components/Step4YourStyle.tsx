@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 import { DayPillItem } from "./DayPillItem";
 import { GymDumbbellIcon } from "./GymDumbbellIcon";
@@ -152,7 +152,7 @@ export function Step4YourStyle() {
 
       {/* Continue CTA */}
       <View style={styles.ctaContainer}>
-        <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
+        <OnboardingButton text="CONTINUE" onPress={nextStep} />
       </View>
     </View>
   );

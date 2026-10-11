@@ -6,7 +6,7 @@ import { AgeSlider } from "./AgeSlider";
 import { AvatarUploadSection } from "./AvatarUploadSection";
 import { GenderSelectionRow } from "./GenderSelectionRow";
 import { ProfileFormInputs } from "./ProfileFormInputs";
-import { ProfileNavigationButton } from "./ProfileNavigationButton";
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 export function Step1LetsStart() {
   const { data, updateData, nextStep } = useProfileSetupStore();
@@ -54,8 +54,8 @@ export function Step1LetsStart() {
 
         <AgeSlider value={data.age} onChange={(age) => updateData({ age })} />
       </View>
-      <ProfileNavigationButton
-        title="CONTINUE"
+      <OnboardingButton
+        text="CONTINUE"
         onPress={nextStep}
         subtext="BY PROCEEDING YOU AGREE TO OUR TERMS OF FORCE"
       />
