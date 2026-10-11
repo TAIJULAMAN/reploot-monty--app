@@ -90,7 +90,9 @@ export function Step4YourStyle() {
             />
           </MaskedView>
         </View>
-        <Text style={styles.subtitle}>Where do you usually work out?</Text>
+        <Text style={styles.subtitle}>
+          Choose where you train and your weekly routine
+        </Text>
       </View>
 
       {/* 2 Location Cards: GYM vs HOME */}

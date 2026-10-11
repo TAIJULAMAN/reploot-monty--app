@@ -106,6 +106,9 @@ export function Step2YourBody() {
             style={styles.gradient}
           />
         </MaskedView>
+        <Text style={styles.subtitle}>
+          Set your physical stats to tailor your workouts
+        </Text>
       </View>
 
       <HeightSelectionCard
@@ -176,6 +179,14 @@ const styles = StyleSheet.create({
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 14,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 8,
+    textAlign: "left",
   },
 
   ctaContainer: {

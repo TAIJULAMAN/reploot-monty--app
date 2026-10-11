@@ -184,6 +184,9 @@ export function Step5YourCoach() {
             <HeaderZapIcon />
           </View>
         </View>
+        <Text style={styles.subtitle}>
+          Preparing your personalized AI training engine
+        </Text>
       </View>
 
       <View
@@ -324,6 +327,14 @@ const styles = StyleSheet.create({
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 14,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 8,
+    textAlign: "center",
   },
   zapWrap: {
     position: "absolute",

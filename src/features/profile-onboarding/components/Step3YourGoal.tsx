@@ -109,6 +109,9 @@ export function Step3YourGoal() {
             style={styles.gradient}
           />
         </MaskedView>
+        <Text style={styles.subtitle}>
+          Select your primary target to focus your training
+        </Text>
       </View>
       <View style={[styles.gridContainer, { width: cardWidth * 2 + cardGap }]}>
         {GOAL_PAIRS.map((pair, rowIndex) => (
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   maskedTitleView: {
     height: 100,
@@ -177,6 +180,14 @@ const styles = StyleSheet.create({
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 14,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 8,
+    textAlign: "left",
   },
   gridContainer: {
     marginBottom: 2,

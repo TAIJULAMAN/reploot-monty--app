@@ -20,8 +20,8 @@ export function Step1LetsStart() {
           maskElement={
             <View style={styles.maskWrapper}>
               <View style={styles.titleRow}>
-                <Text style={styles.title}>LET'S</Text>
-                <Svg
+                <Text style={styles.title}>LET'S START</Text>
+                {/* <Svg
                   width="22"
                   height="26"
                   viewBox="0 0 24 30"
@@ -32,9 +32,9 @@ export function Step1LetsStart() {
                     d="M6 30L7.5 19.5H0L13.5 0H16.5L15 12H24L9 30H6Z"
                     fill="#FFFFFF"
                   />
-                </Svg>
+                </Svg> */}
               </View>
-              <Text style={styles.title}>START</Text>
+              {/* <Text style={styles.title}>START</Text> */}
             </View>
           }
         >
@@ -45,6 +45,9 @@ export function Step1LetsStart() {
             style={styles.gradient}
           />
         </MaskedView>
+        <Text style={styles.subtitle}>
+          Tell us about yourself to personalize your training
+        </Text>
       </View>
       <AvatarUploadSection />
       <ProfileFormInputs />
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
   },
   hero: {
     marginTop: 4,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   maskedTitleView: {
     height: 108,
@@ -111,6 +114,14 @@ const styles = StyleSheet.create({
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 14,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 8,
+    textAlign: "left",
   },
 
   ageCard: {
