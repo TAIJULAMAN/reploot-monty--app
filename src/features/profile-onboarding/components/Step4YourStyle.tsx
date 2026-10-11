@@ -17,7 +17,6 @@ import { DayPillItem } from "./DayPillItem";
 import { GymDumbbellIcon } from "./GymDumbbellIcon";
 import { HomeRoofIcon } from "./HomeRoofIcon";
 import { LocationCard } from "./LocationCard";
-import { TitleSparkleCluster } from "./TitleSparkleCluster";
 
 const DAY_ROWS: number[][] = [
   [2, 3, 4],
@@ -67,15 +66,19 @@ export function Step4YourStyle() {
 
   return (
     <View style={styles.container}>
-      {/* Title & Sparkles */}
       <View style={styles.hero}>
         <View style={styles.titleWrapper}>
           <MaskedView
             style={styles.maskedTitleView}
             maskElement={
               <View style={styles.maskWrapper}>
-                <Text style={styles.title}>YOUR</Text>
-                <Text style={styles.title}>STYLE</Text>
+                <Text
+                  style={styles.title}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                >
+                  YOUR STYLE
+                </Text>
               </View>
             }
           >
@@ -86,9 +89,6 @@ export function Step4YourStyle() {
               style={styles.gradient}
             />
           </MaskedView>
-          <View style={styles.sparkleWrap}>
-            <TitleSparkleCluster />
-          </View>
         </View>
         <Text style={styles.subtitle}>Where do you usually work out?</Text>
       </View>
@@ -172,16 +172,15 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "flex-start",
     justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 24,
+    marginTop: 8,
+    marginBottom: 20,
   },
   titleWrapper: {
-    position: "relative",
     alignItems: "flex-start",
     width: "100%",
   },
   maskedTitleView: {
-    height: 106,
+    height: 52,
     width: "100%",
   },
   maskWrapper: {
@@ -195,8 +194,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 48,
-    lineHeight: 52,
+    fontSize: 38,
+    lineHeight: 44,
     fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.5,
@@ -206,17 +205,12 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
   },
-  sparkleWrap: {
-    position: "absolute",
-    bottom: -10,
-    left: 200,
-  },
   subtitle: {
-    color: "#CBD5E1",
+    color: "#94A3B8",
     fontSize: 14,
     fontFamily: "monospace",
-    fontWeight: "500",
-    marginTop: 10,
+    fontWeight: "600",
+    marginTop: 8,
     textAlign: "left",
   },
   locationGroup: {
