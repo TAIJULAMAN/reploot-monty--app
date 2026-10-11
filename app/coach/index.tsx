@@ -51,6 +51,9 @@ const SUGGESTIONS = [
   "ADJUST MACROS",
   "RECOVERY PROTOCOL",
   "CHECK MY FORM",
+  "HYDRATION TARGETS",
+  "PRE-WORKOUT MEAL",
+  "STRETCHING ROUTINE",
 ];
 
 export default function CoachRoute() {
@@ -110,7 +113,6 @@ export default function CoachRoute() {
 
   return (
     <View style={styles.container}>
-      {/* Background Gradient & Cyber Accent Lines */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
         <LinearGradient
           colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
@@ -146,10 +148,7 @@ export default function CoachRoute() {
           />
         </Svg>
       </View>
-
-      {/* Standardized App Header */}
       <CustomHeader showBackButton={true} transparent={true} />
-
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -223,7 +222,9 @@ export default function CoachRoute() {
               return (
                 <View
                   key={item.id}
-                  style={isCoach ? styles.msgLeftWrapper : styles.msgRightWrapper}
+                  style={
+                    isCoach ? styles.msgLeftWrapper : styles.msgRightWrapper
+                  }
                 >
                   {isCoach ? (
                     <View style={styles.msgBubbleLeft}>
@@ -239,19 +240,25 @@ export default function CoachRoute() {
                       <Text style={styles.msgTextRight}>{item.text}</Text>
                     </LinearGradient>
                   )}
-                  <Text style={isCoach ? styles.timeText : styles.timeTextRight}>
+                  <Text
+                    style={isCoach ? styles.timeText : styles.timeTextRight}
+                  >
                     {item.time}
                   </Text>
                 </View>
               );
             })}
           </View>
+        </ScrollView>
 
-          {/* Suggestion Chips */}
+        {/* Suggestion Chips (Horizontally Scrollable) */}
+        <View style={styles.suggestionsWrapper}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.suggestionsContainer}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled={true}
           >
             {SUGGESTIONS.map((suggestion, index) => (
               <Pressable
@@ -268,9 +275,7 @@ export default function CoachRoute() {
               </Pressable>
             ))}
           </ScrollView>
-        </ScrollView>
-
-        {/* Input Area */}
+        </View>
         <View
           style={[
             styles.inputContainer,
@@ -499,10 +504,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginRight: 4,
   },
+  suggestionsWrapper: {
+    paddingVertical: 6,
+  },
   suggestionsContainer: {
     paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
-    marginBottom: 8,
   },
   suggestionChip: {
     flexDirection: "row",
