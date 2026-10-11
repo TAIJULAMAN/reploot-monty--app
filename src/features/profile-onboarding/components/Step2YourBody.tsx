@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   hero: {
     marginTop: 10,
     marginBottom: 20,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
   },
   maskedTitleView: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: 1.5,
     textTransform: "uppercase",
-    textAlign: "center",
+    textAlign: "left",
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
