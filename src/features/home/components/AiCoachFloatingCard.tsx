@@ -1,8 +1,9 @@
+import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ArrowRight } from "lucide-react-native";
+import { ArrowRight, Sparkles } from "lucide-react-native";
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -17,31 +18,102 @@ export const AiCoachFloatingCard = () => {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.cardContainer}>
       <LinearGradient
-        colors={["#121826", "#18243D", "#0F1626"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.bannerContainer}
-      >
-        <View style={styles.topRow}>
-          <View style={styles.onlinePill}>
-            <View style={styles.onlineDot} />
-            <Text style={styles.onlineText}>COACH ONLINE</Text>
+        colors={["rgba(32, 68, 117, 0.3)", "transparent"]}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0.2, y: 0.8 }}
+      />
+
+      <View style={styles.content}>
+        {/* Header Row: Title & Online Pill */}
+        <View style={styles.headerRow}>
+          <View style={styles.headerLeft}>
+            <View style={styles.onlinePill}>
+              <View style={styles.onlineDot} />
+              <Text style={styles.onlineText}>COACH ONLINE</Text>
+            </View>
+
+            <View style={styles.maskedTitleWrapper}>
+              <MaskedView
+                style={styles.maskedTitleView}
+                maskElement={
+                  <View style={styles.maskWrapper}>
+                    <Text
+                      style={styles.headerTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                    >
+                      AI COACH ASSISTANT
+                    </Text>
+                  </View>
+                }
+              >
+                <LinearGradient
+                  colors={["#00f2fe", "#4facfe"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.gradient}
+                />
+              </MaskedView>
+            </View>
           </View>
-          <Image
-            source={require("../../../../assets/coachOnline/coachOnline.png")}
-            style={styles.coachAvatar}
-            contentFit="cover"
-          />
+
+          <View style={styles.avatarWrapper}>
+            <Image
+              source={require("../../../../assets/coachOnline/ft.png")}
+              style={styles.coachAvatar}
+              contentFit="contain"
+            />
+          </View>
         </View>
 
-        <Text style={styles.messageText}>
-          Need guidance? Your <Text style={styles.highlightText}>AI Coach</Text>{" "}
-          is ready to <Text style={styles.highlightTextBlue}>optimize</Text>{" "}
-          your session.
-        </Text>
+        {/* Message / Guidance Box */}
+        <View style={styles.messageBox}>
+          <Text style={styles.messageText}>
+            Need guidance? Your <Text style={styles.highlightText}>AI Coach</Text>{" "}
+            is ready to <Text style={styles.highlightTextCyan}>optimize</Text>{" "}
+            your workouts, recovery, and nutrition protocols.
+          </Text>
+        </View>
 
+        {/* Quick Suggestion Chips */}
+        <View style={styles.chipsRow}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.chipPill,
+              pressed && styles.chipPressed,
+            ]}
+            onPress={handleAskCoach}
+            accessibilityRole="button"
+          >
+            <Sparkles size={11} color="#38EDD8" />
+            <Text style={styles.chipText}>FORM CHECK</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.chipPill,
+              pressed && styles.chipPressed,
+            ]}
+            onPress={handleAskCoach}
+            accessibilityRole="button"
+          >
+            <Text style={styles.chipText}>ADJUST MACROS</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.chipPill,
+              pressed && styles.chipPressed,
+            ]}
+            onPress={handleAskCoach}
+            accessibilityRole="button"
+          >
+            <Text style={styles.chipText}>RECOVERY</Text>
+          </Pressable>
+        </View>
+
+        {/* Start / Ask Button */}
         <Pressable
           style={({ pressed }) => [
             styles.askButton,
@@ -57,44 +129,50 @@ export const AiCoachFloatingCard = () => {
             style={styles.askButtonGradient}
           >
             <Text style={styles.askButtonText}>ASK AI COACH</Text>
-            <ArrowRight size={14} color="#0B0E14" strokeWidth={2.8} />
+            <ArrowRight size={16} color="#0B0E14" strokeWidth={2.8} />
           </LinearGradient>
         </Pressable>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+  cardContainer: {
+    backgroundColor: "#11141C",
+    borderRadius: 24,
     marginHorizontal: 20,
-    marginBottom: 40,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    overflow: "hidden",
     position: "relative",
   },
-  bannerContainer: {
-    borderRadius: 24,
+  content: {
     padding: 22,
-    borderWidth: 1,
-    borderColor: "rgba(56, 189, 248, 0.22)",
-    overflow: "hidden",
-    backgroundColor: "#11141C",
   },
-  topRow: {
+  headerRow: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 14,
+    marginBottom: 16,
+  },
+  headerLeft: {
+    flex: 1,
+    marginRight: 12,
   },
   onlinePill: {
+    alignSelf: "flex-start",
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(56, 237, 216, 0.1)",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(56, 237, 216, 0.3)",
+    borderColor: "rgba(56, 237, 216, 0.28)",
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
     gap: 6,
+    marginBottom: 8,
   },
   onlineDot: {
     width: 6,
@@ -109,47 +187,112 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     letterSpacing: 1,
   },
+  maskedTitleWrapper: {
+    height: 30,
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  headerTitle: {
+    color: "#FFFFFF",
+    fontSize: 22,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  avatarWrapper: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.03)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   coachAvatar: {
-    width: 56,
-    height: 56,
+    width: 44,
+    height: 44,
+  },
+  messageBox: {
+    backgroundColor: "#0D1017",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.06)",
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 16,
   },
   messageText: {
-    color: "#F1F5F9",
-    fontSize: 18,
-    lineHeight: 25,
-    fontWeight: "700",
-    marginBottom: 20,
-    paddingRight: 24,
+    color: "#94A3B8",
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "600",
+    fontFamily: "monospace",
   },
   highlightText: {
     color: "#38EDD8",
-    fontWeight: "900",
+    fontWeight: "800",
   },
-  highlightTextBlue: {
+  highlightTextCyan: {
     color: "#00f2fe",
-    fontWeight: "900",
+    fontWeight: "800",
+  },
+  chipsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 20,
+  },
+  chipPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 10,
+  },
+  chipText: {
+    color: "#CBD5E1",
+    fontSize: 10,
+    fontWeight: "700",
+    fontFamily: "monospace",
+    letterSpacing: 0.8,
+  },
+  chipPressed: {
+    opacity: 0.75,
   },
   askButton: {
-    alignSelf: "flex-start",
-    borderRadius: 14,
+    borderRadius: 16,
     overflow: "hidden",
   },
   pressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.98 }],
+    opacity: 0.92,
+    transform: [{ scale: 0.985 }],
   },
   askButtonGradient: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    justifyContent: "center",
+    paddingVertical: 14,
     gap: 8,
   },
   askButtonText: {
     color: "#0B0E14",
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
   },
 });
