@@ -3,14 +3,7 @@ import { FitnessGoal } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
 
@@ -69,8 +62,6 @@ interface GoalCardItemProps {
   cardHeight: number;
   onSelect: (goal: FitnessGoal) => void;
 }
-
-// Note: GoalCardItem is now extracted
 
 export function Step3YourGoal() {
   const { width: screenWidth } = useWindowDimensions();
