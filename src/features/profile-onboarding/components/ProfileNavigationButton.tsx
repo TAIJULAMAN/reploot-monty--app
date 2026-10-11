@@ -47,11 +47,11 @@ export function ProfileNavigationButton({
         <LinearGradient
           colors={
             disabled
-              ? ["rgba(53, 112, 173, 0.35)", "rgba(98, 162, 229, 0.35)"]
-              : ["#4282BE", "#72ABE8"]
+              ? ["rgba(0, 242, 254, 0.2)", "rgba(79, 172, 254, 0.2)"]
+              : ["#00f2fe", "#4facfe"]
           }
-          start={{ x: 0, y: 0.2 }}
-          end={{ x: 1, y: 0.8 }}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
           style={styles.gradientPill}
         >
           <Text style={[styles.text, disabled && styles.textDisabled]}>
@@ -60,7 +60,7 @@ export function ProfileNavigationButton({
           {showArrow && (
             <ArrowRight
               size={20}
-              color={disabled ? "rgba(255, 255, 255, 0.5)" : "#FFFFFF"}
+              color={disabled ? "rgba(255, 255, 255, 0.4)" : "#070A12"}
               strokeWidth={2.8}
               style={styles.arrow}
             />
@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     height: 54,
     borderRadius: 27,
-    shadowColor: "#3882F6",
-    shadowOffset: { width: 0, height: 5 },
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
-    shadowRadius: 14,
+    shadowRadius: 16,
     elevation: 8,
   },
   buttonDisabled: {
@@ -109,24 +109,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   text: {
-    color: "#FFFFFF",
-    fontSize: 14,
+    color: "#070A12",
+    fontSize: 15,
     lineHeight: 22,
-    fontWeight: "400",
+    fontFamily: "monospace",
+    fontWeight: "900",
     letterSpacing: 2.2,
     textTransform: "uppercase",
   },
   textDisabled: {
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "rgba(255, 255, 255, 0.4)",
   },
   arrow: {
     marginLeft: 10,
   },
   subtext: {
-    color: "#475569",
+    color: "#64748B",
     fontSize: 10,
     lineHeight: 13,
-    fontWeight: "400",
+    fontFamily: "monospace",
+    fontWeight: "500",
     letterSpacing: 1.4,
     textTransform: "uppercase",
     textAlign: "center",

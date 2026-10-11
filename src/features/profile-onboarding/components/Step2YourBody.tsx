@@ -1,3 +1,5 @@
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { ActivityLevel } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
 import { useCallback, useState } from "react";
@@ -88,8 +90,22 @@ export function Step2YourBody() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <Text style={styles.title}>YOUR</Text>
-        <Text style={styles.title}>BODY</Text>
+        <MaskedView
+          style={styles.maskedTitleView}
+          maskElement={
+            <View style={styles.maskWrapper}>
+              <Text style={styles.title}>YOUR</Text>
+              <Text style={styles.title}>BODY</Text>
+            </View>
+          }
+        >
+          <LinearGradient
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          />
+        </MaskedView>
       </View>
 
       <HeightSelectionCard
@@ -130,22 +146,36 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   hero: {
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: 10,
+    marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
   },
+  maskedTitleView: {
+    height: 108,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
   title: {
     color: "#FFFFFF",
-    fontSize: 55,
-    lineHeight: 50,
+    fontSize: 48,
+    lineHeight: 52,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: -0.5,
-    textShadowColor: "rgba(56, 237, 216, 0.6)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
-    includeFontPadding: false,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
     textAlign: "center",
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
 
   ctaContainer: {

@@ -1,3 +1,4 @@
+import MaskedView from "@react-native-masked-view/masked-view";
 import { useAppDispatch } from "@/store/hooks";
 import { setHasSeenOnboarding } from "@/store/slices/appSlice";
 import { setUser } from "@/store/slices/authSlice";
@@ -163,8 +164,22 @@ export function Step5YourCoach() {
     <View style={styles.container}>
       <View style={styles.hero}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>YOUR COACH</Text>
-          <Text style={styles.title}>READY</Text>
+          <MaskedView
+            style={styles.maskedTitleView}
+            maskElement={
+              <View style={styles.maskWrapper}>
+                <Text style={styles.title}>YOUR COACH</Text>
+                <Text style={styles.title}>READY</Text>
+              </View>
+            }
+          >
+            <LinearGradient
+              colors={["#00f2fe", "#4facfe"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            />
+          </MaskedView>
           <View style={styles.zapWrap}>
             <HeaderZapIcon />
           </View>
@@ -247,7 +262,7 @@ export function Step5YourCoach() {
         <Text style={styles.statusSubtitle}>{currentStatus}</Text>
         <View style={styles.progressTrack}>
           <LinearGradient
-            colors={["#2DD4BF", "#38BDF8", "#3B82F6"]}
+            colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={[styles.progressFill, { width: `${progress}%` }]}
@@ -275,24 +290,40 @@ const styles = StyleSheet.create({
   hero: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 12,
+    marginTop: 10,
     marginBottom: 20,
     width: "100%",
   },
   titleWrapper: {
     position: "relative",
     alignItems: "center",
+    width: "100%",
+  },
+  maskedTitleView: {
+    height: 100,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 50,
-    lineHeight: 50,
+    fontSize: 42,
+    lineHeight: 46,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: -0.5,
+    letterSpacing: 1.5,
     textAlign: "center",
-    textShadowColor: "rgba(56, 237, 216, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
+    textTransform: "uppercase",
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
   zapWrap: {
     position: "absolute",

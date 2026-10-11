@@ -1,3 +1,5 @@
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
@@ -13,23 +15,36 @@ export function Step1LetsStart() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <View style={styles.titleRow}>
-          <Text style={styles.title}>LET'S</Text>
-          <Svg
-            width="24"
-            height="30"
-            viewBox="0 0 24 30"
-            fill="none"
-            style={styles.titleZap}
-          >
-            <Path
-              opacity="0.4"
-              d="M6 30L7.5 19.5H0L13.5 0H16.5L15 12H24L9 30H6Z"
-              fill="#56B5D2"
-            />
-          </Svg>
-        </View>
-        <Text style={styles.title}>START</Text>
+        <MaskedView
+          style={styles.maskedTitleView}
+          maskElement={
+            <View style={styles.maskWrapper}>
+              <View style={styles.titleRow}>
+                <Text style={styles.title}>LET'S</Text>
+                <Svg
+                  width="22"
+                  height="26"
+                  viewBox="0 0 24 30"
+                  fill="none"
+                  style={styles.titleZap}
+                >
+                  <Path
+                    d="M6 30L7.5 19.5H0L13.5 0H16.5L15 12H24L9 30H6Z"
+                    fill="#FFFFFF"
+                  />
+                </Svg>
+              </View>
+              <Text style={styles.title}>START</Text>
+            </View>
+          }
+        >
+          <LinearGradient
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          />
+        </MaskedView>
       </View>
       <AvatarUploadSection />
       <ProfileFormInputs />
@@ -62,25 +77,40 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   hero: {
-    marginTop: 0,
-    marginBottom: 6,
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  maskedTitleView: {
+    height: 108,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   titleZap: {
-    marginLeft: 6,
+    marginLeft: 8,
+    marginTop: 4,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 55,
-    lineHeight: 50,
+    fontSize: 48,
+    lineHeight: 52,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: -0.5,
-    textShadowColor: "rgba(56, 189, 248, 0.75)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
 
   ageCard: {

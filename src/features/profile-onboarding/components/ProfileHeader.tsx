@@ -69,7 +69,7 @@ export function ProfileHeader({
       <View style={styles.progressTrack}>
         <Animated.View style={[styles.progressFillWrapper, animatedStyle]}>
           <LinearGradient
-            colors={["#818CF8", "#38BDF8", "#34D399"]}
+            colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={StyleSheet.absoluteFill}
@@ -100,14 +100,16 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 12,
     lineHeight: 16,
+    fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.8,
     textTransform: "uppercase",
   },
   progressPercentText: {
-    color: "#94A3B8",
+    color: "#22D3EE",
     fontSize: 12,
     lineHeight: 16,
+    fontFamily: "monospace",
     fontWeight: "700",
     letterSpacing: 0.4,
   },

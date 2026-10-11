@@ -1,3 +1,5 @@
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { WorkoutStyle } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
 import React from "react";
@@ -68,8 +70,22 @@ export function Step4YourStyle() {
       {/* Title & Sparkles */}
       <View style={styles.hero}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>YOUR</Text>
-          <Text style={styles.title}>STYLE</Text>
+          <MaskedView
+            style={styles.maskedTitleView}
+            maskElement={
+              <View style={styles.maskWrapper}>
+                <Text style={styles.title}>YOUR</Text>
+                <Text style={styles.title}>STYLE</Text>
+              </View>
+            }
+          >
+            <LinearGradient
+              colors={["#00f2fe", "#4facfe"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            />
+          </MaskedView>
           <View style={styles.sparkleWrap}>
             <TitleSparkleCluster />
           </View>
@@ -155,23 +171,39 @@ const styles = StyleSheet.create({
   hero: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 12,
-    marginBottom: 32,
+    marginTop: 10,
+    marginBottom: 24,
   },
   titleWrapper: {
     position: "relative",
     alignItems: "center",
+    width: "100%",
+  },
+  maskedTitleView: {
+    height: 106,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 55,
-    lineHeight: 50,
+    fontSize: 48,
+    lineHeight: 52,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: -0.5,
+    letterSpacing: 1.5,
     textAlign: "center",
-    textShadowColor: "rgba(56, 237, 216, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
+    textTransform: "uppercase",
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
   sparkleWrap: {
     position: "absolute",
@@ -181,8 +213,9 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#CBD5E1",
     fontSize: 14,
+    fontFamily: "monospace",
     fontWeight: "500",
-    marginTop: 14,
+    marginTop: 10,
     textAlign: "center",
   },
   locationGroup: {

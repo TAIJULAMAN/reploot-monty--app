@@ -1,3 +1,4 @@
+import MaskedView from "@react-native-masked-view/masked-view";
 import { FitnessGoal } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
@@ -101,8 +102,22 @@ export function Step3YourGoal() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <Text style={styles.title}>YOUR</Text>
-        <Text style={styles.title}>GOAL</Text>
+        <MaskedView
+          style={styles.maskedTitleView}
+          maskElement={
+            <View style={styles.maskWrapper}>
+              <Text style={styles.title}>YOUR</Text>
+              <Text style={styles.title}>GOAL</Text>
+            </View>
+          }
+        >
+          <LinearGradient
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          />
+        </MaskedView>
       </View>
       <View style={[styles.gridContainer, { width: cardWidth * 2 + cardGap }]}>
         {GOAL_PAIRS.map((pair, rowIndex) => (
@@ -141,20 +156,34 @@ const styles = StyleSheet.create({
   hero: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 12,
-    marginBottom: 14,
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  maskedTitleView: {
+    height: 100,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 38,
-    lineHeight: 40,
+    fontSize: 44,
+    lineHeight: 48,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
     textAlign: "center",
     textTransform: "uppercase",
-    textShadowColor: "rgba(56, 237, 216, 0.8)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
+    textShadowColor: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
   gridContainer: {
     marginBottom: 2,
