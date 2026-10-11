@@ -169,14 +169,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   hero: {
-    alignItems: "center",
+    width: "100%",
+    alignItems: "flex-start",
     justifyContent: "center",
     marginTop: 10,
     marginBottom: 24,
   },
   titleWrapper: {
     position: "relative",
-    alignItems: "center",
+    alignItems: "flex-start",
     width: "100%",
   },
   maskedTitleView: {
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.5,
-    textAlign: "center",
+    textAlign: "left",
     textTransform: "uppercase",
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
@@ -207,8 +208,8 @@ const styles = StyleSheet.create({
   },
   sparkleWrap: {
     position: "absolute",
-    bottom: -15,
-    right: -30,
+    bottom: -10,
+    left: 200,
   },
   subtitle: {
     color: "#CBD5E1",
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "500",
     marginTop: 10,
-    textAlign: "center",
+    textAlign: "left",
   },
   locationGroup: {
     width: "100%",
