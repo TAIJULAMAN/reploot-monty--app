@@ -1,8 +1,8 @@
+import React, { useCallback } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { FitnessGoal } from "@/shared/types/user";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useCallback } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { ProfileNavigationButton } from "./ProfileNavigationButton";
@@ -126,9 +126,9 @@ export function Step3YourGoal() {
           </View>
         ))}
       </View>
-      <View style={[styles.sparkleRow, { width: cardWidth * 2 + cardGap }]}>
+      {/* <View style={[styles.sparkleRow, { width: cardWidth * 2 + cardGap }]}>
         <SparkleCluster />
-      </View>
+      </View> */}
       <View style={{ width: "100%", paddingHorizontal: horizontalPadding }}>
         <ProfileNavigationButton title="CONTINUE" onPress={nextStep} />
       </View>
