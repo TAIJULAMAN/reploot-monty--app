@@ -3,9 +3,11 @@ import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ArrowRight, Sparkles } from "lucide-react-native";
+import { Sparkles } from "lucide-react-native";
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 export const AiCoachFloatingCard = () => {
   const router = useRouter();
@@ -62,7 +64,7 @@ export const AiCoachFloatingCard = () => {
 
           <View style={styles.avatarWrapper}>
             <Image
-              source={require("../../../../assets/coachOnline/ft.png")}
+              source={require("../../../../assets/coachOnline/coachOnline.png")}
               style={styles.coachAvatar}
               contentFit="contain"
             />
@@ -72,9 +74,10 @@ export const AiCoachFloatingCard = () => {
         {/* Message / Guidance Box */}
         <View style={styles.messageBox}>
           <Text style={styles.messageText}>
-            Need guidance? Your <Text style={styles.highlightText}>AI Coach</Text>{" "}
-            is ready to <Text style={styles.highlightTextCyan}>optimize</Text>{" "}
-            your workouts, recovery, and nutrition protocols.
+            Need guidance? Your{" "}
+            <Text style={styles.highlightText}>AI Coach</Text> is ready to{" "}
+            <Text style={styles.highlightTextCyan}>optimize</Text> your
+            workouts, recovery, and nutrition protocols.
           </Text>
         </View>
 
@@ -114,24 +117,11 @@ export const AiCoachFloatingCard = () => {
         </View>
 
         {/* Start / Ask Button */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.askButton,
-            pressed && styles.pressed,
-          ]}
+        <OnboardingButton
+          text="ASK AI COACH"
           onPress={handleAskCoach}
-          accessibilityRole="button"
-        >
-          <LinearGradient
-            colors={["#00f2fe", "#4facfe"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.askButtonGradient}
-          >
-            <Text style={styles.askButtonText}>ASK AI COACH</Text>
-            <ArrowRight size={16} color="#0B0E14" strokeWidth={2.8} />
-          </LinearGradient>
-        </Pressable>
+          isFinalSlide={true}
+        />
       </View>
     </View>
   );
@@ -272,27 +262,5 @@ const styles = StyleSheet.create({
   },
   chipPressed: {
     opacity: 0.75,
-  },
-  askButton: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  pressed: {
-    opacity: 0.92,
-    transform: [{ scale: 0.985 }],
-  },
-  askButtonGradient: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    gap: 8,
-  },
-  askButtonText: {
-    color: "#0B0E14",
-    fontSize: 13,
-    fontWeight: "900",
-    fontFamily: "monospace",
-    letterSpacing: 1.5,
   },
 });
