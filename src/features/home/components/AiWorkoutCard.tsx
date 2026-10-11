@@ -3,9 +3,11 @@ import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ArrowRight, Clock } from "lucide-react-native";
+import { Clock } from "lucide-react-native";
 import React, { useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+
+import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 const bgAsset = require("../../../../assets/upperBody/upperBodyStrength.png");
 
@@ -134,24 +136,11 @@ export const AiWorkoutCard = () => {
         </View>
 
         {/* Start Button */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.startButton,
-            pressed && styles.pressed,
-          ]}
+        <OnboardingButton
+          text="START WORKOUT"
           onPress={handleStartWorkout}
-          accessibilityRole="button"
-        >
-          <LinearGradient
-            colors={["#00f2fe", "#4facfe"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.startButtonGradient}
-          >
-            <Text style={styles.startButtonText}>START WORKOUT</Text>
-            <ArrowRight size={16} color="#0B0E14" strokeWidth={2.8} />
-          </LinearGradient>
-        </Pressable>
+          isFinalSlide={true}
+        />
       </View>
     </View>
   );
@@ -302,27 +291,5 @@ const styles = StyleSheet.create({
   },
   pillPressed: {
     opacity: 0.8,
-  },
-  startButton: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  pressed: {
-    opacity: 0.92,
-    transform: [{ scale: 0.985 }],
-  },
-  startButtonGradient: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    gap: 8,
-  },
-  startButtonText: {
-    color: "#0B0E14",
-    fontSize: 13,
-    fontWeight: "900",
-    fontFamily: "monospace",
-    letterSpacing: 1.5,
   },
 });

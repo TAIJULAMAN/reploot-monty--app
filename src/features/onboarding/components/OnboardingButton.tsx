@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     width: "100%",
     height: 60,
-    borderRadius: 30,
+    borderRadius: 20,
     overflow: "hidden",
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 6 },
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   buttonGradient: {
     width: "100%",
     height: 60,
-    borderRadius: 30,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
