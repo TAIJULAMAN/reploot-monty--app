@@ -1,7 +1,6 @@
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
 import { useProfileSetupStore } from "../store/profileSetupStore";
 import { AgeSlider } from "./AgeSlider";
 import { AvatarUploadSection } from "./AvatarUploadSection";
@@ -15,36 +14,29 @@ export function Step1LetsStart() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <MaskedView
-          style={styles.maskedTitleView}
-          maskElement={
-            <View style={styles.maskWrapper}>
-              <View style={styles.titleRow}>
-                <Text style={styles.title}>LET'S START</Text>
-                {/* <Svg
-                  width="22"
-                  height="26"
-                  viewBox="0 0 24 30"
-                  fill="none"
-                  style={styles.titleZap}
+        <View style={styles.titleWrapper}>
+          <MaskedView
+            style={styles.maskedTitleView}
+            maskElement={
+              <View style={styles.maskWrapper}>
+                <Text
+                  style={styles.title}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
                 >
-                  <Path
-                    d="M6 30L7.5 19.5H0L13.5 0H16.5L15 12H24L9 30H6Z"
-                    fill="#FFFFFF"
-                  />
-                </Svg> */}
+                  LET'S START
+                </Text>
               </View>
-              {/* <Text style={styles.title}>START</Text> */}
-            </View>
-          }
-        >
-          <LinearGradient
-            colors={["#00f2fe", "#4facfe"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradient}
-          />
-        </MaskedView>
+            }
+          >
+            <LinearGradient
+              colors={["#00f2fe", "#4facfe"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            />
+          </MaskedView>
+        </View>
         <Text style={styles.subtitle}>
           Tell us about yourself to personalize your training
         </Text>
@@ -80,36 +72,37 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   hero: {
-    marginTop: 4,
-    marginBottom: 16,
+    width: "100%",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    marginTop: 8,
+    marginBottom: 20,
+  },
+  titleWrapper: {
+    alignItems: "flex-start",
+    width: "100%",
   },
   maskedTitleView: {
-    height: 108,
+    height: 52,
     width: "100%",
   },
   maskWrapper: {
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
-  titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  titleZap: {
-    marginLeft: 8,
-    marginTop: 4,
-  },
   title: {
     color: "#FFFFFF",
-    fontSize: 48,
-    lineHeight: 52,
+    fontSize: 38,
+    lineHeight: 44,
     fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.5,
+    textAlign: "left",
     textTransform: "uppercase",
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },

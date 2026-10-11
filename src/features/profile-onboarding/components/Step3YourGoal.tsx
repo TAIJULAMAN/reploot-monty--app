@@ -93,22 +93,29 @@ export function Step3YourGoal() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <MaskedView
-          style={styles.maskedTitleView}
-          maskElement={
-            <View style={styles.maskWrapper}>
-              <Text style={styles.title}>YOUR</Text>
-              <Text style={styles.title}>GOAL</Text>
-            </View>
-          }
-        >
-          <LinearGradient
-            colors={["#00f2fe", "#4facfe"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.gradient}
-          />
-        </MaskedView>
+        <View style={styles.titleWrapper}>
+          <MaskedView
+            style={styles.maskedTitleView}
+            maskElement={
+              <View style={styles.maskWrapper}>
+                <Text
+                  style={styles.title}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                >
+                  YOUR GOAL
+                </Text>
+              </View>
+            }
+          >
+            <LinearGradient
+              colors={["#00f2fe", "#4facfe"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradient}
+            />
+          </MaskedView>
+        </View>
         <Text style={styles.subtitle}>
           Select your primary target to focus your training
         </Text>
@@ -153,10 +160,14 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  titleWrapper: {
+    alignItems: "flex-start",
+    width: "100%",
   },
   maskedTitleView: {
-    height: 100,
+    height: 52,
     width: "100%",
   },
   maskWrapper: {
@@ -170,8 +181,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 44,
-    lineHeight: 48,
+    fontSize: 38,
+    lineHeight: 44,
     fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.5,

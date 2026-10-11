@@ -118,15 +118,17 @@ export function Step5YourCoach() {
 
   const handleFinish = () => {
     dispatch(setHasSeenOnboarding(true));
-    dispatch(setUser({
-      id: "user_kinetic_" + Date.now(),
-      email: data.email || "runner@kinetic.ai",
-      fullName: data.fullName || "Kinetic Runner",
-      avatarUrl: data.avatarUri,
-      phoneNumber: data.phoneNumber,
-      createdAt: new Date().toISOString(),
-      hasCompletedOnboarding: true,
-    }));
+    dispatch(
+      setUser({
+        id: "user_kinetic_" + Date.now(),
+        email: data.email || "runner@kinetic.ai",
+        fullName: data.fullName || "Kinetic Runner",
+        avatarUrl: data.avatarUri,
+        phoneNumber: data.phoneNumber,
+        createdAt: new Date().toISOString(),
+        hasCompletedOnboarding: true,
+      }),
+    );
 
     requestAnimationFrame(() => {
       try {
@@ -168,8 +170,13 @@ export function Step5YourCoach() {
             style={styles.maskedTitleView}
             maskElement={
               <View style={styles.maskWrapper}>
-                <Text style={styles.title}>YOUR COACH</Text>
-                <Text style={styles.title}>READY</Text>
+                <Text
+                  style={styles.title}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                >
+                  YOUR COACH
+                </Text>
               </View>
             }
           >
@@ -180,9 +187,6 @@ export function Step5YourCoach() {
               style={styles.gradient}
             />
           </MaskedView>
-          <View style={styles.zapWrap}>
-            <HeaderZapIcon />
-          </View>
         </View>
         <Text style={styles.subtitle}>
           Preparing your personalized AI training engine
@@ -252,9 +256,9 @@ export function Step5YourCoach() {
         </View>
 
         {/* Gold/Bronze Sparkles on Lower-Left */}
-        <View style={styles.goldSparkleWrap}>
+        {/* <View style={styles.goldSparkleWrap}>
           <GoldSparkleCluster />
-        </View>
+        </View> */}
       </View>
       <View style={styles.statusSection}>
         <View style={styles.routineRow}>
@@ -273,7 +277,7 @@ export function Step5YourCoach() {
         </View>
       </View>
       <ProfileNavigationButton
-        title={isReady ? "ENTER KINETIC ARENA" : "CALIBRATING AI COACH..."}
+        title={isReady ? "ENTER REPLOOT ARENA" : "CALIBRATING AI COACH..."}
         disabled={!isReady}
         onPress={handleFinish}
       />
@@ -291,38 +295,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   hero: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 20,
     width: "100%",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    marginTop: 8,
+    marginBottom: 20,
   },
   titleWrapper: {
-    position: "relative",
-    alignItems: "center",
+    alignItems: "flex-start",
     width: "100%",
   },
   maskedTitleView: {
-    height: 100,
+    height: 52,
     width: "100%",
   },
   maskWrapper: {
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 46,
+    fontSize: 38,
+    lineHeight: 44,
     fontFamily: "monospace",
     fontWeight: "900",
     letterSpacing: 1.5,
-    textAlign: "center",
+    textAlign: "left",
     textTransform: "uppercase",
     textShadowColor: "#FFFFFF",
     textShadowOffset: { width: 1, height: 1 },
@@ -334,13 +337,7 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "600",
     marginTop: 8,
-    textAlign: "center",
-  },
-  zapWrap: {
-    position: "absolute",
-    bottom: -5,
-    right: -25,
-    opacity: 0.8,
+    textAlign: "left",
   },
   chamberContainer: {
     position: "relative",
