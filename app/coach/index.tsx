@@ -4,7 +4,7 @@ import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Send, Sparkles } from "lucide-react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -61,6 +61,75 @@ export default function CoachRoute() {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState("");
   const scrollViewRef = useRef<ScrollView>(null);
+  const chipsScrollRef = useRef<ScrollView>(null);
+  const isDraggingRef = useRef(false);
+
+  useEffect(() => {
+    if (Platform.OS !== "web") return;
+
+    const scrollNode =
+      (chipsScrollRef.current as any)?.getScrollableNode?.() ||
+      (chipsScrollRef.current as any)?._inputRef;
+
+    if (!scrollNode) return;
+
+    scrollNode.style.cursor = "grab";
+
+    // 1. Mouse wheel horizontal scrolling
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        scrollNode.scrollLeft += e.deltaY;
+      }
+    };
+
+    // 2. Mouse click-and-drag horizontal scrolling
+    let isDown = false;
+    let startX = 0;
+    let initialScrollLeft = 0;
+
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      isDraggingRef.current = false;
+      startX = e.pageX - scrollNode.offsetLeft;
+      initialScrollLeft = scrollNode.scrollLeft;
+      scrollNode.style.cursor = "grabbing";
+      scrollNode.style.userSelect = "none";
+    };
+
+    const onMouseUp = () => {
+      if (isDown) {
+        isDown = false;
+        scrollNode.style.cursor = "grab";
+        scrollNode.style.userSelect = "auto";
+        setTimeout(() => {
+          isDraggingRef.current = false;
+        }, 60);
+      }
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      const x = e.pageX - scrollNode.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(x - startX) > 5) {
+        isDraggingRef.current = true;
+      }
+      scrollNode.scrollLeft = initialScrollLeft - walk;
+    };
+
+    scrollNode.addEventListener("wheel", onWheel, { passive: false });
+    scrollNode.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      scrollNode.removeEventListener("wheel", onWheel);
+      scrollNode.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -108,6 +177,7 @@ export default function CoachRoute() {
   };
 
   const handleSuggestionPress = (suggestion: string) => {
+    if (isDraggingRef.current) return;
     handleSend(suggestion);
   };
 
@@ -254,6 +324,7 @@ export default function CoachRoute() {
         {/* Suggestion Chips (Horizontally Scrollable) */}
         <View style={styles.suggestionsWrapper}>
           <ScrollView
+            ref={chipsScrollRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.suggestionsContainer}
