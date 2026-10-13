@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     width: "100%",
     height: 60,
-    borderRadius: 20,
+    borderRadius: 10,
     overflow: "hidden",
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 6 },

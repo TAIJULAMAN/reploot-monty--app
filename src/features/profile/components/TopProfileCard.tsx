@@ -1,13 +1,24 @@
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export const TopProfileCard = () => {
   const router = useRouter();
+
+  const handleEditPress = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    router.push("/profile/edit-profile");
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.topProfileRow}>
+        {/* Avatar with Centered Level Badge */}
         <View style={styles.avatarContainer}>
           <Image
             source={{ uri: "https://i.pravatar.cc/150?img=11" }}
@@ -18,24 +29,32 @@ export const TopProfileCard = () => {
           </View>
         </View>
 
-        {/* Info */}
+        {/* Info Column */}
         <View style={styles.infoContainer}>
           <View style={styles.nameRow}>
-            <Text style={styles.nameText}>ALEX{"\n"}RIVERS</Text>
+            <View style={styles.nameTextCol}>
+              <Text style={styles.nameText} numberOfLines={1}>
+                ALEX RIVERS
+              </Text>
+              <Text style={styles.ageText}>24 YEARS OLD • ATHLETE</Text>
+            </View>
+
+            {/* Global Badge on the right opposite of picture and names */}
             <View style={styles.globalBadge}>
               <Image
                 source={require("../../../../assets/trophy.svg")}
-                style={{ width: 10, height: 10, marginRight: 4 }}
+                style={{ width: 12, height: 12, marginRight: 4 }}
                 contentFit="contain"
               />
               <Text style={styles.globalBadgeText}>#42 GLOBAL</Text>
             </View>
           </View>
-          <Text style={styles.ageText}>24 YEARS OLD</Text>
+
+          {/* Streak Badge */}
           <View style={styles.streakBadge}>
             <Image
               source={require("../../../../assets/flame.svg")}
-              style={{ width: 16, height: 16 }}
+              style={{ width: 10, height: 10, marginRight: 4 }}
               contentFit="contain"
             />
             <Text style={styles.streakText}>12 DAY STREAK</Text>
@@ -50,7 +69,7 @@ export const TopProfileCard = () => {
       </View>
       <View style={styles.progressTrack}>
         <LinearGradient
-          colors={["#6366F1", "#2DD4BF"]}
+          colors={["#00f2fe", "#4facfe"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={[StyleSheet.absoluteFill, { width: "81%" }]}
@@ -58,14 +77,14 @@ export const TopProfileCard = () => {
       </View>
 
       <Pressable
-        onPress={() => router.push("/profile/edit-profile")}
+        onPress={handleEditPress}
         style={({ pressed }) => [
           styles.buttonWrapper,
-          pressed && { opacity: 0.8 },
+          pressed && styles.buttonPressed,
         ]}
       >
         <LinearGradient
-          colors={["#3568A5", "#4B85C4", "#69A6E3"]}
+          colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
           style={styles.btnGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -79,158 +98,158 @@ export const TopProfileCard = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "rgba(255,255,255,0.03)",
+    backgroundColor: "rgba(255, 255, 255, 0.03)",
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
+    borderColor: "rgba(255, 255, 255, 0.08)",
     padding: 20,
     marginBottom: 20,
-  },
-  createAccountWrapper: {
-    width: "100%",
-    height: 52,
-    borderRadius: 26,
-    overflow: "hidden",
-    marginBottom: 22,
-  },
-  bottomCtaText: {
-    color: "#CBD5E1",
-    fontSize: 14,
-    fontWeight: "400",
-  },
-  loginLink: {
-    color: "#10B981",
-    fontSize: 14,
-    fontWeight: "700",
   },
   topProfileRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 20,
   },
   avatarContainer: {
     position: "relative",
-    marginRight: 20,
+    marginRight: 16,
+    alignItems: "center",
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
+    width: 76,
+    height: 76,
+    borderRadius: 10,
     borderWidth: 2,
-    borderColor: "rgba(45,212,191,0.5)",
+    borderColor: "rgba(45, 212, 191, 0.6)",
+    backgroundColor: "#161B26",
   },
   lvlBadge: {
     position: "absolute",
-    bottom: -8,
-    right: -10,
-    backgroundColor: "#2DD4BF",
+    bottom: -6,
+    alignSelf: "center",
+    backgroundColor: "#0B0F19",
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: "#0D1117",
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: "#2DD4BF",
     shadowColor: "#2DD4BF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
   },
   lvlBadgeText: {
-    color: "#0D1117",
-    fontSize: 14,
-    fontWeight: "400",
-    textShadowColor: "rgba(255, 255, 255, 0.5)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
+    color: "#2DD4BF",
+    fontSize: 10,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 0.8,
   },
   infoContainer: {
     flex: 1,
+    justifyContent: "center",
   },
   nameRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
   },
+  nameTextCol: {
+    flex: 1,
+    marginRight: 8,
+  },
   nameText: {
     color: "#FFFFFF",
-    fontSize: 30,
+    fontSize: 20,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
+  },
+  ageText: {
+    color: "#94A3B8",
+    fontSize: 11,
     fontWeight: "600",
-    lineHeight: 36,
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
+    marginTop: 2,
+    marginBottom: 6,
   },
   globalBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#B45F2420",
-    paddingHorizontal: 6,
-    paddingVertical: 5,
-    borderRadius: 20,
+    backgroundColor: "rgba(245, 158, 11, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.28)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignSelf: "flex-start",
   },
   globalBadgeText: {
     color: "#FFB68C",
-    fontSize: 12,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  ageText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "400",
-    letterSpacing: 1,
-    marginTop: 6,
-    marginBottom: 8,
+    fontSize: 14,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
   },
   streakBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(192,132,252,0.15)",
-    alignSelf: "flex-start",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
   },
   streakText: {
-    color: "#FFDBC9",
-    fontSize: 14,
-    fontWeight: "400",
-    marginLeft: 4,
+    color: "#FB923C",
+    fontSize: 10,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
   },
   xpRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   xpLabel: {
     color: "#94A3B8",
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 11,
+    fontWeight: "700",
+    fontFamily: "monospace",
     letterSpacing: 1,
   },
   xpValue: {
     color: "#2DD4BF",
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 12,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
   },
   progressTrack: {
-    height: 8,
-    backgroundColor: "rgba(255,255,255,0.05)",
+    height: 7,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
     borderRadius: 4,
     overflow: "hidden",
-    marginBottom: 20,
+    marginBottom: 18,
   },
   buttonWrapper: {
     width: "100%",
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: "hidden",
   },
+  buttonPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.985 }],
+  },
   btnGradient: {
-    paddingVertical: 14,
+    paddingVertical: 13,
     alignItems: "center",
     justifyContent: "center",
   },
   btnText: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "400",
-    letterSpacing: 1,
+    fontSize: 13,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
   },
 });

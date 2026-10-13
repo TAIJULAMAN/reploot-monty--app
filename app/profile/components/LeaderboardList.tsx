@@ -24,13 +24,14 @@ export function LeaderboardList() {
 
       {/* Top 2 */}
       <View style={[styles.rankItem, styles.rankItemSilver]}>
-        <Text style={styles.rankPosition}>2</Text>
+        <Text style={[styles.rankPosition, { color: "#E2E8F0" }]}>2</Text>
         <Image
           source={{ uri: "https://i.pravatar.cc/100?img=12" }}
           style={styles.avatar}
         />
         <View style={styles.athleteInfo}>
           <Text style={styles.athleteName}>Sarah_Strong</Text>
+          <Text style={styles.athleteStatus}>🔥 Master</Text>
         </View>
         <View style={styles.athleteScore}>
           <Text style={styles.xpValue}>48,150</Text>
@@ -47,6 +48,7 @@ export function LeaderboardList() {
         />
         <View style={styles.athleteInfo}>
           <Text style={styles.athleteName}>J-Train</Text>
+          <Text style={styles.athleteStatus}>⚡ Elite</Text>
         </View>
         <View style={styles.athleteScore}>
           <Text style={[styles.xpValue, { color: "#38EDD8" }]}>42,900</Text>
@@ -90,20 +92,25 @@ export function LeaderboardList() {
 
       {/* Current User */}
       <View style={[styles.rankItem, styles.rankItemUser]}>
-        <Text style={[styles.rankPosition, { color: "#CBD5E1" }]}>42</Text>
+        <Text style={[styles.rankPosition, { color: "#38BDF8" }]}>42</Text>
         <Image
           source={{ uri: "https://i.pravatar.cc/100?img=50" }}
-          style={[styles.avatar, { borderColor: "#6366F1", borderWidth: 1 }]}
+          style={[styles.avatar, { borderColor: "#38BDF8", borderWidth: 1.5 }]}
         />
         <View style={styles.athleteInfo}>
-          <Text style={[styles.athleteName, { color: "#E0E7FF" }]}>
-            Alex Rivers
-          </Text>
-          <Text style={styles.youText}>(You)</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <Text style={[styles.athleteName, { color: "#FFFFFF" }]}>
+              Alex Rivers
+            </Text>
+            <View style={styles.youBadge}>
+              <Text style={styles.youText}>YOU</Text>
+            </View>
+          </View>
+          <Text style={styles.athleteStatus}>Top 5% Global</Text>
         </View>
         <View style={styles.athleteScore}>
-          <Text style={[styles.xpValue, { color: "#E0E7FF" }]}>14,250</Text>
-          <Text style={[styles.xpUnit, { color: "#94A3B8" }]}>XP</Text>
+          <Text style={[styles.xpValue, { color: "#38EDD8" }]}>14,250</Text>
+          <Text style={[styles.xpUnit, { color: "#38EDD8" }]}>XP</Text>
         </View>
       </View>
     </View>
@@ -112,130 +119,143 @@ export function LeaderboardList() {
 
 const styles = StyleSheet.create({
   leaderboard: {
-    gap: 12,
+    gap: 10,
+    marginBottom: 20,
   },
   rankItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.02)",
+    backgroundColor: "rgba(15, 23, 42, 0.45)",
     borderRadius: 16,
-    padding: 16,
+    padding: 14,
     borderWidth: 1,
-    borderColor: "transparent",
+    borderColor: "rgba(255, 255, 255, 0.06)",
   },
   rankItemGold: {
-    borderColor: "rgba(255, 182, 140, 0.4)",
+    borderColor: "rgba(245, 158, 11, 0.3)",
     borderLeftWidth: 3,
     borderLeftColor: "#FFB68C",
-    shadowColor: "#FFB68C",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: "rgba(245, 158, 11, 0.05)",
   },
   rankItemSilver: {
-    borderColor: "rgba(226, 232, 240, 0.4)",
+    borderColor: "rgba(226, 232, 240, 0.3)",
     borderLeftWidth: 3,
     borderLeftColor: "#E2E8F0",
+    backgroundColor: "rgba(226, 232, 240, 0.03)",
   },
   rankItemBronze: {
-    borderColor: "rgba(56, 237, 216, 0.4)",
+    borderColor: "rgba(56, 237, 216, 0.3)",
     borderLeftWidth: 3,
     borderLeftColor: "#38EDD8",
+    backgroundColor: "rgba(56, 237, 216, 0.03)",
   },
   rankItemUser: {
-    borderColor: "rgba(99, 102, 241, 0.6)",
+    borderColor: "rgba(56, 189, 248, 0.35)",
     borderLeftWidth: 3,
-    borderLeftColor: "#6366F1",
-    backgroundColor: "rgba(99, 102, 241, 0.1)",
-    shadowColor: "#6366F1",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 3,
+    borderLeftColor: "#38BDF8",
+    backgroundColor: "rgba(56, 189, 248, 0.08)",
   },
   rankItemStandard: {
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(255, 255, 255, 0.02)",
     paddingVertical: 12,
   },
   rankPosition: {
     color: "#FFFFFF",
-    fontSize: 25,
-    fontWeight: "600",
-    width: 32,
+    fontSize: 20,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    width: 28,
     textAlign: "center",
     marginRight: 10,
   },
   rankPositionSub: {
     color: "#64748B",
     fontSize: 14,
-    fontWeight: "600",
-    width: 32,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    width: 28,
     textAlign: "center",
-    marginRight: 12,
+    marginRight: 10,
   },
   avatar: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    marginRight: 16,
+    borderRadius: 12,
+    marginRight: 14,
+    backgroundColor: "#161B26",
   },
   avatarSmall: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
   },
   athleteInfo: {
     flex: 1,
   },
   athleteName: {
     color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "500",
+    fontSize: 15,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
   },
   athleteNameSub: {
     color: "#CBD5E1",
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: 13,
+    fontWeight: "700",
+    fontFamily: "monospace",
   },
   athleteStatus: {
     color: "#94A3B8",
-    fontSize: 14,
+    fontSize: 11,
+    fontFamily: "monospace",
     marginTop: 2,
   },
+  youBadge: {
+    backgroundColor: "rgba(56, 189, 248, 0.2)",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
   youText: {
-    color: "#94A3B8",
-    fontSize: 14,
-    fontWeight: "600",
+    color: "#38BDF8",
+    fontSize: 9,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
   },
   athleteScore: {
     alignItems: "flex-end",
   },
   xpValue: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "900",
+    fontFamily: "monospace",
   },
   xpUnit: {
     color: "#94A3B8",
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: 10,
+    fontWeight: "800",
+    fontFamily: "monospace",
   },
   xpValueSub: {
     color: "#94A3B8",
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 13,
+    fontWeight: "800",
+    fontFamily: "monospace",
   },
   xpUnitSub: {
     color: "#64748B",
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "800",
+    fontFamily: "monospace",
   },
   dots: {
     color: "#64748B",
-    fontSize: 24,
+    fontSize: 20,
     textAlign: "center",
     letterSpacing: 4,
-    marginVertical: 8,
+    marginVertical: 4,
   },
 });

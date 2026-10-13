@@ -1,5 +1,5 @@
 /**
- * KINETQX Workout Domain Models
+ * REPLOOTWorkout Domain Models
  * Unified architecture for Gym, Home, and AI-Tracked Workouts.
  */
 
@@ -16,7 +16,11 @@ export type ExerciseCategory =
   | "full_body"
   | "mobility";
 
-export type DifficultyLevel = "beginner" | "intermediate" | "advanced" | "elite";
+export type DifficultyLevel =
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "elite";
 
 export interface Exercise {
   id: string;

@@ -1,5 +1,5 @@
 /**
- * KINETQX User & Profile Domain Models
+ * REPLOOTUser & Profile Domain Models
  * Derived from Authentication and Profile Onboarding Figma specifications.
  */
 

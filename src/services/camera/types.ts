@@ -1,5 +1,5 @@
 /**
- * KINETQX Camera Service Types & State Machine
+ * REPLOOTCamera Service Types & State Machine
  */
 
 export type CameraFacing = "front" | "back";

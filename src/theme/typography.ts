@@ -1,7 +1,7 @@
 import { TextStyle } from "react-native";
 
 /**
- * KINETQX Typography Tokens
+ * REPLOOTTypography Tokens
  * Designed to provide bold uppercase athletic display fonts, readable UI labels,
  * and high-impact workout metrics.
  */

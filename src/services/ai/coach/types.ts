@@ -1,5 +1,5 @@
 /**
- * KINETQX AI Coach Architecture & Chat Boundaries
+ * REPLOOTAI Coach Architecture & Chat Boundaries
  */
 
 export type MessageRole = "user" | "assistant" | "system";
@@ -27,7 +27,12 @@ export interface ChatConversation {
   messages: ChatMessage[];
 }
 
-export type ChatStreamingState = "idle" | "connecting" | "streaming" | "completed" | "error";
+export type ChatStreamingState =
+  | "idle"
+  | "connecting"
+  | "streaming"
+  | "completed"
+  | "error";
 
 /**
  * Replaceable AI Coach Chat Provider Interface
@@ -36,7 +41,7 @@ export interface AIChatService {
   sendMessage(
     conversationId: string,
     prompt: string,
-    onChunk?: (partialText: string) => void
+    onChunk?: (partialText: string) => void,
   ): Promise<ChatMessage>;
   getSuggestions(): Promise<ChatSuggestion[]>;
   getConversationHistory(conversationId: string): Promise<ChatConversation>;

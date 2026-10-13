@@ -24,7 +24,10 @@ export const CommunityRankCard = () => {
         </View>
         <Text style={styles.rankSub}>TOP 5% OF ATHLETES</Text>
       </View>
-      <Pressable style={styles.darkBtn} onPress={() => router.push("/profile/global-rankings")}>
+      <Pressable
+        style={styles.darkBtn}
+        onPress={() => router.push("/profile/global-rankings")}
+      >
         <Text style={styles.darkBtnText}>VIEW LEADERBOARD</Text>
       </Pressable>
     </View>
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
   rankNumber: {
     color: "#FFB68C",
     fontSize: 48,
-    fontWeight: "600",
+    fontWeight: "700",
     textShadowColor: "rgba(249,115,22,0.4)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,

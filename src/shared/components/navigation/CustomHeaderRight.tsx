@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { Bell, Search } from "lucide-react-native";
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 
 interface CustomHeaderRightProps {
   rightContent?: React.ReactNode;
@@ -99,6 +99,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   notificationDot: {
     position: "absolute",
@@ -118,6 +121,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   avatarImage: {
     width: "100%",

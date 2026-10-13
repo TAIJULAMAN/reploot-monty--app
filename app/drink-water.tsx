@@ -1,125 +1,292 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, TextInput, Dimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
-import { Image } from "expo-image";
 import { router } from "expo-router";
-import { Search, Bell, Droplet } from "lucide-react-native";
+import { StatusBar } from "expo-status-bar";
+import {
+  Check,
+  Droplet,
+  GlassWater,
+  Plus,
+  Sparkles,
+} from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Line as SvgLine } from "react-native-svg";
 
 const { width } = Dimensions.get("window");
 
 export default function DrinkWaterScreen() {
   const insets = useSafeAreaInsets();
+  const [currentLiters, setCurrentLiters] = useState(1.8);
   const [waterInput, setWaterInput] = useState("");
+  const targetLiters = 3.0;
+
+  const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(style).catch(() => {});
+    }
+  };
+
+  const handleQuickAdd = (ml: number) => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    setCurrentLiters((prev) => +(Math.min(prev + ml / 1000, 6.0)).toFixed(2));
+  };
+
+  const handleAddCustom = () => {
+    const val = parseFloat(waterInput);
+    if (!isNaN(val) && val > 0) {
+      triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+      setCurrentLiters((prev) => +(Math.min(prev + val / 1000, 6.0)).toFixed(2));
+      setWaterInput("");
+    }
+  };
+
+  const handleSaveAndExit = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+    router.back();
+  };
+
+  const progressPercentage = Math.min(
+    Math.round((currentLiters / targetLiters) * 100),
+    100
+  );
+  const remainingLiters = Math.max(+(targetLiters - currentLiters).toFixed(2), 0);
+
+  const quickPacks = [
+    { label: "+250 ML", amount: 250, desc: "Standard Glass" },
+    { label: "+500 ML", amount: 500, desc: "Water Bottle" },
+    { label: "+750 ML", amount: 750, desc: "Cycling Flask" },
+    { label: "+1,000 ML", amount: 1000, desc: "Hydration Shaker" },
+  ];
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
-        <Text style={styles.logoText}>KINETQX</Text>
-        <View style={styles.headerRight}>
-          <Search color="#FFFFFF" size={20} />
-          <Bell color="#FFFFFF" size={20} />
-          <Image
-            source={require("../assets/coachOnline/coachOnline.png")}
-            style={styles.avatar}
-            contentFit="cover"
+      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
           />
-        </View>
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Title */}
+      <CustomHeader
+        titleVariant="text"
+        title=""
+        showBackButton={true}
+        showSearch={true}
+        showNotifications={true}
+        showAvatar={true}
+        transparent={true}
+      />
+
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom + 40, 60) },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title Section with Masked Gradient Title & Description */}
         <View style={styles.titleSection}>
-          <Text style={styles.titleGlow}>DRINK WATER</Text>
-          <Text style={styles.subtitle}>STAY KINETIC • HYDRATION TASK</Text>
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    DRINK WATER
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
+          <Text style={styles.subtitle}>
+            Metabolic cellular replenishment & athletic hydration protocol
+          </Text>
         </View>
 
-        {/* Main Hydration Card */}
-        <LinearGradient
-          colors={["#7552E8", "#2EE8B3"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.cardBorder}
-        >
-          <View style={styles.cardInner}>
-            <View style={styles.currentHydrationBadge}>
+        {/* Main Hydration Telemetry Card */}
+        <View style={styles.card}>
+          <View style={styles.badgeRow}>
+            <View style={styles.badgePill}>
               <View style={styles.dot} />
-              <Text style={styles.currentHydrationText}>CURRENT HYDRATION</Text>
+              <Text style={styles.badgeText}>CURRENT HYDRATION</Text>
             </View>
-
-            <View style={styles.amountRow}>
-              <Text style={styles.mainAmount}>1.8</Text>
-              <Text style={styles.unitAmount}>L</Text>
-            </View>
-
-            <View style={styles.goalRow}>
-              <Text style={styles.goalText}>GOAL: 3.0L</Text>
-              <View style={styles.separator} />
-              <View style={styles.progressBarBg}>
-                <LinearGradient
-                  colors={["#38A1D6", "#2EE8B3"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={[styles.progressBarFill, { width: "60%" }]}
-                />
-              </View>
-              <Text style={styles.percentageText}>60%</Text>
+            <View style={styles.statusPill}>
+              <Text style={styles.statusPillText}>
+                {progressPercentage >= 100 ? "OPTIMAL" : "HYDRATING"}
+              </Text>
             </View>
           </View>
-        </LinearGradient>
+
+          {/* Amount Display */}
+          <View style={styles.amountRow}>
+            <Text style={styles.mainAmount}>{currentLiters.toFixed(1)}</Text>
+            <Text style={styles.unitAmount}>L</Text>
+          </View>
+
+          {/* Progress Track */}
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarBg}>
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe", "#2DD4BF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[
+                  StyleSheet.absoluteFill,
+                  { width: `${progressPercentage}%` },
+                ]}
+              />
+            </View>
+
+            <View style={styles.progressMetaRow}>
+              <Text style={styles.metaLabel}>
+                GOAL: {targetLiters.toFixed(1)} L
+              </Text>
+              <Text style={styles.metaPercent}>
+                {progressPercentage}% REACHED
+              </Text>
+              <Text style={styles.metaRemaining}>
+                {remainingLiters > 0
+                  ? `${remainingLiters} L REMAINING`
+                  : "TARGET MET"}
+              </Text>
+            </View>
+          </View>
+        </View>
 
         {/* Quick Add Section */}
-        <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>QUICK ADD</Text>
-          <Text style={styles.sectionSub}>TAP TO LOG</Text>
+        <View style={styles.sectionHeader}>
+          <View style={styles.iconBadge}>
+            <Droplet size={13} color="#38BDF8" />
+          </View>
+          <Text style={styles.sectionTitle}>QUICK VOLUME LOG</Text>
+          <Text style={styles.sectionSub}>TAP TO REPLENISH</Text>
         </View>
 
         <View style={styles.quickAddGrid}>
-          <Pressable style={styles.quickAddBox}>
-            <Droplet color="#38A1D6" size={20} />
-            <Text style={styles.quickAddText}>+250ml</Text>
-          </Pressable>
-          <Pressable style={styles.quickAddBox}>
-            <Droplet color="#38A1D6" size={20} />
-            <Text style={styles.quickAddText}>+500ml</Text>
-          </Pressable>
-          <Pressable style={styles.quickAddBox}>
-            <Droplet color="#38A1D6" size={20} />
-            <Text style={styles.quickAddText}>+750ml</Text>
-          </Pressable>
-          <Pressable style={styles.quickAddBox}>
-            <Droplet color="#38A1D6" size={20} />
-            <Text style={styles.quickAddText}>+1 LITER</Text>
-          </Pressable>
+          {quickPacks.map((pack, idx) => (
+            <Pressable
+              key={idx}
+              style={({ pressed }) => [
+                styles.quickAddBox,
+                pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+              ]}
+              onPress={() => handleQuickAdd(pack.amount)}
+            >
+              <View style={styles.quickAddIconWrapper}>
+                <Droplet color="#38BDF8" size={18} />
+              </View>
+              <Text style={styles.quickAddAmount}>{pack.label}</Text>
+              <Text style={styles.quickAddDesc}>{pack.desc}</Text>
+            </Pressable>
+          ))}
         </View>
 
-        {/* Custom Amount Section */}
-        <Text style={[styles.sectionTitle, { marginBottom: 16 }]}>CUSTOM AMOUNT</Text>
+        {/* Custom Volume Section */}
+        <View style={styles.sectionHeader}>
+          <View style={styles.iconBadge}>
+            <GlassWater size={13} color="#38BDF8" />
+          </View>
+          <Text style={styles.sectionTitle}>CUSTOM VOLUME</Text>
+        </View>
+
         <View style={styles.customInputContainer}>
+          <Droplet color="#38BDF8" size={16} />
           <TextInput
             style={styles.customInput}
-            placeholder="Enter amount... (ml)"
+            placeholder="0"
             placeholderTextColor="#64748B"
-            keyboardType="numeric"
+            keyboardType="number-pad"
             value={waterInput}
-            onChangeText={setWaterInput}
+            onChangeText={(text) =>
+              setWaterInput(text.replace(/[^0-9]/g, ""))
+            }
+            maxLength={5}
           />
           <Text style={styles.customInputUnit}>ML</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.inlineAddBtn,
+              pressed && { opacity: 0.8 },
+            ]}
+            onPress={handleAddCustom}
+          >
+            <Plus size={12} color="#FFFFFF" style={{ marginRight: 2 }} />
+            <Text style={styles.inlineAddText}>LOG</Text>
+          </Pressable>
         </View>
 
-        {/* Save Button */}
-        <Pressable onPress={() => router.back()} style={styles.saveBtnWrapper}>
+        {/* Save & Confirm Button */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.saveBtnWrapper,
+            pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+          ]}
+          onPress={handleSaveAndExit}
+        >
           <LinearGradient
-            colors={["#1B648C", "#3FA8DD"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+            colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={styles.saveBtn}
           >
-            <Text style={styles.saveBtnText}>SAVE WATER</Text>
+            <Check size={16} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={styles.saveBtnText}>SAVE HYDRATION LOG</Text>
           </LinearGradient>
         </Pressable>
       </ScrollView>
@@ -130,232 +297,286 @@ export default function DrinkWaterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111114",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.05)",
-    paddingBottom: 16,
-  },
-  logoText: {
-    color: "#38A1D6",
-    fontSize: 20,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: -0.5,
-  },
-  headerRight: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#2EE8B3",
+    backgroundColor: "#090A10",
   },
   scrollContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 40,
+    paddingHorizontal: 20,
+    paddingTop: 4,
   },
   titleSection: {
-    alignItems: "center",
-    marginBottom: 32,
-    marginTop: 10,
+    marginTop: 4,
+    marginBottom: 20,
   },
-  titleGlow: {
+  maskedTitleWrapper: {
+    height: 48,
+    width: "100%",
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  mainTitle: {
     color: "#FFFFFF",
-    fontSize: 36,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: -1,
-    textShadowColor: "#38A1D6",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 15,
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
   },
   subtitle: {
-    color: "#A0A0B0",
-    fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 2,
-    marginTop: 8,
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 4,
   },
-  cardBorder: {
-    padding: 1,
-    borderRadius: 24,
-    marginBottom: 40,
-  },
-  cardInner: {
-    backgroundColor: "#1A1A22",
-    borderRadius: 23,
-    paddingVertical: 32,
-    paddingHorizontal: 24,
-    alignItems: "center",
-  },
-  currentHydrationBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(46, 232, 179, 0.1)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  card: {
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(46, 232, 179, 0.2)",
+    borderColor: "rgba(56, 189, 248, 0.35)",
+    padding: 24,
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  badgeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
     marginBottom: 16,
+  },
+  badgePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(45, 212, 191, 0.12)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(45, 212, 191, 0.3)",
   },
   dot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#2EE8B3",
+    backgroundColor: "#2DD4BF",
     marginRight: 6,
   },
-  currentHydrationText: {
-    color: "#2EE8B3",
+  badgeText: {
+    color: "#2DD4BF",
     fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 1,
+  },
+  statusPill: {
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+  },
+  statusPillText: {
+    color: "#38BDF8",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
   amountRow: {
     flexDirection: "row",
     alignItems: "baseline",
-    marginBottom: 20,
+    marginVertical: 12,
   },
   mainAmount: {
     color: "#FFFFFF",
-    fontSize: 72,
-    fontFamily: "JetBrainsMono_700Bold",
-    lineHeight: 80,
+    fontSize: 68,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 1,
+    lineHeight: 76,
   },
   unitAmount: {
-    color: "#2EE8B3",
-    fontSize: 24,
-    fontFamily: "JetBrainsMono_700Bold",
-    marginLeft: 4,
+    color: "#38BDF8",
+    fontSize: 22,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    marginLeft: 6,
   },
-  goalRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.03)",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.05)",
-  },
-  goalText: {
-    color: "#A0A0B0",
-    fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
-  },
-  separator: {
-    width: 1,
-    height: 12,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginHorizontal: 12,
+  progressContainer: {
+    width: "100%",
+    marginTop: 8,
   },
   progressBarBg: {
-    width: 40,
-    height: 4,
-    backgroundColor: "rgba(255,255,255,0.1)",
-    borderRadius: 2,
-    marginRight: 10,
+    height: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    borderRadius: 4,
+    overflow: "hidden",
+    marginBottom: 10,
   },
-  progressBarFill: {
-    height: "100%",
-    borderRadius: 2,
-  },
-  percentageText: {
-    color: "#2EE8B3",
-    fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-  },
-  sectionHeaderRow: {
+  progressMetaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+  },
+  metaLabel: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  metaPercent: {
+    color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+  metaRemaining: {
+    color: "#2DD4BF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  iconBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 7,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
   },
   sectionTitle: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    flex: 1,
   },
   sectionSub: {
-    color: "#8A8A93",
+    color: "#64748B",
     fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontFamily: "monospace",
+    fontWeight: "700",
     letterSpacing: 1,
   },
   quickAddGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    rowGap: 16,
-    marginBottom: 40,
+    rowGap: 12,
+    marginBottom: 24,
   },
   quickAddBox: {
-    width: (width - 48 - 16) / 2, // 50% width minus padding and gap
-    backgroundColor: "#16161A",
+    width: (width - 40 - 12) / 2,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.05)",
+    borderColor: "rgba(255, 255, 255, 0.08)",
     borderRadius: 16,
-    paddingVertical: 24,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
     alignItems: "center",
-    gap: 12,
   },
-  quickAddText: {
+  quickAddIconWrapper: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: "rgba(56, 189, 248, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  quickAddAmount: {
     color: "#FFFFFF",
     fontSize: 14,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  quickAddDesc: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
   customInputContainer: {
-    backgroundColor: "#16161A",
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.05)",
+    borderColor: "rgba(255, 255, 255, 0.08)",
     borderRadius: 16,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    height: 60,
-    marginBottom: 40,
+    paddingHorizontal: 16,
+    height: 52,
+    marginBottom: 24,
   },
   customInput: {
     flex: 1,
     color: "#FFFFFF",
-    fontSize: 16,
-    fontFamily: "Inter_400Regular", // Using a clean font for input
+    fontSize: 14,
+    fontFamily: "monospace",
+    marginLeft: 10,
   },
   customInputUnit: {
-    color: "#8A8A93",
-    fontSize: 12,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    color: "#64748B",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    marginRight: 12,
+  },
+  inlineAddBtn: {
+    backgroundColor: "#0284C7",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
+  },
+  inlineAddText: {
+    color: "#FFFFFF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
   saveBtnWrapper: {
-    marginBottom: 20,
+    borderRadius: 16,
+    overflow: "hidden",
   },
   saveBtn: {
-    paddingVertical: 20,
-    borderRadius: 24,
+    flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#38A1D6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 8,
+    justifyContent: "center",
+    paddingVertical: 15,
   },
   saveBtnText: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
   },
 });

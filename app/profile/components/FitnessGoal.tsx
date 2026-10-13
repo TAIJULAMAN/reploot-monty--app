@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
 import { Image } from "expo-image";
-import { CheckCircle2, Circle } from "lucide-react-native";
+import * as Haptics from "expo-haptics";
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface FitnessGoalProps {
   selectedGoal: string;
@@ -15,38 +15,52 @@ export function FitnessGoal({
   const goals = [
     {
       id: "lose_weight",
-      label: "Lose Weight",
+      label: "LOSE WEIGHT",
+      desc: "Caloric deficit & metabolic burn",
       icon: require("../../../assets/loseWeight.svg"),
     },
     {
       id: "build_muscle",
-      label: "Build Muscle",
+      label: "BUILD MUSCLE",
+      desc: "Hypertrophy & progressive overload",
       icon: require("../../../assets/buildMuscle.svg"),
     },
     {
       id: "gain_strength",
-      label: "Gain Strength",
+      label: "GAIN STRENGTH",
+      desc: "Heavy compound lifting & power output",
       icon: require("../../../assets/gainStrength.svg"),
     },
     {
       id: "maintain",
-      label: "Maintain Fitness",
+      label: "MAINTAIN FITNESS",
+      desc: "Active health & cardiovascular balance",
       icon: require("../../../assets/maintainFitness.svg"),
     },
     {
       id: "endurance",
-      label: "Improve Endurance",
+      label: "IMPROVE ENDURANCE",
+      desc: "VO2 max & stamina conditioning",
       icon: require("../../../assets/improveEndurance.svg"),
     },
     {
       id: "flexibility",
-      label: "Improve Flexibility",
+      label: "IMPROVE FLEXIBILITY",
+      desc: "Mobility, joint recovery & dynamic flow",
       icon: require("../../../assets/improveFlexibility.svg"),
     },
   ];
 
+  const handleSelect = (goalId: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    setSelectedGoal(goalId);
+  };
+
   return (
     <View style={styles.section}>
+      {/* Section Header */}
       <View style={styles.sectionHeader}>
         <Image
           source={require("../../../assets/fitnessGoal.svg")}
@@ -56,38 +70,59 @@ export function FitnessGoal({
         <Text style={styles.sectionTitle}>FITNESS GOAL</Text>
       </View>
 
+      {/* Goals List */}
       <View style={styles.goalsContainer}>
         {goals.map((goal) => {
           const isSelected = selectedGoal === goal.id;
-          const iconSource = goal.icon;
           return (
             <Pressable
               key={goal.id}
-              style={[styles.goalCard, isSelected && styles.goalCardSelected]}
-              onPress={() => setSelectedGoal(goal.id)}
+              style={({ pressed }) => [
+                styles.goalCard,
+                isSelected && styles.goalCardSelected,
+                pressed && styles.goalCardPressed,
+              ]}
+              onPress={() => handleSelect(goal.id)}
             >
-              <View style={styles.goalIconContainer}>
+              {/* Left Icon Container */}
+              <View
+                style={[
+                  styles.goalIconContainer,
+                  isSelected && styles.goalIconContainerSelected,
+                ]}
+              >
                 <Image
-                  source={iconSource}
+                  source={goal.icon}
                   style={{
                     width: 20,
                     height: 20,
-                    tintColor: isSelected ? "#38EDD8" : "#94A3B8",
+                    tintColor: isSelected ? "#38BDF8" : "#64748B",
                   }}
                   contentFit="contain"
                 />
               </View>
-              <Text
-                style={[styles.goalText, isSelected && styles.goalTextSelected]}
+
+              {/* Text Center */}
+              <View style={styles.textContainer}>
+                <Text
+                  style={[
+                    styles.goalText,
+                    isSelected && styles.goalTextSelected,
+                  ]}
+                >
+                  {goal.label}
+                </Text>
+                <Text style={styles.goalDesc}>{goal.desc}</Text>
+              </View>
+
+              {/* Radio Indicator */}
+              <View
+                style={[
+                  styles.radioOuter,
+                  isSelected && styles.radioOuterSelected,
+                ]}
               >
-                {goal.label}
-              </Text>
-              <View style={styles.radioContainer}>
-                {isSelected ? (
-                  <CheckCircle2 size={24} color="#38EDD8" />
-                ) : (
-                  <Circle size={24} color="#334155" />
-                )}
+                {isSelected && <View style={styles.radioInner} />}
               </View>
             </Pressable>
           );
@@ -99,54 +134,114 @@ export function FitnessGoal({
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 32,
+    marginBottom: 28,
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 14,
+  },
+  iconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
   },
   sectionTitle: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "400",
+    color: "#94A3B8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 2,
+    flex: 1,
+  },
+  counterText: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 1,
   },
   goalsContainer: {
-    gap: 12,
+    gap: 10,
   },
   goalCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.03)",
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderRadius: 16,
-    padding: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: "transparent",
+    borderColor: "rgba(255, 255, 255, 0.08)",
   },
   goalCardSelected: {
-    borderColor: "rgba(56, 237, 216, 0.3)",
-    backgroundColor: "rgba(56, 237, 216, 0.05)",
+    borderColor: "rgba(56, 189, 248, 0.45)",
+    backgroundColor: "rgba(56, 189, 248, 0.08)",
+  },
+  goalCardPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.99 }],
   },
   goalIconContainer: {
-    width: 40,
-    height: 40,
-    backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: 8,
+    width: 42,
+    height: 42,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.06)",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 16,
+    marginRight: 14,
+  },
+  goalIconContainerSelected: {
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderColor: "rgba(56, 189, 248, 0.35)",
+  },
+  textContainer: {
+    flex: 1,
   },
   goalText: {
-    flex: 1,
-    color: "#E2E8F0",
-    fontSize: 18,
-    fontWeight: "600",
+    color: "#CBD5E1",
+    fontSize: 14,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.8,
+    marginBottom: 2,
   },
   goalTextSelected: {
     color: "#FFFFFF",
   },
-  radioContainer: {
-    marginLeft: 16,
+  goalDesc: {
+    color: "#64748B",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "500",
+    lineHeight: 15,
+  },
+  radioOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: "rgba(148, 163, 184, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 12,
+  },
+  radioOuterSelected: {
+    borderColor: "#38BDF8",
+    backgroundColor: "rgba(56, 189, 248, 0.15)",
+  },
+  radioInner: {
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
+    backgroundColor: "#38BDF8",
   },
 });

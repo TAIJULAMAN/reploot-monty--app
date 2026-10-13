@@ -1,5 +1,5 @@
 /**
- * KINETQX Gradient Tokens
+ * REPLOOTGradient Tokens
  * Built for expo-linear-gradient and reusable surface styling.
  */
 

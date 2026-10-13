@@ -1,5 +1,5 @@
 /**
- * KINETQX Nutrition & Macro Domain Models
+ * REPLOOTNutrition & Macro Domain Models
  * Derived from Precision Nutrition and AI Food Scanner Figma designs.
  */
 

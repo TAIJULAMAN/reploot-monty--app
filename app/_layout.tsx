@@ -43,6 +43,8 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="coach/index" />
         <Stack.Screen name="workouts/index" />
+        <Stack.Screen name="notifications/index" />
+        <Stack.Screen name="search/index" />
         <Stack.Screen
           name="modals/index"
           options={{

@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { ArrowLeft } from "lucide-react-native";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface CustomHeaderLeftProps {
   leftContent?: React.ReactNode;
@@ -81,10 +81,16 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 255, 255, 0.1)",
     alignItems: "center",
     justifyContent: "center",
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   logoWrapper: {
     flexDirection: "row",
     alignItems: "center",
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   logoImage: {
     height: 24,

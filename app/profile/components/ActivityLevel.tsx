@@ -14,7 +14,11 @@ export function ActivityLevel({
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <Image source={require("../../../assets/activityLevel.svg")} style={{ width: 16, height: 16, marginRight: 8 }} contentFit="contain" />
+        <Image
+          source={require("../../../assets/activityLevel.svg")}
+          style={{ width: 16, height: 16, marginRight: 8 }}
+          contentFit="contain"
+        />
         <Text style={styles.sectionTitle}>ACTIVITY LEVEL</Text>
       </View>
 

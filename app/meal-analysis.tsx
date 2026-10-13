@@ -1,140 +1,316 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Dimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
+import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { ArrowLeft, Search, Bell, Flame, Droplet, Leaf, Hexagon, Scale } from "lucide-react-native";
+import { StatusBar } from "expo-status-bar";
+import {
+  CheckCircle2,
+  Droplet,
+  Flame,
+  Hexagon,
+  Leaf,
+  RotateCcw,
+  Scale,
+  Sparkles,
+} from "lucide-react-native";
+import React from "react";
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Line as SvgLine } from "react-native-svg";
 
 const { width } = Dimensions.get("window");
 
 export default function MealAnalysisScreen() {
   const insets = useSafeAreaInsets();
 
+  const triggerHaptic = (
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+  ) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(style).catch(() => {});
+    }
+  };
+
+  const handleSaveMeal = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+    router.push("/meal-history");
+  };
+
+  const handleScanAgain = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    router.back();
+  };
+
+  const ingredients = [
+    { name: "CHICKEN BREAST", portion: "180g" },
+    { name: "BROWN RICE", portion: "100g" },
+    { name: "STEAMED BROCCOLI", portion: "40g" },
+  ];
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      
-      {/* Custom Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft color="#38A1D6" size={20} />
-        </Pressable>
-        <View style={styles.headerRight}>
-          <Search color="#FFFFFF" size={20} />
-          <Bell color="#FFFFFF" size={20} />
-          <Image
-            source={require("../assets/coachOnline/coachOnline.png")} // Using a known avatar asset
-            style={styles.avatar}
-            contentFit="cover"
+
+      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
           />
-        </View>
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Title */}
+      <CustomHeader
+        titleVariant="text"
+        title=""
+        showBackButton={true}
+        showSearch={true}
+        showNotifications={true}
+        showAvatar={true}
+        transparent={true}
+      />
+
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom + 40, 60) },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title Section with Masked Gradient Title & Description */}
         <View style={styles.titleSection}>
-          <Text style={styles.titleGlow}>MEAL</Text>
-          <Text style={styles.titleGlow}>ANALYSIS</Text>
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    MEAL ANALYSIS
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
+          <Text style={styles.subtitle}>
+            Computer vision macro breakdown & portion telemetry
+          </Text>
         </View>
 
-        {/* Meal Image */}
+        {/* Meal Image with Cyber Frame & Confidence HUD */}
         <View style={styles.imageContainer}>
           <LinearGradient
-            colors={["#7552E8", "#2EE8B3"]}
+            colors={["#00f2fe", "#4facfe", "#2DD4BF"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.imageGlowBorder}
           >
-            <Image
-              source={{ uri: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2000&auto=format&fit=crop" }}
-              style={styles.mealImage}
-              contentFit="cover"
-            />
+            <View style={styles.imageInnerWrapper}>
+              <Image
+                source={{
+                  uri: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2000&auto=format&fit=crop",
+                }}
+                style={styles.mealImage}
+                contentFit="cover"
+              />
+              <View style={styles.verifiedBadge}>
+                <CheckCircle2
+                  size={11}
+                  color="#2DD4BF"
+                  style={{ marginRight: 4 }}
+                />
+                <Text style={styles.verifiedText}>CLASSIFIED</Text>
+              </View>
+            </View>
           </LinearGradient>
         </View>
 
-        {/* Detected Foods */}
-        <View style={styles.detectedSection}>
-          <Text style={styles.detectedTitle}>DETECTED FOODS</Text>
+        {/* Detected Ingredients Section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.iconBadge}>
+              <Sparkles size={13} color="#38BDF8" />
+            </View>
+            <Text style={styles.sectionTitle}>DETECTED INGREDIENTS</Text>
+          </View>
+
           <View style={styles.pillsRow}>
-            <View style={styles.pill}><Text style={styles.pillText}>CHICKEN BREAST</Text></View>
-            <View style={styles.pill}><Text style={styles.pillText}>RICE</Text></View>
-            <View style={styles.pill}><Text style={styles.pillText}>BROCCOLI</Text></View>
+            {ingredients.map((item, idx) => (
+              <View key={idx} style={styles.pill}>
+                <View style={styles.pillDot} />
+                <Text style={styles.pillText}>{item.name}</Text>
+                <Text style={styles.pillPortion}>{item.portion}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
         {/* Macros Grid */}
-        <View style={styles.macrosGrid}>
-          {/* Calories */}
-          <View style={[styles.macroCard, { borderBottomWidth: 3, borderBottomColor: "#2EE8B3" }]}>
-            <View style={styles.macroHeader}>
-              <Text style={[styles.macroLabel, { color: "#2EE8B3" }]}>CALORIES</Text>
-              <Flame color="#2EE8B3" size={14} />
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.iconBadge}>
+              <Flame size={13} color="#38BDF8" />
             </View>
-            <Text style={styles.macroValue}>450</Text>
-            <Text style={styles.macroSub}>KCAL</Text>
+            <Text style={styles.sectionTitle}>METABOLIC MACRO TELEMETRY</Text>
           </View>
 
-          {/* Protein */}
-          <View style={[styles.macroCard, { borderBottomWidth: 3, borderBottomColor: "#7552E8" }]}>
-            <View style={styles.macroHeader}>
-              <Text style={[styles.macroLabel, { color: "#7552E8" }]}>PROTEIN</Text>
-              <Droplet color="#7552E8" size={14} />
+          <View style={styles.macrosGrid}>
+            {/* Calories */}
+            <View
+              style={[
+                styles.macroCard,
+                { borderColor: "rgba(56, 189, 248, 0.35)" },
+              ]}
+            >
+              <View style={styles.macroHeader}>
+                <Text style={[styles.macroLabel, { color: "#38BDF8" }]}>
+                  CALORIES
+                </Text>
+                <Flame color="#38BDF8" size={15} />
+              </View>
+              <Text style={styles.macroValue}>450</Text>
+              <Text style={styles.macroSub}>KCAL</Text>
             </View>
-            <Text style={styles.macroValue}>35g</Text>
-            <Text style={styles.macroSub}>HIGH TARGET</Text>
-          </View>
 
-          {/* Carbs */}
-          <View style={[styles.macroCard, { borderBottomWidth: 3, borderBottomColor: "#F29C38" }]}>
-            <View style={styles.macroHeader}>
-              <Text style={[styles.macroLabel, { color: "#F29C38" }]}>CARBS</Text>
-              <Leaf color="#F29C38" size={14} />
+            {/* Protein */}
+            <View
+              style={[
+                styles.macroCard,
+                { borderColor: "rgba(45, 212, 191, 0.35)" },
+              ]}
+            >
+              <View style={styles.macroHeader}>
+                <Text style={[styles.macroLabel, { color: "#2DD4BF" }]}>
+                  PROTEIN
+                </Text>
+                <Droplet color="#2DD4BF" size={15} />
+              </View>
+              <Text style={styles.macroValue}>35g</Text>
+              <Text style={[styles.macroSub, { color: "#2DD4BF" }]}>
+                HIGH TARGET
+              </Text>
             </View>
-            <Text style={styles.macroValue}>42g</Text>
-            <Text style={styles.macroSub}>COMPLEX</Text>
-          </View>
 
-          {/* Fat */}
-          <View style={[styles.macroCard, { borderBottomWidth: 3, borderBottomColor: "#F2385A" }]}>
-            <View style={styles.macroHeader}>
-              <Text style={[styles.macroLabel, { color: "#F2385A" }]}>FAT</Text>
-              <Hexagon color="#F2385A" size={14} />
+            {/* Carbs */}
+            <View
+              style={[
+                styles.macroCard,
+                { borderColor: "rgba(255, 182, 140, 0.35)" },
+              ]}
+            >
+              <View style={styles.macroHeader}>
+                <Text style={[styles.macroLabel, { color: "#FFB68C" }]}>
+                  CARBS
+                </Text>
+                <Leaf color="#FFB68C" size={15} />
+              </View>
+              <Text style={styles.macroValue}>42g</Text>
+              <Text style={[styles.macroSub, { color: "#FFB68C" }]}>
+                COMPLEX
+              </Text>
             </View>
-            <Text style={styles.macroValue}>12g</Text>
-            <Text style={styles.macroSub}>UNSATURATED</Text>
-          </View>
-        </View>
 
-        {/* Portion */}
-        <View style={[styles.portionCard, { borderBottomWidth: 3, borderBottomColor: "#EAE041" }]}>
-          <View style={styles.macroHeader}>
-            <Text style={[styles.macroLabel, { color: "#EAE041" }]}>PORTION</Text>
-            <Scale color="#EAE041" size={14} />
-          </View>
-          <View style={{ alignItems: "center", marginTop: 10 }}>
-            <Text style={styles.macroValue}>320g</Text>
-            <Text style={styles.macroSub}>NET WEIGHT</Text>
+            {/* Fat */}
+            <View
+              style={[
+                styles.macroCard,
+                { borderColor: "rgba(244, 63, 94, 0.35)" },
+              ]}
+            >
+              <View style={styles.macroHeader}>
+                <Text style={[styles.macroLabel, { color: "#F43F5E" }]}>
+                  FAT
+                </Text>
+                <Hexagon color="#F43F5E" size={15} />
+              </View>
+              <Text style={styles.macroValue}>12g</Text>
+              <Text style={[styles.macroSub, { color: "#F43F5E" }]}>
+                UNSATURATED
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
-          <Pressable onPress={() => router.push("/meal-history")}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.saveButton,
+              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+            ]}
+            onPress={handleSaveMeal}
+          >
             <LinearGradient
-              colors={["#2D76A8", "#38A1D6"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.saveButton}
+              colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.saveGradient}
             >
+              <CheckCircle2
+                color="#FFFFFF"
+                size={16}
+                style={{ marginRight: 8 }}
+              />
               <Text style={styles.saveButtonText}>SAVE MEAL</Text>
             </LinearGradient>
           </Pressable>
 
-          <Pressable style={styles.scanAgainButton} onPress={() => router.back()}>
-            <Text style={styles.scanAgainText}>SCAN AGAIN</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.scanAgainButton,
+              pressed && { opacity: 0.75, transform: [{ scale: 0.99 }] },
+            ]}
+            onPress={handleScanAgain}
+          >
+            <Text style={styles.scanAgainText}>SCAN ANOTHER MEAL</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -145,168 +321,327 @@ export default function MealAnalysisScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#161619",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-    marginBottom: 20,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.05)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerRight: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#2EE8B3",
+    backgroundColor: "#090A10",
   },
   scrollContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 40,
+    paddingHorizontal: 20,
+    paddingTop: 4,
   },
   titleSection: {
-    marginBottom: 24,
+    marginTop: 4,
+    marginBottom: 20,
   },
-  titleGlow: {
+  maskedTitleWrapper: {
+    height: 48,
+    width: "100%",
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  mainTitle: {
     color: "#FFFFFF",
-    fontSize: 42,
-    fontFamily: "JetBrainsMono_700Bold",
-    lineHeight: 44,
-    textShadowColor: "#44EAC3",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 15,
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 4,
   },
   imageContainer: {
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 24,
   },
   imageGlowBorder: {
     padding: 2,
     borderRadius: 24,
     width: "100%",
-    aspectRatio: 1,
-    shadowColor: "#44EAC3",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
+    aspectRatio: 1.25,
   },
-  mealImage: {
+  imageInnerWrapper: {
     flex: 1,
     borderRadius: 22,
+    overflow: "hidden",
+    position: "relative",
+  },
+  mealImage: {
     width: "100%",
+    height: "100%",
   },
-  detectedSection: {
-    marginBottom: 32,
+  hudBadge: {
+    position: "absolute",
+    top: 14,
+    left: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(15, 23, 42, 0.85)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.4)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
   },
-  detectedTitle: {
-    color: "#8A8A93",
+  hudBadgeText: {
+    color: "#38BDF8",
     fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 2,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  verifiedBadge: {
+    position: "absolute",
+    bottom: 14,
+    right: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(15, 23, 42, 0.85)",
+    borderWidth: 1,
+    borderColor: "rgba(45, 212, 191, 0.4)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  verifiedText: {
+    color: "#2DD4BF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
+  },
+  iconBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 7,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  sectionTitle: {
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.5,
   },
   pillsRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
+    gap: 8,
   },
   pill: {
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
-    borderRadius: 20,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 12,
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: "rgba(255,255,255,0.05)",
+    paddingHorizontal: 12,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
+    gap: 6,
+  },
+  pillDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: "#38BDF8",
   },
   pillText: {
     color: "#FFFFFF",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  pillPortion: {
+    color: "#64748B",
     fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    fontFamily: "monospace",
+    fontWeight: "700",
   },
   macrosGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    rowGap: 16,
-    marginBottom: 16,
+    rowGap: 12,
   },
   macroCard: {
-    width: (width - 48 - 16) / 2, // 50% width minus padding and gap
-    backgroundColor: "#1D1D23",
+    width: (width - 40 - 12) / 2,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderRadius: 16,
-    padding: 16,
+    borderWidth: 1,
+    padding: 14,
   },
   macroHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   macroLabel: {
-    fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 1,
   },
   macroValue: {
     color: "#FFFFFF",
-    fontSize: 28,
-    fontFamily: "JetBrainsMono_700Bold",
-    marginBottom: 4,
+    fontSize: 26,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.5,
+    marginBottom: 2,
   },
   macroSub: {
-    color: "#8A8A93",
+    color: "#64748B",
     fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontFamily: "monospace",
+    fontWeight: "700",
     letterSpacing: 1,
   },
   portionCard: {
-    backgroundColor: "#1D1D23",
-    borderRadius: 16,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
     padding: 16,
-    marginBottom: 32,
+    marginBottom: 24,
+  },
+  portionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  portionHeaderLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  portionIconBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  portionTitle: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  portionSubtitle: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    marginTop: 2,
+  },
+  portionValueRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 2,
+  },
+  portionValue: {
+    color: "#FFFFFF",
+    fontSize: 24,
+    fontFamily: "monospace",
+    fontWeight: "900",
+  },
+  portionUnit: {
+    color: "#38BDF8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+  portionBarTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  portionBarMeta: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  portionMetaText: {
+    color: "#64748B",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  portionMetaPercent: {
+    color: "#38BDF8",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "800",
   },
   actionsContainer: {
-    gap: 16,
+    gap: 12,
   },
   saveButton: {
-    paddingVertical: 18,
-    borderRadius: 24,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  saveGradient: {
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 15,
   },
   saveButtonText: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
   },
   scanAgainButton: {
-    paddingVertical: 18,
-    borderRadius: 24,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
-    backgroundColor: "#1D1D23",
+    borderColor: "rgba(56, 189, 248, 0.3)",
+    backgroundColor: "rgba(56, 189, 248, 0.08)",
   },
   scanAgainText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "JetBrainsMono_700Bold",
+    color: "#38BDF8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 1,
   },
 });

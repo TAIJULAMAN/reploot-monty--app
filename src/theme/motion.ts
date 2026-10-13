@@ -1,7 +1,11 @@
-import { WithSpringConfig, WithTimingConfig, Easing } from "react-native-reanimated";
+import {
+  WithSpringConfig,
+  WithTimingConfig,
+  Easing,
+} from "react-native-reanimated";
 
 /**
- * KINETQX Motion & Animation Tokens
+ * REPLOOTMotion & Animation Tokens
  * Calibrated spring and timing configurations for fluid UI transitions.
  */
 

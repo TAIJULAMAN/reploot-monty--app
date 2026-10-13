@@ -2,13 +2,7 @@ import { useAppSelector } from "@/store/hooks";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CustomHeaderLeft } from "./CustomHeaderLeft";
 import { CustomHeaderRight } from "./CustomHeaderRight";
@@ -38,7 +32,6 @@ export interface CustomHeaderProps {
 }
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
-  title = "KINETQX",
   titleVariant,
   showBackButton = false,
   onPressBack,
@@ -94,7 +87,11 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
-    onPressSearch?.();
+    if (onPressSearch) {
+      onPressSearch();
+    } else {
+      router.push("/search");
+    }
   };
 
   const handleNotificationsPress = () => {
@@ -138,7 +135,6 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           leftContent={leftContent}
           showBackButton={showBackButton}
           handleBackPress={handleBackPress}
-          title={title}
           resolvedVariant={resolvedVariant}
           handleLogoPress={handleLogoPress}
         />

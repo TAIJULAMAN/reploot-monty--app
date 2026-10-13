@@ -1,5 +1,5 @@
 /**
- * KINETQX Spacing Tokens (4px Grid Scale)
+ * REPLOOTSpacing Tokens (4px Grid Scale)
  */
 
 export const spacing = {

@@ -1,26 +1,74 @@
+import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
-import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
+import {
+  Activity,
+  ArrowRight,
+  ChevronRight,
+  Dumbbell,
+  Flame,
+  LayoutGrid,
+  Sparkles,
+  TrendingUp,
+  User,
+  Zap,
+} from "lucide-react-native";
 import React, { useState } from "react";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DEMO_WORKOUT_PATHS } from "../data/workoutPaths";
-import { GymWorkoutPathCard } from "./GymWorkoutPathCard";
-import { PullDayScreen } from "./PullDayScreen";
-import { PushDayScreen } from "./PushDayScreen";
-import { WorkoutHeader } from "./WorkoutHeader";
+import Svg, { Line as SvgLine } from "react-native-svg";
+import {
+  DynamicWorkoutPathDetail,
+  WORKOUT_PATH_DETAILS_MAP,
+} from "../data/workoutPathDetailData";
+import { GenericWorkoutDetailScreen } from "./GenericWorkoutDetailScreen";
 import { WorkoutLibraryScreen } from "./WorkoutLibraryScreen";
 
+const { width } = Dimensions.get("window");
+
+export type WorkoutPathId =
+  | "push"
+  | "pull"
+  | "upper"
+  | "lower"
+  | "fullbody"
+  | "library";
+
+interface GymPathCardConfig {
+  id: WorkoutPathId;
+  title: string;
+  subtitle: string;
+  tag: string;
+  tagColor: string;
+  tagBg: string;
+  arrowColor: string;
+  iconBg: string;
+  iconBorder: string;
+  glowAura: string;
+  icon: React.ReactNode;
+}
+
 export interface GymWorkoutPathScreenProps {
-  onSelectPath?: (pathId: "push" | "pull" | "library") => void;
+  onSelectPath?: (pathId: WorkoutPathId) => void;
 }
 
 export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
   onSelectPath,
 }) => {
   const insets = useSafeAreaInsets();
-  const [activePath, setActivePath] = useState<string | null>(null);
+  const [activePath, setActivePath] = useState<WorkoutPathId | null>(null);
 
-  const handleCardPress = (pathId: "push" | "pull" | "library") => {
+  const handleCardPress = (pathId: WorkoutPathId) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     }
@@ -31,67 +79,226 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
     }
   };
 
-  if (activePath === "push") {
-    return <PushDayScreen onBack={() => setActivePath(null)} />;
-  }
-
-  if (activePath === "pull") {
-    return <PullDayScreen onBack={() => setActivePath(null)} />;
-  }
-
+  // If user selected Workout Library, open library screen
   if (activePath === "library") {
     return <WorkoutLibraryScreen onBack={() => setActivePath(null)} />;
   }
 
+  // Dynamic Workout Handler: Use single common screen for Push, Pull, Upper, Lower, Full Body
+  if (activePath && WORKOUT_PATH_DETAILS_MAP[activePath]) {
+    return (
+      <GenericWorkoutDetailScreen
+        workout={WORKOUT_PATH_DETAILS_MAP[activePath]}
+        onBack={() => setActivePath(null)}
+      />
+    );
+  }
+
+  const PATH_CARDS: GymPathCardConfig[] = [
+    {
+      id: "push",
+      title: "PUSH DAY",
+      subtitle: "Chest, Shoulders & Triceps focus",
+      tag: "+50 XP",
+      tagColor: "#C5C0FF",
+      tagBg: "rgba(129, 140, 248, 0.15)",
+      arrowColor: "#818CF8",
+      iconBg: "rgba(108, 92, 255, 0.18)",
+      iconBorder: "rgba(129, 140, 248, 0.35)",
+      glowAura: "rgba(129, 140, 248, 0.12)",
+      icon: <Zap size={20} color="#C5C0FF" />,
+    },
+    {
+      id: "pull",
+      title: "PULL DAY",
+      subtitle: "Back, Biceps & Rear Delts focus",
+      tag: "+50 XP",
+      tagColor: "#38EDD8",
+      tagBg: "rgba(56, 237, 216, 0.12)",
+      arrowColor: "#38EDD8",
+      iconBg: "rgba(56, 237, 216, 0.16)",
+      iconBorder: "rgba(56, 237, 216, 0.35)",
+      glowAura: "rgba(56, 237, 216, 0.12)",
+      icon: <User size={20} color="#38EDD8" />,
+    },
+    {
+      id: "upper",
+      title: "UPPER BODY",
+      subtitle: "Chest, Back, Arms & Delts",
+      tag: "+60 XP",
+      tagColor: "#C5C0FF",
+      tagBg: "rgba(129, 140, 248, 0.15)",
+      arrowColor: "#818CF8",
+      iconBg: "rgba(108, 92, 255, 0.18)",
+      iconBorder: "rgba(129, 140, 248, 0.35)",
+      glowAura: "rgba(129, 140, 248, 0.12)",
+      icon: <Dumbbell size={20} color="#C5C0FF" />,
+    },
+    {
+      id: "lower",
+      title: "LOWER BODY",
+      subtitle: "Quads, Glutes, Calves & Hams",
+      tag: "+60 XP",
+      tagColor: "#38EDD8",
+      tagBg: "rgba(56, 237, 216, 0.12)",
+      arrowColor: "#38EDD8",
+      iconBg: "rgba(56, 237, 216, 0.16)",
+      iconBorder: "rgba(56, 237, 216, 0.35)",
+      glowAura: "rgba(56, 237, 216, 0.12)",
+      icon: <Activity size={20} color="#38EDD8" />,
+    },
+    {
+      id: "fullbody",
+      title: "FULL BODY",
+      subtitle: "Total compound power & endurance",
+      tag: "+75 XP",
+      tagColor: "#C5C0FF",
+      tagBg: "rgba(129, 140, 248, 0.15)",
+      arrowColor: "#818CF8",
+      iconBg: "rgba(108, 92, 255, 0.18)",
+      iconBorder: "rgba(129, 140, 248, 0.35)",
+      glowAura: "rgba(129, 140, 248, 0.12)",
+      icon: <Flame size={20} color="#C5C0FF" />,
+    },
+    {
+      id: "library",
+      title: "LIBRARY",
+      subtitle: "Browse all gym routine programs",
+      tag: "EXPLORE",
+      tagColor: "#38EDD8",
+      tagBg: "rgba(56, 237, 216, 0.12)",
+      arrowColor: "#38EDD8",
+      iconBg: "rgba(56, 237, 216, 0.16)",
+      iconBorder: "rgba(56, 237, 216, 0.35)",
+      glowAura: "rgba(56, 237, 216, 0.12)",
+      icon: <LayoutGrid size={20} color="#38EDD8" />,
+    },
+  ];
+
   return (
     <View style={styles.screen}>
-      {/* Background */}
-      <View style={styles.bgContainer} pointerEvents="none">
-        <View style={[styles.bgImage, { backgroundColor: "#070A11" }]} />
-        <Image
-          source={require("../../../../assets/bg/gymWorkoutBg.png")}
-          style={styles.bgImage}
-          contentFit="cover"
-          transition={150}
+      <StatusBar style="light" />
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
         />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
       </View>
-      <WorkoutHeader />
+
+      <CustomHeader transparent={true} />
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingBottom: Math.max(insets.bottom + 24, 40),
+            paddingBottom: Math.max(insets.bottom + 32, 50),
           },
         ]}
       >
-        {/* Title Header Section */}
+        {/* Title Section with Masked Gradient Title (Exact progress.tsx pattern) */}
         <View style={styles.titleSection}>
           <Text style={styles.categoryBadge}>GYM WORKOUT</Text>
-          <Text style={styles.mainTitle}>{"SELECT YOUR\nPATH"}</Text>
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={2}
+                    adjustsFontSizeToFit
+                  >
+                    {"SELECT YOUR\nPATH"}
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
           <Text style={styles.subtitle}>
-            Choose your focus for today's session.
+            Choose your athletic focus & telemetry for today's session
           </Text>
         </View>
 
-        {/* Workout Path Cards*/}
-        <View style={styles.cardsColumn}>
-          {DEMO_WORKOUT_PATHS.map((item) => (
-            <GymWorkoutPathCard
+        {/* 2-Column Workout Path Cards Grid matching screenshot */}
+        <View style={styles.cardsGrid}>
+          {PATH_CARDS.map((item) => (
+            <Pressable
               key={item.id}
-              title={item.title}
-              subtitle={item.subtitle}
-              icon={item.icon}
-              bgImage={item.bgImage}
-              circleGlow={item.circleGlow}
-              gradientColors={item.gradientColors}
-              gradientLocations={item.gradientLocations}
-              gradientStart={item.gradientStart}
-              gradientEnd={item.gradientEnd}
-              gradientStyle={item.gradientStyle}
-              isActive={activePath === item.id}
+              style={({ pressed }) => [
+                styles.card,
+                pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
+              ]}
               onPress={() => handleCardPress(item.id)}
-            />
+            >
+              {/* Radial Glow Overlay */}
+              <View
+                style={[styles.glowAura, { backgroundColor: item.glowAura }]}
+                pointerEvents="none"
+              />
+
+              {/* Card Top Row: Icon Badge + XP Pill */}
+              <View style={styles.cardTopRow}>
+                <View
+                  style={[
+                    styles.iconBox,
+                    {
+                      backgroundColor: item.iconBg,
+                      borderColor: item.iconBorder,
+                    },
+                  ]}
+                >
+                  {item.icon}
+                </View>
+
+                <View style={[styles.tagPill, { backgroundColor: item.tagBg }]}>
+                  <Text style={[styles.tagText, { color: item.tagColor }]}>
+                    {item.tag}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.titleRow}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <ArrowRight size={17} color={item.arrowColor} />
+              </View>
+              <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+            </Pressable>
           ))}
         </View>
       </ScrollView>
@@ -102,61 +309,127 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    width: "100%",
-    minHeight: "100%",
     backgroundColor: "#070A11",
-  },
-  bgContainer: {
-    ...StyleSheet.absoluteFill,
-    width: "100%",
-    height: "100%",
-    overflow: "hidden",
-  },
-  bgImage: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    height: "100%",
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 28,
+    paddingTop: 14,
   },
   titleSection: {
-    marginBottom: 28,
+    marginBottom: 26,
+    marginTop: 4,
   },
   categoryBadge: {
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
     color: "#44EAC3",
     fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "700",
-    letterSpacing: 1.2,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    fontFamily: "monospace",
     textTransform: "uppercase",
-    marginBottom: 10,
+    marginBottom: 8,
+  },
+  maskedTitleWrapper: {
+    height: 84,
+    width: "100%",
+    marginBottom: 4,
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
     fontSize: 34,
-    lineHeight: 38,
+    lineHeight: 40,
     fontWeight: "900",
-    letterSpacing: 0.5,
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
     textTransform: "uppercase",
-    marginBottom: 10,
   },
   subtitle: {
-    color: "#fff",
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: "400",
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
-  cardsColumn: {
-    gap: 16,
+
+  cardsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    rowGap: 16,
+  },
+  card: {
+    width: (width - 54) / 2,
+    height: 194,
+    backgroundColor: "rgba(18, 22, 33, 0.72)",
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 16,
+    justifyContent: "space-between",
+    position: "relative",
+    overflow: "hidden",
+  },
+  glowAura: {
+    position: "absolute",
+    bottom: -30,
+    right: -30,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    filter: "blur(40px)",
+  },
+  cardTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  iconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tagPill: {
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 12,
+  },
+  tagText: {
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  titleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "auto",
+    marginBottom: 6,
+  },
+  cardTitle: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "900",
+    letterSpacing: 0.5,
+  },
+  cardSubtitle: {
+    color: "#94A3B8",
+    fontSize: 11,
+    lineHeight: 16,
+    fontWeight: "500",
   },
 });

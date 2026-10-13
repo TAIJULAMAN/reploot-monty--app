@@ -30,7 +30,7 @@ function GoldSparkleCluster() {
     <Svg width={32} height={32} viewBox="0 0 32 32" fill="none">
       <Path
         d="M12 2C12 7 15 10 20 10C15 10 12 13 12 18C12 13 9 10 4 10C9 10 12 7 12 2Z"
-        fill="#FBBF24"
+        fill="#FFB68C"
         opacity="0.85"
       />
       <Path

@@ -1,130 +1,242 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Dimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { WorkoutHeader } from "@/features/workouts";
+import MaskedView from "@react-native-masked-view/masked-view";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Image } from "expo-image";
-import { Search, Bell, Sparkles, Award, TrendingUp, Flame, BarChart2, History, ChevronRight } from "lucide-react-native";
+import {
+  Award,
+  BarChart2,
+  ChevronRight,
+  Flame,
+  History,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Trophy,
+  Zap,
+} from "lucide-react-native";
+import React from "react";
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Line as SvgLine } from "react-native-svg";
 
 const { width } = Dimensions.get("window");
 
 export default function ProgressTabRoute() {
   const insets = useSafeAreaInsets();
 
+  const triggerHaptic = (
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+  ) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(style).catch(() => {});
+    }
+  };
+
+  const handleStartWorkout = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+    router.push("/workouts");
+  };
+
+  const handleNavigate = (path: string) => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    router.push(path as any);
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
       <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
-        <Text style={styles.logoText}>KINETQX</Text>
-        <View style={styles.headerRight}>
-          <Search color="#FFFFFF" size={20} />
-          <Bell color="#FFFFFF" size={20} />
-          <Image
-            source={require("../../assets/coachOnline/coachOnline.png")}
-            style={styles.avatar}
-            contentFit="cover"
+      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
           />
-        </View>
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        {/* Title Section */}
+      <WorkoutHeader transparent={true} />
+
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContainer,
+          { paddingBottom: Math.max(insets.bottom + 100, 120) },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title Section with Masked Gradient Title */}
         <View style={styles.titleSection}>
-          <Text style={styles.titleGlow}>LEVEL</Text>
-          <Text style={styles.titleGlow}>UP...</Text>
-        </View>
-
-        {/* Level Card */}
-        <View style={styles.levelCardWrapper}>
-          <LinearGradient
-            colors={["#7552E8", "#2EE8B3"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.cardBorder}
-          >
-            <LinearGradient
-              colors={["#352B58", "#1E2A38"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.levelCardInner}
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    LEVEL UP...
+                  </Text>
+                </View>
+              }
             >
-              <View style={styles.levelHeaderRow}>
-                <View>
-                  <Text style={styles.currentStatusLabel}>CURRENT STATUS</Text>
-                  <Text style={styles.levelMainText}>Level 12</Text>
-                </View>
-                <View style={styles.sparkleBadge}>
-                  <Sparkles color="#2EE8B3" size={20} />
-                </View>
-              </View>
-
-              <View style={styles.progressBarBg}>
-                <LinearGradient
-                  colors={["#7552E8", "#2EE8B3"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={[styles.progressBarFill, { width: "81%" }]}
-                />
-              </View>
-
-              <View style={styles.xpRow}>
-                <Text style={styles.xpTextLeft}>
-                  2,450 /{"\n"}3,000 XP
-                </Text>
-                <Text style={styles.xpTextRight}>
-                  ONLY 550 XP LEFT TO REACH{"\n"}THE NEXT LEVEL!
-                </Text>
-              </View>
-            </LinearGradient>
-          </LinearGradient>
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
+          <Text style={styles.subtitle}>
+            Athletic ranking, season progression & performance records
+          </Text>
         </View>
 
-        {/* Personal Records */}
-        <View style={styles.prCard}>
-          <View style={styles.prHeader}>
-            <View style={styles.prIconWrapper}>
-              <Award color="#A0A0B0" size={18} />
+        {/* Level & XP Progression Card */}
+        <View style={styles.card}>
+          <View style={styles.levelHeaderRow}>
+            <View style={styles.sparkleBadge}>
+              <Sparkles color="#38BDF8" size={22} />
             </View>
-            <Text style={styles.prTitle}>PERSONAL{"\n"}RECORDS</Text>
-          </View>
-          
-          <View style={styles.prProgressRow}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <TrendingUp color="#F29C38" size={16} />
-              <Text style={styles.prProgressLabel}>Overall Progress</Text>
+            <View style={styles.levelInfoCol}>
+              <Text style={styles.statusLabel}>CURRENT STATUS</Text>
+              <Text style={styles.levelMainText}>LEVEL 12</Text>
             </View>
-            <Text style={styles.prProgressStatus}>Excellent</Text>
           </View>
 
-          <Pressable style={styles.viewRecordsBtn}>
+          {/* XP Progress Bar */}
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBarBg}>
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe", "#2DD4BF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[StyleSheet.absoluteFill, { width: "81%" }]}
+              />
+            </View>
+            <View style={styles.xpRow}>
+              <View style={styles.xpLeftCol}>
+                <Text style={styles.xpValue}>2,450</Text>
+                <Text style={styles.xpTotal}> / 3,000 XP</Text>
+              </View>
+              <View style={styles.xpRightCol}>
+                <Zap size={11} color="#2DD4BF" style={{ marginRight: 4 }} />
+                <Text style={styles.xpNotice}>550 XP TO NEXT TIER</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Personal Records Card */}
+        <View style={styles.card}>
+          <View style={styles.prHeaderFull}>
+            <View style={styles.colIconBadge}>
+              <Trophy color="#38BDF8" size={16} />
+            </View>
+            <View style={styles.prTitleCol}>
+              <Text style={styles.prCardTitle}>PERSONAL RECORDS</Text>
+              <Text style={styles.prCardSub}>
+                Benchmark maxes & strength telemetry
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.prProgressRowFull}>
+            <TrendingUp color="#FFB68C" size={15} style={{ marginRight: 8 }} />
+            <Text style={styles.prProgressLabel}>OVERALL PROGRESS</Text>
+            <Text style={styles.prProgressValue}>PEAK</Text>
+          </View>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.viewRecordsBtn,
+              pressed && { opacity: 0.75 },
+            ]}
+            onPress={() => handleNavigate("/profile/global-rankings")}
+          >
             <Text style={styles.viewRecordsText}>VIEW ALL RECORDS</Text>
           </Pressable>
         </View>
 
-        {/* Quote Card */}
-        <View style={styles.quoteCard}>
-          <View style={styles.flameIconWrapper}>
-            <Flame color="#FFFFFF" size={18} fill="#F29C38" />
+        {/* Motivation Quote Card */}
+        <View style={styles.card}>
+          <View style={styles.quoteHeaderFull}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.quoteTextFull}>
+                "Every single rep reconstructs your physical limits."
+              </Text>
+            </View>
           </View>
-          <Text style={styles.quoteText}>
-            Every workout{"\n"}makes you{"\n"}stronger.
-          </Text>
         </View>
 
-        {/* Streak Card */}
-        <View style={styles.streakCard}>
-          <Text style={styles.streakTitle}>12 Day Streak</Text>
-          <Text style={styles.streakDesc}>Complete today's workout to{"\n"}keep your streak alive.</Text>
-          
-          <Pressable style={{ marginTop: 20 }}>
+        {/* 12-Day Streak Card */}
+        <View style={styles.card}>
+          <View style={styles.streakHeaderRow}>
+            <View>
+              <View style={styles.flameBadge}>
+                <Flame color="#FFB68C" size={14} style={{ marginRight: 6 }} />
+                <Text style={styles.flameBadgeText}>ACTIVE CONSISTENCY</Text>
+              </View>
+              <Text style={styles.streakTitle}>12 DAY STREAK</Text>
+              <Text style={styles.streakDesc}>
+                Complete today's kinetic workout session to preserve streak
+                momentum.
+              </Text>
+            </View>
+          </View>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.startWorkoutBtn,
+              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
+            ]}
+            onPress={handleStartWorkout}
+          >
             <LinearGradient
-              colors={["#1B648C", "#3FA8DD"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.startWorkoutBtn}
+              colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.startWorkoutGradient}
             >
               <Text style={styles.startWorkoutText}>START TODAY'S WORKOUT</Text>
             </LinearGradient>
@@ -132,305 +244,446 @@ export default function ProgressTabRoute() {
         </View>
 
         {/* Weekly Challenge Card */}
-        <View style={styles.challengeCard}>
+        <View style={styles.card}>
           <View style={styles.challengeHeader}>
-            <Text style={styles.challengeTitle}>Weekly{"\n"}Challenge</Text>
+            <View>
+              <Text style={styles.challengeTitle}>WEEKLY CHALLENGE</Text>
+            </View>
             <View style={styles.xpPill}>
-              <Text style={styles.xpPillText}>+500{"\n"}XP</Text>
+              <Text style={styles.xpPillText}>+500 XP</Text>
             </View>
           </View>
-          <Text style={styles.challengeDesc}>Complete 5 workouts this{"\n"}week</Text>
 
+          <Text style={styles.challengeDesc}>
+            Log 5 full workout routines across the 7-day training cycle.
+          </Text>
+
+          {/* Challenge Segments */}
           <View style={styles.segmentsRow}>
-            {[1, 2, 3, 4, 5].map((item, index) => (
-              <View 
-                key={index} 
-                style={[
-                  styles.segment, 
-                  { backgroundColor: index < 3 ? "#F29C38" : "rgba(255,255,255,0.1)" }
-                ]} 
-              />
-            ))}
+            {[1, 2, 3, 4, 5].map((item, index) => {
+              const isFilled = index < 3;
+              return (
+                <View key={index} style={styles.segmentWrapper}>
+                  {isFilled ? (
+                    <LinearGradient
+                      colors={["#00f2fe", "#4facfe"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={styles.segmentFilled}
+                    />
+                  ) : (
+                    <View style={styles.segmentUnfilled} />
+                  )}
+                </View>
+              );
+            })}
           </View>
-          <Text style={styles.challengeProgressText}>3 / 5 PROGRESS</Text>
+
+          <View style={styles.challengeFooterRow}>
+            <Text style={styles.challengeProgressText}>3 OF 5 COMPLETED</Text>
+            <Text style={styles.challengePercent}>60% TARGET</Text>
+          </View>
         </View>
 
-        {/* Menu Items */}
+        {/* Protocol & History Navigation Section */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>PERFORMANCE PROTOCOLS</Text>
+          <View style={styles.sectionLine} />
+        </View>
+
         <View style={styles.menuList}>
-          <Pressable style={styles.menuItem}>
+          {/* Reports -> Weight Progress */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.menuItem,
+              pressed && { opacity: 0.75 },
+            ]}
+            onPress={() => handleNavigate("/weight-progress")}
+          >
             <View style={styles.menuIconWrapper}>
-              <BarChart2 color="#A0A0B0" size={18} />
+              <BarChart2 color="#38BDF8" size={17} />
             </View>
-            <Text style={styles.menuText}>View Reports</Text>
-            <ChevronRight color="#A0A0B0" size={18} />
+            <View style={styles.menuContent}>
+              <Text style={styles.menuTitle}>PERFORMANCE REPORTS</Text>
+              <Text style={styles.menuSub}>
+                Weight progress, trend telemetry & metabolic efficiency
+              </Text>
+            </View>
+            <View style={styles.chevronWrapper}>
+              <ChevronRight color="#38BDF8" size={16} />
+            </View>
           </Pressable>
 
-          <Pressable style={styles.menuItem}>
-            <View style={styles.menuIconWrapper}>
-              <History color="#2EE8B3" size={18} />
+          {/* Workout History -> Your Workouts */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.menuItem,
+              pressed && { opacity: 0.75 },
+            ]}
+            onPress={() => handleNavigate("/your-workouts")}
+          >
+            <View
+              style={[
+                styles.menuIconWrapper,
+                {
+                  backgroundColor: "rgba(45, 212, 191, 0.12)",
+                  borderColor: "rgba(45, 212, 191, 0.25)",
+                },
+              ]}
+            >
+              <History color="#2DD4BF" size={17} />
             </View>
-            <Text style={styles.menuText}>Workout History</Text>
-            <ChevronRight color="#A0A0B0" size={18} />
+            <View style={styles.menuContent}>
+              <Text style={styles.menuTitle}>YOUR WORKOUTS & LOGS</Text>
+              <Text style={styles.menuSub}>
+                Historical routines, volume telemetry & milestone achievements
+              </Text>
+            </View>
+            <View style={styles.chevronWrapper}>
+              <ChevronRight color="#38BDF8" size={16} />
+            </View>
           </Pressable>
 
-          <Pressable style={styles.menuItem}>
-            <View style={styles.menuIconWrapper}>
-              <Award color="#A0A0B0" size={18} />
+          {/* Global Rankings / Achievements -> Unlock Next Level Badges */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.menuItem,
+              pressed && { opacity: 0.75 },
+            ]}
+            onPress={() => handleNavigate("/achievements")}
+          >
+            <View
+              style={[
+                styles.menuIconWrapper,
+                {
+                  backgroundColor: "rgba(255, 182, 140, 0.12)",
+                  borderColor: "rgba(255, 182, 140, 0.25)",
+                },
+              ]}
+            >
+              <Award color="#FFB68C" size={17} />
             </View>
-            <Text style={styles.menuText}>Achievements</Text>
-            <ChevronRight color="#A0A0B0" size={18} />
+            <View style={styles.menuContent}>
+              <Text style={styles.menuTitle}>ACHIEVEMENTS & BADGES</Text>
+              <Text style={styles.menuSub}>
+                Unlocked milestones, badges & level progression
+              </Text>
+            </View>
+            <View style={styles.chevronWrapper}>
+              <ChevronRight color="#38BDF8" size={16} />
+            </View>
           </Pressable>
         </View>
-
-        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: "#111114",
+    backgroundColor: "#090A10",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.05)",
-    paddingBottom: 16,
-  },
-  logoText: {
-    color: "#38A1D6",
-    fontSize: 20,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: -0.5,
-  },
-  headerRight: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#2EE8B3",
-  },
-  scrollContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 20,
+  scrollContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 4,
   },
   titleSection: {
-    marginBottom: 32,
+    marginTop: 4,
+    marginBottom: 20,
   },
-  titleGlow: {
+  maskedTitleWrapper: {
+    height: 48,
+    width: "100%",
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  mainTitle: {
     color: "#FFFFFF",
-    fontSize: 42,
-    fontFamily: "JetBrainsMono_700Bold",
-    lineHeight: 44,
-    textShadowColor: "#44EAC3",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 15,
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
   },
-  levelCardWrapper: {
-    marginBottom: 24,
-    shadowColor: "#44EAC3",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 8,
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
+    marginTop: 4,
   },
-  cardBorder: {
-    padding: 1,
-    borderRadius: 24,
-  },
-  levelCardInner: {
-    borderRadius: 23,
-    padding: 24,
+  card: {
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 20,
+    marginBottom: 20,
   },
   levelHeaderRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 24,
+    alignItems: "center",
+    marginBottom: 18,
   },
-  currentStatusLabel: {
-    color: "#A0A0B0",
+  sparkleBadge: {
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  levelInfoCol: {
+    flex: 1,
+  },
+  statusLabel: {
+    color: "#94A3B8",
     fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 2,
-    marginBottom: 8,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    marginBottom: 2,
   },
   levelMainText: {
     color: "#FFFFFF",
-    fontSize: 32,
-    fontFamily: "JetBrainsMono_700Bold",
+    fontSize: 26,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 1,
   },
-  sparkleBadge: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(46, 232, 179, 0.15)",
-    justifyContent: "center",
+  tierPill: {
+    flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "rgba(45, 212, 191, 0.12)",
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(45, 212, 191, 0.3)",
+  },
+  tierDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: "#2DD4BF",
+    marginRight: 5,
+  },
+  tierPillText: {
+    color: "#2DD4BF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  progressContainer: {
+    marginTop: 4,
   },
   progressBarBg: {
     height: 8,
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
     borderRadius: 4,
-    marginBottom: 16,
-  },
-  progressBarFill: {
-    height: "100%",
-    borderRadius: 4,
+    overflow: "hidden",
+    marginBottom: 12,
   },
   xpRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
-  xpTextLeft: {
+  xpLeftCol: {
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
+  xpValue: {
     color: "#FFFFFF",
-    fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
-    lineHeight: 16,
+    fontSize: 14,
+    fontFamily: "monospace",
+    fontWeight: "900",
   },
-  xpTextRight: {
-    color: "#2EE8B3",
-    fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
-    lineHeight: 14,
-    textAlign: "right",
+  xpTotal: {
+    color: "#64748B",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "700",
   },
-  prCard: {
-    backgroundColor: "#16161A",
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 24,
-  },
-  prHeader: {
+  xpRightCol: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
-    marginBottom: 20,
   },
-  prIconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.05)",
+  xpNotice: {
+    color: "#2DD4BF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  prHeaderFull: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  prTitleCol: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  prCardTitle: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.8,
+  },
+  prCardSub: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    marginTop: 2,
+  },
+  colIconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
     justifyContent: "center",
     alignItems: "center",
   },
-  prTitle: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontFamily: "JetBrainsMono_700Bold",
-    lineHeight: 22,
-  },
-  prProgressRow: {
+  prProgressRowFull: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.03)",
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.03)",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.04)",
   },
   prProgressLabel: {
-    color: "#A0A0B0",
-    fontSize: 12,
-    fontFamily: "Inter_400Regular",
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    flex: 1,
   },
-  prProgressStatus: {
-    color: "#2EE8B3",
-    fontSize: 12,
-    fontFamily: "JetBrainsMono_700Bold",
+  prProgressValue: {
+    color: "#FFB68C",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  optimalPill: {
+    backgroundColor: "rgba(45, 212, 191, 0.12)",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "rgba(45, 212, 191, 0.25)",
+  },
+  optimalText: {
+    color: "#2DD4BF",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
   viewRecordsBtn: {
     borderWidth: 1,
-    borderColor: "rgba(46, 232, 179, 0.2)",
-    borderRadius: 20,
-    paddingVertical: 12,
+    borderColor: "rgba(56, 189, 248, 0.3)",
+    backgroundColor: "rgba(56, 189, 248, 0.08)",
+    borderRadius: 12,
+    paddingVertical: 11,
     alignItems: "center",
   },
   viewRecordsText: {
-    color: "#2EE8B3",
+    color: "#38BDF8",
     fontSize: 10,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
-  quoteCard: {
-    backgroundColor: "#16161A",
-    borderRadius: 20,
-    padding: 24,
-    marginBottom: 24,
+  quoteHeaderFull: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
+    gap: 12,
   },
-  flameIconWrapper: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(242, 156, 56, 0.15)",
-    justifyContent: "center",
+  quoteTag: {
+    color: "#FFB68C",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    marginBottom: 4,
+  },
+  quoteTextFull: {
+    color: "#CBD5E1",
+    fontSize: 12,
+    fontFamily: "monospace",
+    lineHeight: 18,
+    fontStyle: "italic",
+  },
+  streakHeaderRow: {
+    marginBottom: 16,
+  },
+  flameBadge: {
+    flexDirection: "row",
     alignItems: "center",
+    marginBottom: 6,
   },
-  quoteText: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontFamily: "Inter_400Regular",
-    lineHeight: 26,
-  },
-  streakCard: {
-    backgroundColor: "#16161A",
-    borderRadius: 20,
-    padding: 24,
-    marginBottom: 24,
+  flameBadgeText: {
+    color: "#FFB68C",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
   },
   streakTitle: {
-    color: "#F29C38",
-    fontSize: 24,
-    fontFamily: "JetBrainsMono_700Bold",
-    marginBottom: 8,
+    color: "#FFFFFF",
+    fontSize: 22,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 1,
+    marginBottom: 4,
   },
   streakDesc: {
-    color: "#A0A0B0",
+    color: "#94A3B8",
     fontSize: 12,
-    fontFamily: "Inter_400Regular",
-    lineHeight: 18,
+    fontFamily: "monospace",
+    lineHeight: 16,
   },
   startWorkoutBtn: {
-    paddingVertical: 16,
-    borderRadius: 24,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  startWorkoutGradient: {
+    paddingVertical: 14,
     alignItems: "center",
-    shadowColor: "#38A1D6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 8,
+    justifyContent: "center",
   },
   startWorkoutText: {
     color: "#FFFFFF",
     fontSize: 12,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
-  },
-  challengeCard: {
-    backgroundColor: "#16161A",
-    borderRadius: 20,
-    padding: 24,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: "rgba(242, 156, 56, 0.15)",
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
   },
   challengeHeader: {
     flexDirection: "row",
@@ -438,68 +691,148 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 8,
   },
+  challengeBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  challengeBadgeText: {
+    color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
+  },
   challengeTitle: {
-    color: "#F29C38",
-    fontSize: 20,
-    fontFamily: "JetBrainsMono_700Bold",
-    lineHeight: 24,
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.8,
   },
   xpPill: {
-    backgroundColor: "#F29C38",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
-    alignItems: "center",
+    backgroundColor: "rgba(56, 189, 248, 0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.35)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
   },
   xpPillText: {
-    color: "#FFFFFF",
-    fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
-    textAlign: "center",
-    lineHeight: 12,
+    color: "#38BDF8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.5,
   },
   challengeDesc: {
-    color: "#A0A0B0",
+    color: "#94A3B8",
     fontSize: 12,
-    fontFamily: "Inter_400Regular",
-    marginBottom: 20,
-    lineHeight: 18,
+    fontFamily: "monospace",
+    lineHeight: 16,
+    marginBottom: 16,
   },
   segmentsRow: {
     flexDirection: "row",
-    gap: 6,
+    gap: 8,
     marginBottom: 12,
   },
-  segment: {
+  segmentWrapper: {
     flex: 1,
-    height: 4,
-    borderRadius: 2,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    overflow: "hidden",
+  },
+  segmentFilled: {
+    flex: 1,
+    borderRadius: 3,
+  },
+  segmentUnfilled: {
+    flex: 1,
+  },
+  challengeFooterRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   challengeProgressText: {
-    color: "#F29C38",
-    fontSize: 9,
-    fontFamily: "JetBrainsMono_700Bold",
-    letterSpacing: 1,
-    textAlign: "right",
+    color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  challengePercent: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  sectionTitle: {
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.5,
+  },
+  sectionLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    marginLeft: 12,
   },
   menuList: {
-    gap: 12,
+    gap: 10,
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#16161A",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     borderRadius: 16,
   },
   menuIconWrapper: {
-    marginRight: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 14,
   },
-  menuText: {
+  menuContent: {
     flex: 1,
+  },
+  menuTitle: {
     color: "#FFFFFF",
-    fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+    marginBottom: 2,
+  },
+  menuSub: {
+    color: "#64748B",
+    fontSize: 10,
+    fontFamily: "monospace",
+  },
+  chevronWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

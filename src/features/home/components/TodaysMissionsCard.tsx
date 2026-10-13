@@ -81,9 +81,6 @@ export const TodaysMissionsCard = () => {
             ]}
           >
             <View style={styles.missionInfo}>
-              <View style={styles.tagWrap}>
-                <Text style={styles.tagText}>TARGET PROTOCOL</Text>
-              </View>
               <Text style={styles.missionTitle}>Pull Day Hyper-Row</Text>
               <Text style={styles.missionSubtitle}>
                 Lat Pulldown & Cable Rows

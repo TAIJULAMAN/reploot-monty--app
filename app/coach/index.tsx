@@ -29,7 +29,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: "1",
     sender: "coach",
-    text: "Welcome to KINETQX Neural Coaching. Ready to crush your goals today? What are we optimizing?",
+    text: "Welcome to REPLOOTNeural Coaching. Ready to crush your goals today? What are we optimizing?",
     time: "10:42 AM",
   },
   {
@@ -273,7 +273,7 @@ export default function CoachRoute() {
             </View>
             <View style={styles.coachInfo}>
               <View style={styles.coachNameRow}>
-                <Text style={styles.coachName}>KINETQX AI</Text>
+                <Text style={styles.coachName}>REPLOOTAI</Text>
                 <View style={styles.onlineBadge}>
                   <View style={styles.miniDot} />
                   <Text style={styles.onlineBadgeText}>ONLINE</Text>
@@ -355,7 +355,11 @@ export default function CoachRoute() {
         >
           <View style={styles.inputWrapper}>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                Platform.OS === "web" &&
+                  ({ outlineStyle: "none", outlineWidth: 0 } as any),
+              ]}
               placeholder="Type message or ask AI Coach..."
               placeholderTextColor="#64748B"
               value={inputText}
@@ -594,6 +598,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   chipPressed: {
     opacity: 0.75,
@@ -619,6 +626,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 6,
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   input: {
     flex: 1,
@@ -626,11 +636,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "monospace",
     height: 40,
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   sendBtn: {
     borderRadius: 10,
     overflow: "hidden",
     marginLeft: 8,
+    ...(Platform.OS === "web"
+      ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
+      : {}),
   },
   sendBtnPressed: {
     opacity: 0.85,

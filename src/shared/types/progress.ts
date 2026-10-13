@@ -1,5 +1,5 @@
 /**
- * KINETQX Progress, Gamification & Analytics Domain Models
+ * REPLOOTProgress, Gamification & Analytics Domain Models
  */
 
 export interface XPProgress {

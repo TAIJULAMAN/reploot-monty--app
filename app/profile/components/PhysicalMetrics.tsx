@@ -1,7 +1,7 @@
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "expo-image";
 
 export function PhysicalMetrics() {
   return (
@@ -66,9 +66,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "400",
+    color: "#94A3B8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 2,
   },
   metricsRow: {
@@ -85,32 +86,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0B0D14",
     borderRadius: 15,
-    paddingTop: 25,
-    paddingBottom: 25,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingTop: 22,
+    paddingBottom: 22,
+    paddingLeft: 8,
+    paddingRight: 8,
     alignItems: "center",
   },
   metricLabel: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "400",
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "700",
     letterSpacing: 1.5,
     marginBottom: 8,
   },
   metricValue: {
     color: "#C5C0FF",
-    fontSize: 24,
-    fontWeight: "600",
+    fontSize: 22,
+    fontFamily: "monospace",
+    fontWeight: "800",
   },
   metricUnit: {
     fontSize: 12,
-    fontWeight: "600",
+    fontFamily: "monospace",
+    fontWeight: "700",
   },
   metricSub: {
     color: "#C5C0FF",
     fontSize: 10,
-    fontWeight: "700",
+    fontFamily: "monospace",
+    fontWeight: "800",
     letterSpacing: 1,
     marginTop: 4,
   },

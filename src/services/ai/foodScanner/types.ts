@@ -1,7 +1,7 @@
 import { MacroNutrients } from "@/shared/types/nutrition";
 
 /**
- * KINETQX AI Food Scanner Integration Boundaries
+ * REPLOOTAI Food Scanner Integration Boundaries
  */
 
 export interface DetectedFoodItem {
@@ -34,5 +34,9 @@ export interface MealAnalysisResult {
  */
 export interface FoodRecognitionProvider {
   analyzeImage(imageUri: string): Promise<MealAnalysisResult>;
-  refinePortion(scanId: string, foodItemId: string, newGrams: number): Promise<MealAnalysisResult>;
+  refinePortion(
+    scanId: string,
+    foodItemId: string,
+    newGrams: number,
+  ): Promise<MealAnalysisResult>;
 }

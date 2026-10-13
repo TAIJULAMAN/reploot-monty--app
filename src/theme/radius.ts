@@ -1,5 +1,5 @@
 /**
- * KINETQX Corner Radius Tokens
+ * REPLOOTCorner Radius Tokens
  */
 
 export const radius = {

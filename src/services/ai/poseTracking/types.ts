@@ -1,5 +1,5 @@
 /**
- * KINETQX AI Workout Pose Tracking Boundaries
+ * REPLOOTAI Workout Pose Tracking Boundaries
  * Decoupled provider-agnostic interfaces for real-time skeletal analysis.
  */
 

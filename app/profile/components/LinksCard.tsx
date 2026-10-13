@@ -1,52 +1,83 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ArrowRight, FileText, Info } from "lucide-react-native";
-import { Image } from "expo-image";
+import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
+import { ChevronRight, FileText, Info, Shield } from "lucide-react-native";
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export function LinksCard() {
   const router = useRouter();
 
+  const handlePress = (route: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    router.push(route as any);
+  };
+
   return (
     <View style={styles.card}>
-      <Pressable style={styles.linkRow} onPress={() => router.push("/profile/privacy-policy")}>
+      {/* Privacy Policy */}
+      <Pressable
+        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+        onPress={() => handlePress("/profile/privacy-policy")}
+      >
         <View style={styles.linkLeft}>
-          <FileText size={20} color="#CBD5E1" style={styles.linkIcon} />
-          <Text style={styles.linkTitle}>Privacy Policy</Text>
+          <View style={styles.iconBadge}>
+            <Shield size={16} color="#38BDF8" />
+          </View>
+          <View>
+            <Text style={styles.linkTitle}>PRIVACY PROTOCOL</Text>
+            <Text style={styles.linkSubtitle}>
+              Data telemetry & encryption policies
+            </Text>
+          </View>
         </View>
-        <View style={styles.linkRight}>
-          <Text style={styles.linkActionText}>OPEN</Text>
-          <ArrowRight size={16} color="#38EDD8" />
+        <View style={styles.chevronWrapper}>
+          <ChevronRight size={16} color="#38BDF8" />
         </View>
       </Pressable>
 
       <View style={styles.divider} />
 
-      <Pressable style={styles.linkRow} onPress={() => router.push("/profile/terms")}>
+      {/* Terms & Conditions */}
+      <Pressable
+        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+        onPress={() => handlePress("/profile/terms")}
+      >
         <View style={styles.linkLeft}>
-          <Image
-            source={require("../../../assets/terms.svg")}
-            style={[styles.linkIcon, { width: 20, height: 20 }]}
-            contentFit="contain"
-          />
-          <Text style={styles.linkTitle}>Terms & Conditions</Text>
+          <View style={styles.iconBadge}>
+            <FileText size={16} color="#38BDF8" />
+          </View>
+          <View>
+            <Text style={styles.linkTitle}>TERMS OF SERVICE</Text>
+            <Text style={styles.linkSubtitle}>Athletic platform agreement</Text>
+          </View>
         </View>
-        <View style={styles.linkRight}>
-          <Text style={styles.linkActionText}>OPEN</Text>
-          <ArrowRight size={16} color="#38EDD8" />
+        <View style={styles.chevronWrapper}>
+          <ChevronRight size={16} color="#38BDF8" />
         </View>
       </Pressable>
 
       <View style={styles.divider} />
 
-      <Pressable style={styles.linkRow} onPress={() => router.push("/profile/about")}>
+      {/* About */}
+      <Pressable
+        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+        onPress={() => handlePress("/profile/about")}
+      >
         <View style={styles.linkLeft}>
-          <Info size={20} color="#CBD5E1" style={styles.linkIcon} />
-          <Text style={styles.linkTitle}>About Us</Text>
+          <View style={styles.iconBadge}>
+            <Info size={16} color="#38BDF8" />
+          </View>
+          <View>
+            <Text style={styles.linkTitle}>ABOUT REPLOOT</Text>
+            <Text style={styles.linkSubtitle}>
+              Architecture, team & release logs
+            </Text>
+          </View>
         </View>
-        <View style={styles.linkRight}>
-          <Text style={styles.linkActionText}>OPEN</Text>
-          <ArrowRight size={16} color="#38EDD8" />
+        <View style={styles.chevronWrapper}>
+          <ChevronRight size={16} color="#38BDF8" />
         </View>
       </Pressable>
     </View>
@@ -55,15 +86,17 @@ export function LinksCard() {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#161722",
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
     borderRadius: 20,
-    padding: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 18,
     marginBottom: 20,
   },
   divider: {
     height: 1,
-    backgroundColor: "rgba(255,255,255,0.05)",
-    marginVertical: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    marginVertical: 14,
   },
   linkRow: {
     flexDirection: "row",
@@ -73,24 +106,39 @@ const styles = StyleSheet.create({
   linkLeft: {
     flexDirection: "row",
     alignItems: "center",
+    flex: 1,
   },
-  linkIcon: {
-    marginRight: 12,
+  iconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: "rgba(56, 189, 248, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 14,
   },
   linkTitle: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+    marginBottom: 2,
   },
-  linkRight: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  linkActionText: {
-    color: "#38EDD8",
+  linkSubtitle: {
+    color: "#64748B",
     fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 1,
-    marginRight: 4,
+    fontFamily: "monospace",
+  },
+  chevronWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
   },
 });

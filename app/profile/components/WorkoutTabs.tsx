@@ -1,6 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface WorkoutTabsProps {
   activeTab: string;
@@ -8,16 +9,26 @@ interface WorkoutTabsProps {
 }
 
 export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
+  const handleTabPress = (tab: string) => {
+    if (tab === activeTab) return;
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    setActiveTab(tab);
+  };
+
   return (
     <View style={styles.tabsContainer}>
       <Pressable
-        style={[styles.tab, activeTab === "gym" && styles.activeTab]}
-        onPress={() => setActiveTab("gym")}
+        style={styles.tab}
+        onPress={() => handleTabPress("gym")}
       >
         {activeTab === "gym" && (
           <LinearGradient
-            colors={["#38EDD8", "#2DD4BF"]}
-            style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[StyleSheet.absoluteFill, { borderRadius: 16 }]}
           />
         )}
         <Text
@@ -26,14 +37,17 @@ export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
           GYM WORKOUT
         </Text>
       </Pressable>
+
       <Pressable
-        style={[styles.tab, activeTab === "home" && styles.activeTab]}
-        onPress={() => setActiveTab("home")}
+        style={styles.tab}
+        onPress={() => handleTabPress("home")}
       >
         {activeTab === "home" && (
           <LinearGradient
-            colors={["#38EDD8", "#2DD4BF"]}
-            style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
+            colors={["#00f2fe", "#4facfe"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[StyleSheet.absoluteFill, { borderRadius: 16 }]}
           />
         )}
         <Text
@@ -49,33 +63,29 @@ export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
 const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: "row",
-    backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: 24,
+    backgroundColor: "rgba(15, 23, 42, 0.65)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 20,
     padding: 4,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   tab: {
     flex: 1,
-    height: 40,
+    height: 42,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 20,
-  },
-  activeTab: {
-    backgroundColor: "transparent",
-    shadowColor: "#38EDD8",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 15,
-    elevation: 10,
+    borderRadius: 16,
   },
   tabText: {
     color: "#94A3B8",
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 12,
+    fontWeight: "700",
+    fontFamily: "monospace",
     letterSpacing: 1,
   },
   activeTabText: {
-    color: "#0B0D14",
+    color: "#090A10",
+    fontWeight: "900",
   },
 });

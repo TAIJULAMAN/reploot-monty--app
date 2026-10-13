@@ -1,9 +1,9 @@
 import { Platform, ViewStyle } from "react-native";
 
 /**
- * KINETQX Cross-Platform Shadows & Glow Effects
+ * REPLOOTCross-Platform Shadows & Glow Effects
  * Provides calibrated iOS shadow properties and Android elevation fallback,
- * including signature KINETQX neon bloom glows.
+ * including signature REPLOOTneon bloom glows.
  */
 
 export const shadows = {
