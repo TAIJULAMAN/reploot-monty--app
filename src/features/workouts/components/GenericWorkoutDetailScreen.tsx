@@ -1,9 +1,13 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Line as SvgLine } from "react-native-svg";
 import {
   DynamicWorkoutPathDetail,
   WorkoutExerciseItem,
@@ -47,6 +51,13 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
     }
     if (onStartWorkout) {
       onStartWorkout();
+    } else {
+      router.push({
+        pathname: "/workouts/ai-session" as any,
+        params: {
+          pathId: workout.id,
+        },
+      });
     }
   };
 
@@ -54,21 +65,95 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
-    onSelectExercise?.(exercise.id);
+    if (onSelectExercise) {
+      onSelectExercise(exercise.id);
+    } else {
+      router.push({
+        pathname: "/workouts/exercise-detail" as any,
+        params: {
+          id: exercise.id,
+          title: exercise.title.replace(/\n/g, " "),
+        },
+      });
+    }
   };
 
   return (
     <View style={styles.screen}>
-      <CustomHeader showBackButton onPressBack={handleBack} />
+      <StatusBar style="light" />
+
+      {/* Cyber Kinetic Ambient Gradient & Accent Lines (Exact progress.tsx / GymWorkoutPathScreen pattern) */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
+      </View>
+
+      <CustomHeader transparent={true} showBackButton onPressBack={handleBack} />
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom, 16) + 90 },
+          { paddingBottom: Math.max(insets.bottom, 16) + 100 },
         ]}
       >
+        {/* Title Section with Masked Gradient Title (Exact progress.tsx pattern) */}
         <View style={styles.titleSection}>
-          <Text style={styles.mainTitle}>{workout.title}</Text>
+          <Text style={styles.categoryBadge}>ROUTINE OVERVIEW</Text>
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    {workout.title}
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
           <Text style={styles.subtitle}>{workout.subtitle}</Text>
         </View>
 
@@ -78,6 +163,16 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
           durationText={workout.durationText}
           caloriesText={workout.caloriesText}
         />
+
+        {/* Section Header for Exercise List */}
+        <View style={styles.exerciseHeaderRow}>
+          <Text style={styles.exerciseHeaderTitle}>EXERCISES</Text>
+          <View style={styles.exerciseCountBadge}>
+            <Text style={styles.exerciseCountText}>
+              {workout.exercises.length} TARGETS
+            </Text>
+          </View>
+        </View>
 
         <PushDayExerciseList
           exercises={workout.exercises}
@@ -97,32 +192,83 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 12,
+    paddingTop: 10,
   },
   titleSection: {
-    marginBottom: 16,
+    marginBottom: 20,
+    marginTop: 4,
+  },
+  categoryBadge: {
+    color: "#44EAC3",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    fontFamily: "monospace",
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+  maskedTitleWrapper: {
+    height: 46,
+    width: "100%",
+    marginBottom: 4,
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
+    fontSize: 32,
     lineHeight: 38,
     fontWeight: "900",
-    letterSpacing: -0.5,
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
     textTransform: "uppercase",
-    marginBottom: 6,
-    textShadowColor: "rgba(68, 234, 195, 0.55)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
-    ...(Platform.OS === "web"
-      ? ({
-          filter: "drop-shadow(0 0 16px rgba(68, 234, 195, 0.5))",
-        } as any)
-      : {}),
   },
   subtitle: {
-    color: "#8E95A5",
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: "500",
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
+  },
+  exerciseHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 10,
+    marginBottom: 14,
+    paddingHorizontal: 2,
+  },
+  exerciseHeaderTitle: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  exerciseCountBadge: {
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.3)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  exerciseCountText: {
+    color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
 });

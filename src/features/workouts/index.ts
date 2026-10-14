@@ -5,3 +5,5 @@ export * from "./data/pushDayData";
 export * from "./data/pullDayData";
 export * from "./data/workoutLibraryData";
 export * from "./data/workoutLibraryDetailData";
+export * from "./data/workoutPathDetailData";
+export * from "./data/exerciseDetailsData";

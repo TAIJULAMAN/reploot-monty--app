@@ -422,14 +422,17 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: 14,
+    fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
   },
   cardSubtitle: {
     color: "#94A3B8",
     fontSize: 11,
     lineHeight: 16,
-    fontWeight: "500",
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
 });

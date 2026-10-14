@@ -57,7 +57,14 @@ export const WorkoutLibraryDetailScreen: React.FC<
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
-    onSelectExercise?.(exerciseId);
+    if (onSelectExercise) {
+      onSelectExercise(exerciseId);
+    } else {
+      router.push({
+        pathname: "/workouts/exercise-detail" as any,
+        params: { id: exerciseId },
+      });
+    }
   };
 
   const handleExplorePress = () => {

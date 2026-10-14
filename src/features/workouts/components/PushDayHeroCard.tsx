@@ -94,14 +94,11 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   xpBadgeText: {
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontFamily: "monospace",
     color: "#070A11",
     fontSize: 12,
     fontWeight: "800",
-    letterSpacing: 0.6,
+    letterSpacing: 0.8,
   },
   heroBottomBadgesRow: {
     position: "absolute",
@@ -124,13 +121,10 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   statPillText: {
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontFamily: "monospace",
     color: "#FFFFFF",
     fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 0.6,
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
 });
