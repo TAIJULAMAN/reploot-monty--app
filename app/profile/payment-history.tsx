@@ -2,15 +2,16 @@ import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { CreditCard, Download, Smartphone } from "lucide-react-native";
+import { Check, CreditCard, Download, Smartphone } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -71,8 +72,18 @@ const TRANSACTIONS: Transaction[] = [
 ];
 
 export default function PaymentHistoryRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/profile");
+    }
+  };
 
   const handleActionHaptic = () => {
     if (Platform.OS !== "web") {
@@ -85,7 +96,11 @@ export default function PaymentHistoryRoute() {
     setDownloadingId(id);
     setTimeout(() => {
       setDownloadingId(null);
-    }, 1500);
+      setToastMessage(`INVOICE ${id.toUpperCase()} SAVED TO ARCHIVE`);
+      setTimeout(() => {
+        setToastMessage(null);
+      }, 2500);
+    }, 1200);
   };
 
   return (
@@ -133,6 +148,7 @@ export default function PaymentHistoryRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}
@@ -211,11 +227,9 @@ export default function PaymentHistoryRoute() {
                     <Text style={styles.statusText}>{tx.status}</Text>
                   </View>
 
-                  <Pressable
-                    style={({ pressed }) => [
-                      styles.invoiceBtn,
-                      pressed && { opacity: 0.7 },
-                    ]}
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.invoiceBtn}
                     onPress={() => handleDownloadInvoice(tx.id)}
                   >
                     <Download
@@ -230,13 +244,21 @@ export default function PaymentHistoryRoute() {
                     >
                       {downloadingId === tx.id ? "SAVED" : "PDF"}
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           ))}
         </View>
       </ScrollView>
+
+      {/* Floating Cyber HUD Toast */}
+      {toastMessage && (
+        <View style={styles.savedToast}>
+          <Check size={16} color="#00f2fe" style={{ marginRight: 8 }} />
+          <Text style={styles.savedToastText}>{toastMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -398,5 +420,33 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontFamily: "monospace",
     fontWeight: "800",
+  },
+  savedToast: {
+    position: "absolute",
+    bottom: 30,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(7, 10, 17, 0.95)",
+    borderWidth: 1.5,
+    borderColor: "#00f2fe",
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    zIndex: 9999,
+    elevation: 12,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  savedToastText: {
+    color: "#00f2fe",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.6,
   },
 });

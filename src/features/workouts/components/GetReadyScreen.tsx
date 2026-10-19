@@ -1,11 +1,13 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { ArrowRight, Check } from "lucide-react-native";
-import React, { useState } from "react";
+import { ArrowRight, Camera as CameraIcon, Check } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Platform,
@@ -16,7 +18,11 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, { Line as SvgLine, Path as SvgPath, Rect as SvgRect } from "react-native-svg";
+import Svg, {
+  Circle as SvgCircle,
+  Line as SvgLine,
+  Path as SvgPath,
+} from "react-native-svg";
 
 const { width } = Dimensions.get("window");
 
@@ -29,9 +35,12 @@ export interface GetReadyScreenProps {
   onReady?: () => void;
   onBack?: () => void;
   exerciseTitle?: string;
+  title?: string;
+  description?: string;
 }
 
 const DEFAULT_REQUIREMENTS: GetReadyRequirement[] = [
+  { id: "dist", label: "Stand 2–3 meters away" },
   { id: "dist", label: "Stand 2–3 meters away" },
   { id: "visible", label: "Keep your full body visible" },
   { id: "light", label: "Ensure good lighting" },
@@ -42,13 +51,34 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
   onReady,
   onBack,
   exerciseTitle,
+  title = "GET READY",
+  description = "Align your full body within the camera frame to calibrate real-time AI tracking.",
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
+  // Camera permissions & facing
+  const [permission, requestPermission] = useCameraPermissions();
+  const [facing, setFacing] = useState<CameraType>("front");
+
+  useEffect(() => {
+    if (!permission) {
+      requestPermission().catch(() => {});
+    } else if (!permission.granted && permission.canAskAgain) {
+      requestPermission().catch(() => {});
+    }
+  }, [permission]);
+
+  const toggleFacing = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    setFacing((current) => (current === "front" ? "back" : "front"));
+  };
+
   // Requirements checklist state (all checked by default or togglable)
   const [checkedIds, setCheckedIds] = useState<string[]>(
-    DEFAULT_REQUIREMENTS.map((r) => r.id)
+    DEFAULT_REQUIREMENTS.map((r) => r.id),
   );
 
   const toggleRequirement = (id: string) => {
@@ -56,7 +86,7 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
     setCheckedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -65,7 +95,7 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
   const handleReadyPress = () => {
     if (Platform.OS !== "web") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
-        () => {}
+        () => {},
       );
     }
     onReady?.();
@@ -117,7 +147,11 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
         </Svg>
       </View>
 
-      <CustomHeader transparent={true} showBackButton onPressBack={handleBack} />
+      <CustomHeader
+        transparent={true}
+        showBackButton
+        onPressBack={handleBack}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -126,19 +160,124 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
           { paddingBottom: Math.max(insets.bottom + 20, 40) },
         ]}
       >
-        {/* Glow Title: GET READY */}
+        {/* Title Section with Masked Gradient Title (Exact GenericWorkoutDetailScreen / ExerciseDetailScreen pattern) */}
         <View style={styles.titleSection}>
-          <Text style={styles.glowTitle}>GET</Text>
-          <Text style={styles.glowTitle}>READY</Text>
+          {/* <Text style={styles.categoryBadge}>
+            {exerciseTitle
+              ? exerciseTitle.toUpperCase()
+              : "AI WORKOUT PROTOCOL"}
+          </Text> */}
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    {title}
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
+          {description ? (
+            <Text style={styles.subtitle}>{description}</Text>
+          ) : null}
         </View>
 
-        {/* Camera Viewport / Body Detection Frame with user's exact uploaded image */}
+        {/* Camera Viewport / Body Detection Frame with Live Camera */}
         <View style={styles.cameraBox}>
-          <Image
-            source={require("../../../../assets/workout/getReadyDetection.png")}
-            style={styles.cameraBackdrop}
-            contentFit="cover"
+          {permission?.granted ? (
+            <CameraView
+              style={StyleSheet.absoluteFill}
+              facing={facing}
+              mode="picture"
+            />
+          ) : (
+            <Image
+              source={require("../../../../assets/workout/getReadyDetection.png")}
+              style={styles.cameraBackdrop}
+              contentFit="cover"
+            />
+          )}
+
+          {/* Ambient Darkened Gradient for HUD Contrast */}
+          <LinearGradient
+            colors={[
+              "rgba(5, 8, 14, 0.45)",
+              "transparent",
+              "rgba(5, 8, 14, 0.6)",
+            ]}
+            locations={[0, 0.4, 1]}
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
           />
+
+          {/* Corner Framing Brackets */}
+          <View
+            style={[styles.cornerGuide, styles.cornerTL]}
+            pointerEvents="none"
+          />
+          <View
+            style={[styles.cornerGuide, styles.cornerTR]}
+            pointerEvents="none"
+          />
+          <View
+            style={[styles.cornerGuide, styles.cornerBL]}
+            pointerEvents="none"
+          />
+          <View
+            style={[styles.cornerGuide, styles.cornerBR]}
+            pointerEvents="none"
+          />
+
+          {/* Top Pill Badge: (✓) BODY DETECTED */}
+          {/* <View style={styles.bodyDetectedPill} pointerEvents="none">
+            <View style={styles.greenDotRing}>
+              <Check size={11} color="#38EDD8" strokeWidth={3.2} />
+            </View>
+            <Text style={styles.bodyDetectedText}>BODY DETECTED</Text>
+          </View> */}
+
+          {/* Camera Flip Button */}
+          {/* {permission?.granted && (
+            <Pressable
+              onPress={toggleFacing}
+              style={styles.flipButton}
+              accessibilityRole="button"
+              accessibilityLabel="Flip camera"
+              hitSlop={8}
+            >
+              <RotateCcw size={15} color="#38EDD8" strokeWidth={2.5} />
+            </Pressable>
+          )} */}
+
+          {/* Silhouette Wireframe Guide Overlay */}
+          <View style={styles.silhouetteContainer} pointerEvents="none">
+            {/* Perspective Floor Workout Mat Bar */}
+            {/* <View style={styles.floorMatBar} /> */}
+          </View>
+
+          {/* Camera Permission Prompt if not yet granted */}
+          {!permission?.granted && (
+            <Pressable
+              style={styles.enableCameraPill}
+              onPress={() => requestPermission()}
+            >
+              <CameraIcon size={14} color="#38EDD8" />
+              <Text style={styles.enableCameraText}>ENABLE CAMERA</Text>
+            </Pressable>
+          )}
         </View>
 
         {/* 4 Checklist Requirements */}
@@ -181,22 +320,19 @@ export const GetReadyScreen: React.FC<GetReadyScreenProps> = ({
 
         {/* Bottom CTA: I'M READY -> */}
         <Pressable
-          style={({ pressed }) => [
-            styles.readyButton,
-            pressed && { opacity: 0.88, transform: [{ scale: 0.99 }] },
-          ]}
+          style={styles.readyButton}
           onPress={handleReadyPress}
           accessibilityRole="button"
           accessibilityLabel="I'm Ready, start countdown"
         >
           <LinearGradient
-            colors={["#1E6BB8", "#258CE8"]}
+            colors={["#1967B2", "#2B90EA"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.readyButtonGradient}
           >
             <Text style={styles.readyButtonText}>I'M READY</Text>
-            <ArrowRight size={18} color="#FFFFFF" />
+            <ArrowRight size={18} color="#FFFFFF" strokeWidth={2.5} />
           </LinearGradient>
         </Pressable>
       </ScrollView>
@@ -214,39 +350,63 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   titleSection: {
-    alignItems: "center",
-    marginBottom: 16,
-    marginTop: 2,
+    marginBottom: 18,
+    marginTop: 4,
   },
-  glowTitle: {
+  categoryBadge: {
+    color: "#44EAC3",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    fontFamily: "monospace",
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  maskedTitleWrapper: {
+    height: 44,
+    width: "100%",
+    marginBottom: 4,
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  mainTitle: {
     color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 46,
+    fontSize: 32,
+    lineHeight: 38,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
-    textAlign: "center",
-    textShadowColor: "rgba(56, 237, 216, 0.75)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 20,
-    ...(Platform.OS === "web"
-      ? ({
-          filter: "drop-shadow(0 0 20px rgba(56, 237, 216, 0.8))",
-        } as any)
-      : {}),
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  subtitle: {
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
 
   // Camera Box
   cameraBox: {
     width: "100%",
-    height: 310,
-    borderRadius: 26,
+    height: 350,
+    borderRadius: 28,
     overflow: "hidden",
-    backgroundColor: "#0E121B",
-    borderWidth: 1.2,
-    borderColor: "rgba(56, 237, 216, 0.25)",
+    backgroundColor: "#0B0E17",
+    borderWidth: 1.5,
+    borderColor: "rgba(56, 237, 216, 0.35)",
     position: "relative",
-    marginBottom: 18,
+    marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -256,41 +416,42 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.65,
+    opacity: 0.75,
   },
   cornerGuide: {
     position: "absolute",
-    width: 22,
-    height: 22,
+    width: 26,
+    height: 26,
     borderColor: "#38EDD8",
+    zIndex: 4,
   },
   cornerTL: {
     top: 14,
     left: 14,
-    borderTopWidth: 2.5,
-    borderLeftWidth: 2.5,
-    borderTopLeftRadius: 6,
+    borderTopWidth: 3,
+    borderLeftWidth: 3,
+    borderTopLeftRadius: 8,
   },
   cornerTR: {
     top: 14,
     right: 14,
-    borderTopWidth: 2.5,
-    borderRightWidth: 2.5,
-    borderTopRightRadius: 6,
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderTopRightRadius: 8,
   },
   cornerBL: {
     bottom: 14,
     left: 14,
-    borderBottomWidth: 2.5,
-    borderLeftWidth: 2.5,
-    borderBottomLeftRadius: 6,
+    borderBottomWidth: 3,
+    borderLeftWidth: 3,
+    borderBottomLeftRadius: 8,
   },
   cornerBR: {
     bottom: 14,
     right: 14,
-    borderBottomWidth: 2.5,
-    borderRightWidth: 2.5,
-    borderBottomRightRadius: 6,
+    borderBottomWidth: 3,
+    borderRightWidth: 3,
+    borderBottomRightRadius: 8,
   },
 
   bodyDetectedPill: {
@@ -299,46 +460,93 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 7,
-    backgroundColor: "rgba(10, 16, 24, 0.88)",
-    borderWidth: 1.2,
-    borderColor: "rgba(56, 237, 216, 0.5)",
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 16,
-    zIndex: 2,
+    backgroundColor: "rgba(9, 21, 26, 0.88)",
+    borderWidth: 1.4,
+    borderColor: "rgba(56, 237, 216, 0.55)",
+    paddingHorizontal: 14,
+    paddingVertical: 5.5,
+    borderRadius: 18,
+    zIndex: 5,
+    shadowColor: "#38EDD8",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
   },
   greenDotRing: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: "#38EDD8",
+    width: 17,
+    height: 17,
+    borderRadius: 8.5,
+    borderWidth: 1.4,
+    borderColor: "#38EDD8",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "rgba(56, 237, 216, 0.12)",
   },
   bodyDetectedText: {
     color: "#38EDD8",
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: "monospace",
-    fontWeight: "900",
-    letterSpacing: 1.2,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+  },
+
+  flipButton: {
+    position: "absolute",
+    top: 14,
+    right: 48,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(10, 16, 24, 0.75)",
+    borderWidth: 1,
+    borderColor: "rgba(56, 237, 216, 0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 5,
   },
 
   silhouetteContainer: {
-    width: 150,
-    height: 210,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1,
+    zIndex: 2,
   },
   floorMatBar: {
     position: "absolute",
-    bottom: 24,
+    bottom: 18,
     width: "74%",
     height: 14,
     borderRadius: 7,
     backgroundColor: "rgba(18, 22, 33, 0.85)",
     borderWidth: 1,
     borderColor: "rgba(56, 237, 216, 0.25)",
+  },
+
+  enableCameraPill: {
+    position: "absolute",
+    bottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "rgba(10, 20, 30, 0.92)",
+    borderWidth: 1.2,
+    borderColor: "#38EDD8",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    zIndex: 6,
+  },
+  enableCameraText: {
+    color: "#38EDD8",
+    fontSize: 11.5,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1.2,
   },
 
   // Requirements Checklist
@@ -349,54 +557,56 @@ const styles = StyleSheet.create({
   requirementItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(17, 20, 30, 0.8)",
+    backgroundColor: "rgba(18, 22, 33, 0.88)",
     borderRadius: 18,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
-    paddingVertical: 13,
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    gap: 12,
+    gap: 14,
   },
   requirementItemChecked: {
-    borderColor: "rgba(56, 237, 216, 0.2)",
-    backgroundColor: "rgba(17, 20, 30, 0.95)",
+    borderColor: "rgba(56, 237, 216, 0.22)",
+    backgroundColor: "rgba(19, 24, 36, 0.95)",
   },
   checkCircle: {
     width: 26,
     height: 26,
     borderRadius: 13,
     backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
     alignItems: "center",
     justifyContent: "center",
   },
   checkCircleChecked: {
-    backgroundColor: "rgba(56, 237, 216, 0.15)",
+    backgroundColor: "rgba(14, 48, 48, 0.9)",
+    borderColor: "rgba(56, 237, 216, 0.4)",
   },
   requirementText: {
     color: "#64748B",
     fontSize: 13,
-    fontWeight: "500",
+    fontFamily: "monospace",
+    fontWeight: "600",
+    letterSpacing: 0.3,
   },
   requirementTextChecked: {
-    color: "#E2E8F0",
-    fontWeight: "600",
+    color: "#F1F5F9",
+    fontWeight: "700",
   },
 
   // Ready Button
   readyButton: {
     width: "100%",
-    height: 52,
-    borderRadius: 26,
+    height: 54,
+    borderRadius: 27,
     overflow: "hidden",
     shadowColor: "#258CE8",
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.45,
-    shadowRadius: 14,
+    shadowRadius: 16,
     elevation: 8,
-  },
-  readyButtonDisabled: {
-    opacity: 0.5,
-    shadowOpacity: 0,
+    marginTop: 2,
   },
   readyButtonGradient: {
     flex: 1,
@@ -407,9 +617,9 @@ const styles = StyleSheet.create({
   },
   readyButtonText: {
     color: "#FFFFFF",
-    fontSize: 13.5,
+    fontSize: 14,
     fontFamily: "monospace",
-    fontWeight: "900",
-    letterSpacing: 1.2,
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
 });

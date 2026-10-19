@@ -2,7 +2,7 @@ import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { ChevronRight, FileText, Info, Shield } from "lucide-react-native";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function LinksCard() {
   const router = useRouter();
@@ -17,15 +17,16 @@ export function LinksCard() {
   return (
     <View style={styles.card}>
       {/* Privacy Policy */}
-      <Pressable
-        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+      <TouchableOpacity
+        style={styles.linkRow}
+        activeOpacity={0.75}
         onPress={() => handlePress("/profile/privacy-policy")}
       >
         <View style={styles.linkLeft}>
           <View style={styles.iconBadge}>
             <Shield size={16} color="#38BDF8" />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.linkTitle}>PRIVACY PROTOCOL</Text>
             <Text style={styles.linkSubtitle}>
               Data telemetry & encryption policies
@@ -35,20 +36,21 @@ export function LinksCard() {
         <View style={styles.chevronWrapper}>
           <ChevronRight size={16} color="#38BDF8" />
         </View>
-      </Pressable>
+      </TouchableOpacity>
 
       <View style={styles.divider} />
 
       {/* Terms & Conditions */}
-      <Pressable
-        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+      <TouchableOpacity
+        style={styles.linkRow}
+        activeOpacity={0.75}
         onPress={() => handlePress("/profile/terms")}
       >
         <View style={styles.linkLeft}>
           <View style={styles.iconBadge}>
             <FileText size={16} color="#38BDF8" />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.linkTitle}>TERMS OF SERVICE</Text>
             <Text style={styles.linkSubtitle}>Athletic platform agreement</Text>
           </View>
@@ -56,20 +58,21 @@ export function LinksCard() {
         <View style={styles.chevronWrapper}>
           <ChevronRight size={16} color="#38BDF8" />
         </View>
-      </Pressable>
+      </TouchableOpacity>
 
       <View style={styles.divider} />
 
       {/* About */}
-      <Pressable
-        style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.75 }]}
+      <TouchableOpacity
+        style={styles.linkRow}
+        activeOpacity={0.75}
         onPress={() => handlePress("/profile/about")}
       >
         <View style={styles.linkLeft}>
           <View style={styles.iconBadge}>
             <Info size={16} color="#38BDF8" />
           </View>
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={styles.linkTitle}>ABOUT REPLOOT</Text>
             <Text style={styles.linkSubtitle}>
               Architecture, team & release logs
@@ -79,7 +82,7 @@ export function LinksCard() {
         <View style={styles.chevronWrapper}>
           <ChevronRight size={16} color="#38BDF8" />
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }

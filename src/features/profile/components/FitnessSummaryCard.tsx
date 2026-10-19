@@ -1,10 +1,19 @@
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const FitnessSummaryCard = () => {
   const router = useRouter();
+
+  const handlePress = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    router.push("/profile/fitness-profile");
+  };
+
   return (
     <View style={styles.card}>
       <View style={[styles.cardHeader, { justifyContent: "space-between" }]}>
@@ -39,9 +48,13 @@ export const FitnessSummaryCard = () => {
           </Text>
         </View>
       </View>
-      <Pressable style={styles.darkBtn} onPress={() => router.push("/profile/fitness-profile")}>
+      <TouchableOpacity
+        style={styles.darkBtn}
+        activeOpacity={0.75}
+        onPress={handlePress}
+      >
         <Text style={styles.darkBtnText}>VIEW FITNESS PROFILE</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

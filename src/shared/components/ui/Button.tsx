@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Pressable,
+  TouchableOpacity,
   ActivityIndicator,
   ViewStyle,
   TextStyle,
@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
     if (disabled || loading) return;
     if (haptic) {
       try {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
       } catch {
         // Haptics unavailable on web / simulator
       }
@@ -103,15 +103,15 @@ export const Button: React.FC<ButtonProps> = ({
     const gradientColors = isAi ? gradients.violetBlue.colors : gradients.primaryCTA.colors;
 
     return (
-      <Pressable
+      <TouchableOpacity
         onPress={handlePress}
         disabled={disabled || loading}
-        style={({ pressed }) => [
+        activeOpacity={0.82}
+        style={[
           styles.base,
           sizeStyles[size].container,
           shadows.glowCyan,
           disabled && styles.disabled,
-          pressed && styles.pressed,
           style,
         ]}
       >
@@ -123,7 +123,7 @@ export const Button: React.FC<ButtonProps> = ({
         >
           {renderContent()}
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
     );
   }
 
@@ -152,20 +152,20 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={handlePress}
       disabled={disabled || loading}
-      style={({ pressed }) => [
+      activeOpacity={0.82}
+      style={[
         styles.base,
         sizeStyles[size].container,
         variantStyles[variant],
         disabled && styles.disabled,
-        pressed && styles.pressed,
         style,
       ]}
     >
       {renderContent()}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

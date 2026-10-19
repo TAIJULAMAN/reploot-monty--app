@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -48,11 +49,11 @@ export default function SignInRoute() {
         id: "1",
         email: email || "runner@kinetic.ai",
         fullName: "Alex Runner",
-        hasCompletedOnboarding: false,
+        hasCompletedOnboarding: true,
         createdAt: new Date().toISOString(),
       }),
     );
-    router.replace("/(profile-setup)");
+    router.replace("/(tabs)/home");
     requestAnimationFrame(() => {
       try {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -64,7 +65,7 @@ export default function SignInRoute() {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {}
-    router.push("/(auth)/forgot-password");
+    router.push("/forgot-password" as any);
   };
 
   const handleGoogleLogin = () => {
@@ -85,7 +86,7 @@ export default function SignInRoute() {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {}
-    router.push("/(auth)/sign-up");
+    router.push("/sign-up" as any);
   };
 
   return (
@@ -147,25 +148,21 @@ export default function SignInRoute() {
                   rightIcon={<Lock size={19} color="#CBD5E1" />}
                 />
                 <View style={styles.forgotPasswordWrapper}>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={handleForgotPassword}
-                    hitSlop={12}
-                    style={({ pressed }) => [pressed && styles.buttonPressed]}
+                    activeOpacity={0.7}
+                    hitSlop={{ top: 12, bottom: 12, left: 16, right: 16 }}
                   >
                     <Text style={styles.forgotPasswordText}>
                       Forgot password?
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.createAccountWrapper}>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={handleLogin}
-                    unstable_pressDelay={0}
-                    hitSlop={6}
-                    style={({ pressed }) => [
-                      styles.fullWidth,
-                      pressed && styles.buttonPressed,
-                    ]}
+                    activeOpacity={0.8}
+                    style={styles.fullWidth}
                   >
                     <LinearGradient
                       colors={["#3568A5", "#4B85C4", "#69A6E3"]}
@@ -175,7 +172,7 @@ export default function SignInRoute() {
                     >
                       <Text style={styles.createAccountText}>SIGN IN</Text>
                     </LinearGradient>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.dividerRow}>
                   <View style={styles.dividerLine} />
@@ -183,12 +180,10 @@ export default function SignInRoute() {
                   <View style={styles.dividerLine} />
                 </View>
                 <View style={styles.socialButtonWrapper}>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={handleGoogleLogin}
-                    style={({ pressed }) => [
-                      styles.fullWidth,
-                      pressed && styles.buttonPressed,
-                    ]}
+                    activeOpacity={0.7}
+                    style={styles.fullWidth}
                   >
                     <View style={styles.socialButtonContainer}>
                       <View style={styles.socialIconBox}>
@@ -198,15 +193,13 @@ export default function SignInRoute() {
                         Continue with Google
                       </Text>
                     </View>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.appleButtonWrapper}>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={handleAppleLogin}
-                    style={({ pressed }) => [
-                      styles.fullWidth,
-                      pressed && styles.buttonPressed,
-                    ]}
+                    activeOpacity={0.7}
+                    style={styles.fullWidth}
                   >
                     <View style={styles.socialButtonContainer}>
                       <View style={styles.socialIconBox}>
@@ -216,20 +209,20 @@ export default function SignInRoute() {
                         Continue with Apple
                       </Text>
                     </View>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               </LinearGradient>
             </View>
           </View>
           <View style={styles.bottomCtaContainer}>
             <Text style={styles.bottomCtaText}>Don't have an account? </Text>
-            <Pressable
+            <TouchableOpacity
               onPress={handleCreateAccount}
+              activeOpacity={0.7}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={({ pressed }) => [pressed && styles.buttonPressed]}
             >
               <Text style={styles.loginLink}>Sign Up</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

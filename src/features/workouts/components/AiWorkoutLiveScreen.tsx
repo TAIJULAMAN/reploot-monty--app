@@ -3,32 +3,37 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import {
+  Activity,
   ArrowRight,
+  Check,
+  ChevronLeft,
   Clock,
+  Dumbbell,
+  Flame,
+  Minus,
   Pause,
   Play,
-  RotateCcw,
+  Plus,
   Sparkles,
+  TrendingUp,
   Waves,
+  Zap,
 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Svg, {
-  Circle as SvgCircle,
-  Line as SvgLine,
-  Polygon as SvgPolygon,
-} from "react-native-svg";
+import Svg, { Circle as SvgCircle, Line as SvgLine } from "react-native-svg";
 import { WorkoutExerciseItem } from "../data/workoutPathDetailData";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export interface AiWorkoutLiveScreenProps {
   currentExercise: WorkoutExerciseItem;
@@ -36,6 +41,7 @@ export interface AiWorkoutLiveScreenProps {
   totalExercises: number;
   onNextExercise: () => void;
   onEndWorkout: () => void;
+  onBack?: () => void;
 }
 
 export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
@@ -44,17 +50,44 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
   totalExercises,
   onNextExercise,
   onEndWorkout,
+  onBack,
 }) => {
   const insets = useSafeAreaInsets();
 
   // Dynamic Workout Tracking State
-  const [reps, setReps] = useState<number>(12);
-  const [targetReps] = useState<number>(15);
-  const [accuracy] = useState<number>(94);
+  const [reps, setReps] = useState<number>(exerciseIndex === 0 ? 12 : 0);
+  const [targetReps, setTargetReps] = useState<number>(15);
+  const [accuracy, setAccuracy] = useState<number>(
+    exerciseIndex === 0 ? 94 : 98,
+  );
   const [nextBreakSec, setNextBreakSec] = useState<number>(45);
-  const [currentSet] = useState<number>(2);
-  const [totalSets] = useState<number>(4);
+  const [currentSet, setCurrentSet] = useState<number>(
+    exerciseIndex === 0 ? 2 : 1,
+  );
+  const [totalSets, setTotalSets] = useState<number>(4);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+
+  // When exercise changes (e.g. clicking NEXT EXERCISE to redirect to Exercise 2)
+  useEffect(() => {
+    const matchReps = currentExercise.subtitle?.match(/(\d+)\s*(?:Reps|reps)/);
+    const parsedTarget = matchReps ? parseInt(matchReps[1], 10) : 12;
+    const matchSets = currentExercise.subtitle?.match(/(\d+)\s*(?:Sets|sets)/);
+    const parsedSets = matchSets ? parseInt(matchSets[1], 10) : 4;
+
+    setTargetReps(parsedTarget);
+    setTotalSets(parsedSets);
+    setCurrentSet(1);
+
+    if (exerciseIndex === 0) {
+      setReps(12);
+      setAccuracy(94);
+    } else {
+      setReps(0);
+      setAccuracy(98);
+    }
+    setNextBreakSec(45);
+    setIsPaused(false);
+  }, [currentExercise.id, exerciseIndex]);
 
   // Live Timer countdown simulation
   useEffect(() => {
@@ -65,9 +98,9 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
     return () => clearInterval(timer);
   }, [isPaused]);
 
-  // Form Accuracy Ring Calculations
-  const radius = 28;
-  const strokeWidth = 4;
+  // Ring Gauge Calculations
+  const radius = 32;
+  const strokeWidth = 5;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - accuracy / 100);
 
@@ -80,7 +113,7 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
   const handleNext = () => {
     if (Platform.OS !== "web") {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
-        () => {}
+        () => {},
       );
     }
     onNextExercise();
@@ -93,89 +126,228 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
     setIsPaused((prev) => !prev);
   };
 
+  const adjustReps = (delta: number) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    }
+    setReps((prev) => Math.max(0, Math.min(30, prev + delta)));
+  };
+
+  const adjustBreakTime = (delta: number) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    setNextBreakSec((prev) => Math.max(0, prev + delta));
+  };
+
   const cleanExerciseTitle = currentExercise.title.replace(/\n/g, " ");
+  const repsProgress = Math.min(100, Math.round((reps / targetReps) * 100));
+
+  // Dynamic set breakdown
+  const setsData = Array.from({ length: totalSets }, (_, i) => {
+    const setNum = i + 1;
+    const isCompleted = setNum < currentSet;
+    const isCurrent = setNum === currentSet;
+    const targetSetReps = targetReps;
+    const setRepsLogged = isCompleted ? targetSetReps : isCurrent ? reps : "-";
+    const weightKg = 60 + i * 2.5;
+    const acc = isCompleted ? 96 - i : isCurrent ? accuracy : "-";
+    return {
+      setNum,
+      isCompleted,
+      isCurrent,
+      reps: setRepsLogged,
+      weightKg,
+      acc,
+    };
+  });
 
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
 
-      {/* Fullscreen Video / Studio Athlete Background with exact neon pose mesh */}
-      <Image
-        source={require("../../../../assets/workout/aiWorkoutAthletePose.png")}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-      />
-
-      {/* Cyber Subtle Gradient Vignette Overlay */}
+      {/* Regular Background: Cyber Kinetic Ambient Gradient & Accent Lines */}
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
         <LinearGradient
-          colors={[
-            "rgba(7, 10, 17, 0.45)",
-            "transparent",
-            "rgba(7, 10, 17, 0.9)",
-          ]}
-          locations={[0, 0.4, 0.88]}
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
       </View>
 
       {/* Top Header Bar */}
-      <View style={[styles.topHeader, { paddingTop: Math.max(insets.top + 8, 24) }]}>
-        <View>
-          <Text style={styles.headerTitle}>AI</Text>
-          <Text style={styles.headerTitle}>WORKOUT</Text>
+      <View
+        style={[styles.topHeader, { paddingTop: Math.max(insets.top + 8, 20) }]}
+      >
+        <View style={styles.headerLeftCol}>
+          {onBack ? (
+            <Pressable
+              style={styles.backButton}
+              onPress={onBack}
+              accessibilityRole="button"
+              accessibilityLabel="Back to exercise routine"
+            >
+              <ChevronLeft size={22} color="#FFFFFF" strokeWidth={2.4} />
+            </Pressable>
+          ) : null}
+          <View>
+            <Text style={styles.headerCategory}>EXERCISE TELEMETRY</Text>
+          </View>
         </View>
 
-        {/* Pause / Resume Button */}
-        <Pressable style={styles.pauseCircleBtn} onPress={togglePause}>
+        {/* Right Action: Pause / Resume Button */}
+        <Pressable
+          style={[styles.pauseBtn, isPaused && styles.pauseBtnActive]}
+          onPress={togglePause}
+        >
           {isPaused ? (
-            <Play size={18} color="#FFFFFF" fill="#FFFFFF" />
+            <Play size={16} color="#FFFFFF" fill="#FFFFFF" />
           ) : (
-            <Pause size={18} color="#FFFFFF" />
+            <Pause size={16} color="#38EDD8" />
           )}
         </Pressable>
       </View>
 
-      {/* Live AI Form Cue Pill */}
-      <View style={styles.aiCueWrapper}>
-        <View style={styles.aiCuePill}>
-          <Waves size={16} color="#38EDD8" />
-          <Text style={styles.aiCueText}>STRAIGHTEN YOUR BACK</Text>
-        </View>
-      </View>
-
-      {/* Main Content Area */}
-      <View style={styles.telemetryOverlayContainer}>
-        {/* Row 1: REPS Card + ACCURACY Card */}
-        <View style={styles.telemetryRow1}>
-          {/* Left Glass Card: REPS */}
-          <View style={styles.repsGlassCard}>
-            <Text style={styles.cardMiniLabel}>REPS</Text>
-            <Text style={styles.repsLargeNumber}>{reps}</Text>
-            <Text style={styles.cardTargetLabel}>TARGET: {targetReps}</Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, 16) + 120 },
+        ]}
+      >
+        {/* Active Exercise Hero Card */}
+        <View style={styles.exerciseHeroCard}>
+          <View style={styles.heroImageWrapper}>
+            {currentExercise.image ? (
+              <Image
+                source={currentExercise.image}
+                style={styles.heroThumbnail}
+                contentFit="cover"
+              />
+            ) : null}
+            <View style={styles.indexBadge}>
+              <Text style={styles.indexBadgeText}>
+                {currentExercise.index || `0${exerciseIndex + 1}`}
+              </Text>
+            </View>
           </View>
 
-          {/* Right Glass Card: ACCURACY */}
-          <View style={styles.accuracyGlassCard}>
-            <View style={styles.accuracyTopRow}>
-              <Text style={styles.cardMiniLabel}>ACCURACY</Text>
-              <Sparkles size={13} color="#38EDD8" />
+          <View style={styles.heroTextCol}>
+            <View style={styles.heroStatusRow}>
+              <View style={styles.activePill}>
+                <View style={styles.pulsingDot} />
+                <Text style={styles.activePillText}>IN PROGRESS</Text>
+              </View>
+              <Text style={styles.progressCounterText}>
+                {exerciseIndex + 1} OF {totalExercises}
+              </Text>
             </View>
 
-            {/* Circular Ring Gauge */}
-            <View style={styles.ringCenterBox}>
-              <Svg width="72" height="72" viewBox="0 0 72 72">
+            <Text style={styles.exerciseNameText} numberOfLines={2}>
+              {cleanExerciseTitle}
+            </Text>
+            <Text style={styles.exerciseSubtitleText}>
+              {currentExercise.subtitle}
+            </Text>
+          </View>
+        </View>
+
+        {/* Primary Statistics Grid (Bento Layout) */}
+        <View style={styles.statsGridRow}>
+          {/* Bento Card 1: REPS TRACKER */}
+          <View style={styles.statCard}>
+            <View style={styles.statCardHeader}>
+              <Text style={styles.statCardLabel}>REPS LOGGED</Text>
+              <Dumbbell size={15} color="#38EDD8" strokeWidth={2.4} />
+            </View>
+
+            <View style={styles.repsDisplayRow}>
+              <Text style={styles.repsMainNumber}>{reps}</Text>
+              <Text style={styles.repsTargetText}>/ {targetReps}</Text>
+            </View>
+
+            {/* Reps Progress Bar */}
+            <View style={styles.repsProgressBarTrack}>
+              <View
+                style={[
+                  styles.repsProgressBarFill,
+                  { width: `${repsProgress}%` },
+                ]}
+              />
+            </View>
+            <Text style={styles.repsProgressSub}>
+              {repsProgress}% OF TARGET COMPLETED
+            </Text>
+
+            {/* Reps Adjusters (+ / -) */}
+            <View style={styles.repAdjustRow}>
+              <Pressable
+                style={styles.adjustBtn}
+                onPress={() => adjustReps(-1)}
+                accessibilityRole="button"
+                accessibilityLabel="Decrease rep"
+              >
+                <Minus size={14} color="#FFFFFF" />
+              </Pressable>
+              <Pressable
+                style={[styles.adjustBtn, styles.adjustBtnAdd]}
+                onPress={() => adjustReps(1)}
+                accessibilityRole="button"
+                accessibilityLabel="Increase rep"
+              >
+                <Plus size={14} color="#0B0F19" strokeWidth={3} />
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Bento Card 2: FORM ACCURACY */}
+          <View style={styles.statCard}>
+            <View style={styles.statCardHeader}>
+              <Text style={styles.statCardLabel}>FORM ACCURACY</Text>
+              <Sparkles size={15} color="#38EDD8" strokeWidth={2.4} />
+            </View>
+
+            <View style={styles.ringCenterContainer}>
+              <Svg width="80" height="80" viewBox="0 0 80 80">
                 <SvgCircle
-                  cx="36"
-                  cy="36"
+                  cx="40"
+                  cy="40"
                   r={radius}
-                  stroke="rgba(255, 255, 255, 0.12)"
+                  stroke="rgba(255, 255, 255, 0.08)"
                   strokeWidth={strokeWidth}
                   fill="none"
                 />
                 <SvgCircle
-                  cx="36"
-                  cy="36"
+                  cx="40"
+                  cy="40"
                   r={radius}
                   stroke="#38EDD8"
                   strokeWidth={strokeWidth}
@@ -183,57 +355,93 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
                   strokeDashoffset={strokeDashoffset}
                   strokeLinecap="round"
                   fill="none"
-                  transform="rotate(-90 36 36)"
+                  transform="rotate(-90 40 40)"
                 />
               </Svg>
-              <Text style={styles.accuracyValueText}>{accuracy}%</Text>
+              <View style={styles.ringAbsoluteCenter}>
+                <Text style={styles.accuracyNumberText}>{accuracy}%</Text>
+              </View>
             </View>
+
+            <View style={styles.accuracyRatingPill}>
+              <Text style={styles.accuracyRatingText}>
+                {accuracy >= 90 ? "OPTIMAL FORM" : "STEADY FORM"}
+              </Text>
+            </View>
+            <Text style={styles.accuracySubText}>AI REAL-TIME FEEDBACK</Text>
           </View>
         </View>
 
-        {/* Row 2: NEXT BREAK Card */}
-        <View style={styles.telemetryRow2}>
-          <View style={styles.breakGlassCard}>
-            <Text style={styles.cardMiniLabel}>NEXT BREAK</Text>
-            <View style={styles.breakTimeRow}>
-              <Text style={styles.breakTimerText}>
-                {formatSeconds(nextBreakSec)}
-              </Text>
-              <Clock size={16} color="#38EDD8" />
+        {/* Secondary Row: REST TIMER & VOLUME */}
+        <View style={styles.statsGridRow}>
+          {/* Card 3: NEXT BREAK */}
+          <View style={styles.statCard}>
+            <View style={styles.statCardHeader}>
+              <Text style={styles.statCardLabel}>REST INTERVAL</Text>
+              <Clock size={15} color="#38EDD8" strokeWidth={2.4} />
             </View>
-          </View>
-        </View>
 
-        {/* Current Exercise Title & Sets Completed */}
-        <View style={styles.currentExerciseRow}>
-          <View style={styles.exerciseTitleCol}>
-            <View style={styles.cyanIndicatorBar} />
-            <View>
-              <Text style={styles.currentExerciseTag}>CURRENT EXERCISE</Text>
-              <Text style={styles.exerciseNameText} numberOfLines={1}>
-                {cleanExerciseTitle}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.setsProgressBox}>
-            <Text style={styles.setsProgressNumber}>
-              {exerciseIndex + 1}/{totalExercises}
+            <Text style={styles.timerLargeText}>
+              {formatSeconds(nextBreakSec)}
             </Text>
-            <Text style={styles.setsProgressLabel}>EXERCISE</Text>
+            <Text style={styles.timerSubText}>NEXT SET REST</Text>
+
+            <View style={styles.timerQuickRow}>
+              <Pressable
+                style={styles.quickTimerBtn}
+                onPress={() => adjustBreakTime(-15)}
+              >
+                <Text style={styles.quickTimerText}>-15S</Text>
+              </Pressable>
+              <Pressable
+                style={styles.quickTimerBtn}
+                onPress={() => adjustBreakTime(15)}
+              >
+                <Text style={styles.quickTimerText}>+15S</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Card 4: INTENSITY & ENERGY */}
+          <View style={styles.statCard}>
+            <View style={styles.statCardHeader}>
+              <Text style={styles.statCardLabel}>ENERGY BURN</Text>
+              <Flame size={15} color="#F59E0B" strokeWidth={2.4} />
+            </View>
+
+            <View style={styles.metricPairRow}>
+              <Text style={styles.burnNumber}>92</Text>
+              <Text style={styles.burnUnit}>KCAL</Text>
+            </View>
+            <Text style={styles.burnSubText}>ESTIMATED OUTPUT</Text>
+
+            <View style={styles.volumeMiniRow}>
+              <TrendingUp size={12} color="#38EDD8" />
+              <Text style={styles.volumeMiniText}>VOL LOAD: 720 KG</Text>
+            </View>
           </View>
         </View>
+      </ScrollView>
 
-        {/* Action Button: NEXT EXERCISE -> */}
+      {/* Bottom Sticky Action Area */}
+      <View
+        style={[
+          styles.bottomActionBar,
+          { paddingBottom: Math.max(insets.bottom, 14) + 8 },
+        ]}
+      >
         <Pressable
-          style={({ pressed }) => [
-            styles.nextExerciseButton,
-            pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] },
-          ]}
+          style={styles.nextExerciseButton}
           onPress={handleNext}
+          accessibilityRole="button"
+          accessibilityLabel={
+            exerciseIndex + 1 >= totalExercises
+              ? "Finish workout"
+              : "Next exercise"
+          }
         >
           <LinearGradient
-            colors={["#1E6BB8", "#258CE8"]}
+            colors={["#1967B2", "#2B90EA"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.nextButtonGradient}
@@ -243,13 +451,8 @@ export const AiWorkoutLiveScreen: React.FC<AiWorkoutLiveScreenProps> = ({
                 ? "FINISH WORKOUT"
                 : "NEXT EXERCISE"}
             </Text>
-            <ArrowRight size={18} color="#FFFFFF" />
+            <ArrowRight size={18} color="#FFFFFF" strokeWidth={2.5} />
           </LinearGradient>
-        </Pressable>
-
-        {/* End Workout Session link */}
-        <Pressable style={styles.endWorkoutLink} onPress={onEndWorkout}>
-          <Text style={styles.endWorkoutText}>END WORKOUT SESSION</Text>
         </Pressable>
       </View>
     </View>
@@ -262,229 +465,626 @@ const styles = StyleSheet.create({
     backgroundColor: "#070A11",
   },
   topHeader: {
-    paddingHorizontal: 22,
+    paddingHorizontal: 20,
+    paddingBottom: 12,
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     zIndex: 10,
   },
-  headerTitle: {
-    color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 38,
-    fontWeight: "900",
-    fontFamily: "monospace",
-    letterSpacing: 1.2,
-    textShadowColor: "rgba(56, 237, 216, 0.7)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
-    ...(Platform.OS === "web"
-      ? ({
-          filter: "drop-shadow(0 0 16px rgba(56, 237, 216, 0.7))",
-        } as any)
-      : {}),
+  headerLeftCol: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
-  pauseCircleBtn: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: "rgba(10, 14, 24, 0.7)",
+  backButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: "rgba(18, 22, 33, 0.85)",
     borderWidth: 1.2,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    borderColor: "rgba(255, 255, 255, 0.12)",
     alignItems: "center",
     justifyContent: "center",
   },
-
-  // AI Cue Pill
-  aiCueWrapper: {
-    alignItems: "center",
-    marginTop: 18,
-    zIndex: 10,
-  },
-  aiCuePill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    backgroundColor: "rgba(10, 14, 24, 0.8)",
-    borderWidth: 1,
-    borderColor: "rgba(56, 237, 216, 0.45)",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  aiCueText: {
-    color: "#FFFFFF",
-    fontSize: 11,
+  headerCategory: {
+    color: "#FFF",
+    fontSize: 20,
     fontFamily: "monospace",
-    fontWeight: "800",
+    fontWeight: "900",
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  headerTitle: {
+    color: "#FFFFFF",
+    fontSize: 22,
+    lineHeight: 26,
+    fontFamily: "monospace",
+    fontWeight: "900",
     letterSpacing: 1.2,
+    textTransform: "uppercase",
   },
-
-  // Telemetry Overlay
-  telemetryOverlayContainer: {
-    marginTop: "auto",
-    paddingHorizontal: 20,
-    paddingBottom: 28,
-    zIndex: 10,
-  },
-  telemetryRow1: {
+  pauseBtn: {
     flexDirection: "row",
-    gap: 12,
-    marginBottom: 12,
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "rgba(18, 22, 33, 0.85)",
+    borderWidth: 1.2,
+    borderColor: "rgba(56, 237, 216, 0.45)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 18,
   },
-  repsGlassCard: {
-    flex: 1,
-    backgroundColor: "rgba(10, 14, 24, 0.72)",
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    padding: 16,
-    justifyContent: "space-between",
+  pauseBtnActive: {
+    backgroundColor: "rgba(37, 140, 232, 0.35)",
+    borderColor: "#38BDF8",
   },
-  cardMiniLabel: {
-    color: "#64748B",
+  pauseBtnText: {
+    color: "#38EDD8",
     fontSize: 10,
     fontFamily: "monospace",
     fontWeight: "800",
-    letterSpacing: 0.8,
   },
-  repsLargeNumber: {
+  pauseBtnTextActive: {
     color: "#FFFFFF",
-    fontSize: 48,
-    lineHeight: 52,
-    fontFamily: "monospace",
-    fontWeight: "900",
   },
-  cardTargetLabel: {
+
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+
+  // Active Exercise Hero Card
+  exerciseHeroCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(18, 22, 33, 0.92)",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 14,
+    marginBottom: 16,
+  },
+  heroImageWrapper: {
+    width: 68,
+    height: 68,
+    borderRadius: 16,
+    overflow: "hidden",
+    backgroundColor: "#0F121A",
+    position: "relative",
+    borderWidth: 1.2,
+    borderColor: "rgba(56, 237, 216, 0.35)",
+  },
+  heroThumbnail: {
+    width: "100%",
+    height: "100%",
+  },
+  indexBadge: {
+    position: "absolute",
+    top: 5,
+    left: 5,
+    backgroundColor: "rgba(8, 10, 16, 0.85)",
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 1.5,
+  },
+  indexBadgeText: {
+    color: "#38EDD8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+  heroTextCol: {
+    flex: 1,
+    marginLeft: 14,
+  },
+  heroStatusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  activePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "rgba(56, 237, 216, 0.12)",
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  pulsingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#38EDD8",
+  },
+  activePillText: {
     color: "#38EDD8",
     fontSize: 9.5,
     fontFamily: "monospace",
     fontWeight: "800",
     letterSpacing: 0.6,
   },
-
-  accuracyGlassCard: {
-    flex: 1,
-    backgroundColor: "rgba(10, 14, 24, 0.72)",
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    padding: 16,
-    alignItems: "center",
+  progressCounterText: {
+    color: "#94A3B8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
   },
-  accuracyTopRow: {
+  exerciseNameText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    lineHeight: 20,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  exerciseSubtitleText: {
+    color: "#94A3B8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "500",
+    marginTop: 2,
+  },
+
+  // Bento Stats Grid
+  statsGridRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 12,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: "rgba(18, 22, 33, 0.88)",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 14,
+    justifyContent: "space-between",
+  },
+  statCardHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 6,
+    marginBottom: 8,
   },
-  ringCenterBox: {
-    width: 72,
-    height: 72,
+  statCardLabel: {
+    color: "#94A3B8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  repsDisplayRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 4,
+  },
+  repsMainNumber: {
+    color: "#FFFFFF",
+    fontSize: 38,
+    lineHeight: 42,
+    fontFamily: "monospace",
+    fontWeight: "900",
+  },
+  repsTargetText: {
+    color: "#64748B",
+    fontSize: 16,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+  repsProgressBarTrack: {
+    height: 6,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 3,
+    overflow: "hidden",
+    marginVertical: 8,
+  },
+  repsProgressBarFill: {
+    height: "100%",
+    backgroundColor: "#38EDD8",
+    borderRadius: 3,
+  },
+  repsProgressSub: {
+    color: "#38EDD8",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  repAdjustRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 10,
+  },
+  adjustBtn: {
+    flex: 1,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
     alignItems: "center",
     justifyContent: "center",
-    position: "relative",
   },
-  accuracyValueText: {
+  adjustBtnAdd: {
+    backgroundColor: "#38EDD8",
+  },
+
+  // Ring Center
+  ringCenterContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 4,
+    position: "relative",
+    height: 80,
+  },
+  ringAbsoluteCenter: {
     position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  accuracyNumberText: {
     color: "#FFFFFF",
+    fontSize: 18,
+    fontFamily: "monospace",
+    fontWeight: "900",
+  },
+  accuracyRatingPill: {
+    alignSelf: "center",
+    backgroundColor: "rgba(56, 237, 216, 0.12)",
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 10,
+    marginTop: 4,
+  },
+  accuracyRatingText: {
+    color: "#38EDD8",
+    fontSize: 9.5,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.6,
+  },
+  accuracySubText: {
+    color: "#64748B",
+    fontSize: 8.5,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 4,
+    letterSpacing: 0.5,
+  },
+
+  // Timer Card
+  timerLargeText: {
+    color: "#FFFFFF",
+    fontSize: 32,
+    lineHeight: 36,
+    fontFamily: "monospace",
+    fontWeight: "900",
+  },
+  timerSubText: {
+    color: "#94A3B8",
+    fontSize: 9.5,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    marginTop: 2,
+  },
+  timerQuickRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 10,
+  },
+  quickTimerBtn: {
+    flex: 1,
+    height: 30,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quickTimerText: {
+    color: "#FFFFFF",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+
+  // Metric Pair
+  metricPairRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 4,
+  },
+  burnNumber: {
+    color: "#FFFFFF",
+    fontSize: 34,
+    lineHeight: 38,
+    fontFamily: "monospace",
+    fontWeight: "900",
+  },
+  burnUnit: {
+    color: "#F59E0B",
     fontSize: 13,
     fontFamily: "monospace",
     fontWeight: "900",
   },
-
-  telemetryRow2: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginBottom: 16,
-  },
-  breakGlassCard: {
-    width: "48%",
-    backgroundColor: "rgba(10, 14, 24, 0.72)",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  breakTimeRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 4,
-  },
-  breakTimerText: {
-    color: "#FFFFFF",
-    fontSize: 20,
+  burnSubText: {
+    color: "#94A3B8",
+    fontSize: 9.5,
     fontFamily: "monospace",
-    fontWeight: "900",
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    marginTop: 2,
   },
-
-  // Exercise Title Col
-  currentExerciseRow: {
+  volumeMiniRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 18,
+    gap: 4,
+    marginTop: 12,
   },
-  exerciseTitleCol: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    flex: 1,
-    marginRight: 10,
-  },
-  cyanIndicatorBar: {
-    width: 4,
-    height: 38,
-    borderRadius: 2,
-    backgroundColor: "#6366F1",
-  },
-  currentExerciseTag: {
-    color: "#64748B",
+  volumeMiniText: {
+    color: "#38EDD8",
     fontSize: 9.5,
     fontFamily: "monospace",
     fontWeight: "800",
-    letterSpacing: 0.8,
+    letterSpacing: 0.5,
   },
-  exerciseNameText: {
-    color: "#FFFFFF",
-    fontSize: 22,
+
+  // AI Form Insight Card
+  aiInsightCard: {
+    backgroundColor: "rgba(14, 25, 36, 0.9)",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(56, 237, 216, 0.35)",
+    padding: 16,
+    marginBottom: 16,
+  },
+  aiInsightHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  aiBadgePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  aiBadgeText: {
+    color: "#38EDD8",
+    fontSize: 11,
     fontFamily: "monospace",
-    fontWeight: "900",
-    letterSpacing: 0.8,
-    textTransform: "uppercase",
+    fontWeight: "800",
+    letterSpacing: 1,
   },
-  setsProgressBox: {
-    alignItems: "flex-end",
+  aiLiveTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "rgba(251, 191, 36, 0.15)",
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
   },
-  setsProgressNumber: {
-    color: "#FFFFFF",
-    fontSize: 22,
+  aiLiveTagText: {
+    color: "#FBBF24",
+    fontSize: 9,
     fontFamily: "monospace",
-    fontWeight: "900",
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
-  setsProgressLabel: {
-    color: "#64748B",
+  aiCueText: {
+    color: "#E2E8F0",
+    fontSize: 12.5,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "500",
+    marginBottom: 12,
+  },
+  aiMetricsRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  aiMetricChip: {
+    flex: 1,
+    backgroundColor: "rgba(8, 14, 24, 0.8)",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.06)",
+  },
+  aiMetricChipLabel: {
+    color: "#94A3B8",
     fontSize: 8.5,
     fontFamily: "monospace",
     fontWeight: "800",
-    letterSpacing: 0.8,
+    letterSpacing: 0.6,
+  },
+  aiMetricChipVal: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    marginTop: 2,
   },
 
-  // Next Exercise Button
+  // Sets Progression Table
+  setsTableContainer: {
+    backgroundColor: "rgba(18, 22, 33, 0.88)",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    padding: 16,
+    marginBottom: 16,
+  },
+  setsTableHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  setsTableTitle: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
+  setsTableSubtitle: {
+    color: "#38EDD8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.6,
+  },
+  setsListWrapper: {
+    gap: 8,
+  },
+  setRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(10, 14, 22, 0.6)",
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.05)",
+  },
+  setRowCurrent: {
+    borderColor: "rgba(56, 237, 216, 0.5)",
+    backgroundColor: "rgba(14, 25, 36, 0.95)",
+  },
+  setRowCompleted: {
+    borderColor: "rgba(56, 237, 216, 0.25)",
+  },
+  setRowLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  setNumberCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  setNumberCircleCompleted: {
+    backgroundColor: "rgba(56, 237, 216, 0.2)",
+    borderWidth: 1,
+    borderColor: "#38EDD8",
+  },
+  setNumberCircleCurrent: {
+    backgroundColor: "#38EDD8",
+  },
+  setNumberText: {
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "800",
+  },
+  setNumberTextCurrent: {
+    color: "#0B0F19",
+  },
+  setLabelText: {
+    color: "#94A3B8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.6,
+  },
+  setLabelTextCurrent: {
+    color: "#FFFFFF",
+  },
+  setRowMetrics: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  setMetricText: {
+    color: "#E2E8F0",
+    fontSize: 11.5,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  setDotDivider: {
+    color: "#475569",
+    fontSize: 10,
+  },
+  setMetricAcc: {
+    color: "#94A3B8",
+    fontSize: 11,
+    fontFamily: "monospace",
+    fontWeight: "600",
+  },
+  setMetricAccCompleted: {
+    color: "#38EDD8",
+  },
+  setStatusCol: {
+    minWidth: 54,
+    alignItems: "flex-end",
+  },
+  statusDoneBadge: {
+    backgroundColor: "rgba(56, 237, 216, 0.15)",
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  statusDoneText: {
+    color: "#38EDD8",
+    fontSize: 9.5,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  statusActiveBadge: {
+    backgroundColor: "rgba(56, 189, 248, 0.2)",
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  statusActiveText: {
+    color: "#38BDF8",
+    fontSize: 9.5,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  statusPendingText: {
+    color: "#64748B",
+    fontSize: 9.5,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+
+  // Bottom Sticky Action Bar
+  bottomActionBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    backgroundColor: "rgba(7, 10, 17, 0.94)",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.08)",
+  },
   nextExerciseButton: {
     width: "100%",
     height: 52,
     borderRadius: 26,
     overflow: "hidden",
-    shadowColor: "#258CE8",
-    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.45,
-    shadowRadius: 14,
+    shadowRadius: 16,
     elevation: 8,
-    marginBottom: 14,
+    marginBottom: 8,
   },
   nextButtonGradient: {
     flex: 1,
@@ -495,19 +1095,25 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     color: "#FFFFFF",
-    fontSize: 13.5,
+    fontSize: 14,
     fontFamily: "monospace",
-    fontWeight: "900",
-    letterSpacing: 1.2,
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
-
-  endWorkoutLink: {
+  secondaryLinksRow: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 6,
+    justifyContent: "space-between",
+    paddingHorizontal: 4,
+    paddingVertical: 2,
   },
-  endWorkoutText: {
-    color: "#64748B",
-    fontSize: 10,
+  exitLinkBtn: {
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  exitLinkText: {
+    color: "#94A3B8",
+    fontSize: 11,
     fontFamily: "monospace",
     fontWeight: "800",
     letterSpacing: 1.2,

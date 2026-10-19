@@ -1,13 +1,10 @@
-import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { Sparkles } from "lucide-react-native";
+import { ArrowRight, Sparkles } from "lucide-react-native";
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-
-import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 export const AiCoachFloatingCard = () => {
   const router = useRouter();
@@ -22,14 +19,14 @@ export const AiCoachFloatingCard = () => {
   return (
     <View style={styles.cardContainer}>
       <LinearGradient
-        colors={["rgba(32, 68, 117, 0.3)", "transparent"]}
+        colors={["rgba(32, 68, 117, 0.25)", "transparent"]}
         style={StyleSheet.absoluteFill}
         start={{ x: 1, y: 0 }}
         end={{ x: 0.2, y: 0.8 }}
       />
 
       <View style={styles.content}>
-        {/* Header Row: Title & Online Pill */}
+        {/* Header Row: Title & Online Pill + Robot Avatar */}
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <View style={styles.onlinePill}>
@@ -37,38 +34,16 @@ export const AiCoachFloatingCard = () => {
               <Text style={styles.onlineText}>COACH ONLINE</Text>
             </View>
 
-            <View style={styles.maskedTitleWrapper}>
-              <MaskedView
-                style={styles.maskedTitleView}
-                maskElement={
-                  <View style={styles.maskWrapper}>
-                    <Text
-                      style={styles.headerTitle}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                    >
-                      AI COACH ASSISTANT
-                    </Text>
-                  </View>
-                }
-              >
-                <LinearGradient
-                  colors={["#00f2fe", "#4facfe"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.gradient}
-                />
-              </MaskedView>
-            </View>
+            <Text style={styles.headerTitle}>AI COACH ASSISTANT</Text>
           </View>
 
-          <View style={styles.avatarWrapper}>
+          {/* <View style={styles.avatarWrapper}>
             <Image
               source={require("../../../../assets/coachOnline/coachOnline.png")}
               style={styles.coachAvatar}
               contentFit="contain"
             />
-          </View>
+          </View> */}
         </View>
 
         {/* Message / Guidance Box */}
@@ -83,45 +58,40 @@ export const AiCoachFloatingCard = () => {
 
         {/* Quick Suggestion Chips */}
         <View style={styles.chipsRow}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.chipPill,
-              pressed && styles.chipPressed,
-            ]}
-            onPress={handleAskCoach}
-            accessibilityRole="button"
-          >
-            <Sparkles size={11} color="#38EDD8" />
-            <Text style={styles.chipText}>FORM CHECK</Text>
+          <Pressable onPress={handleAskCoach} accessibilityRole="button">
+            <View style={styles.chipPill}>
+              <Sparkles size={13} color="#00f2fe" strokeWidth={2.2} />
+              <Text style={styles.chipText}>FORM CHECK</Text>
+            </View>
           </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.chipPill,
-              pressed && styles.chipPressed,
-            ]}
-            onPress={handleAskCoach}
-            accessibilityRole="button"
-          >
-            <Text style={styles.chipText}>ADJUST MACROS</Text>
+
+          <Pressable onPress={handleAskCoach} accessibilityRole="button">
+            <View style={styles.chipPill}>
+              <Text style={styles.chipText}>ADJUST MACROS</Text>
+            </View>
           </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              styles.chipPill,
-              pressed && styles.chipPressed,
-            ]}
-            onPress={handleAskCoach}
-            accessibilityRole="button"
-          >
-            <Text style={styles.chipText}>RECOVERY</Text>
+
+          <Pressable onPress={handleAskCoach} accessibilityRole="button">
+            <View style={styles.chipPill}>
+              <Text style={styles.chipText}>RECOVERY</Text>
+            </View>
           </Pressable>
         </View>
 
         {/* Start / Ask Button */}
-        <OnboardingButton
-          text="ASK AI COACH"
-          onPress={handleAskCoach}
-          isFinalSlide={true}
-        />
+        <Pressable onPress={handleAskCoach} accessibilityRole="button">
+          <View style={styles.actionButton}>
+            <LinearGradient
+              colors={["#00b4d8", "#0077b6"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>ASK AI COACH</Text>
+              <ArrowRight size={20} color="#FFFFFF" strokeWidth={2.5} />
+            </LinearGradient>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -157,10 +127,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(56, 237, 216, 0.1)",
     borderWidth: 1,
-    borderColor: "rgba(56, 237, 216, 0.28)",
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 8,
+    borderColor: "rgba(56, 237, 216, 0.3)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
     gap: 6,
     marginBottom: 8,
   },
@@ -176,21 +146,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: "monospace",
     letterSpacing: 1,
-  },
-  maskedTitleWrapper: {
-    height: 30,
-  },
-  maskedTitleView: {
-    flex: 1,
-    width: "100%",
-  },
-  maskWrapper: {
-    backgroundColor: "transparent",
-    flex: 1,
-    justifyContent: "center",
-  },
-  gradient: {
-    flex: 1,
   },
   headerTitle: {
     color: "#FFFFFF",
@@ -249,8 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.04)",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
-    paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 10,
   },
   chipText: {
@@ -262,5 +217,30 @@ const styles = StyleSheet.create({
   },
   chipPressed: {
     opacity: 0.75,
+  },
+  actionButton: {
+    width: "100%",
+    height: 54,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  buttonGradient: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingHorizontal: 20,
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.5,
+  },
+  buttonPressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.985 }],
   },
 });

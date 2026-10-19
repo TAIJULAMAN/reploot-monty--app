@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const TopProfileCard = () => {
   const router = useRouter();
@@ -76,12 +76,10 @@ export const TopProfileCard = () => {
         />
       </View>
 
-      <Pressable
+      <TouchableOpacity
         onPress={handleEditPress}
-        style={({ pressed }) => [
-          styles.buttonWrapper,
-          pressed && styles.buttonPressed,
-        ]}
+        activeOpacity={0.8}
+        style={styles.buttonWrapper}
       >
         <LinearGradient
           colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
@@ -91,7 +89,7 @@ export const TopProfileCard = () => {
         >
           <Text style={styles.btnText}>EDIT PROFILE</Text>
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -161,10 +159,10 @@ const styles = StyleSheet.create({
   },
   nameText: {
     color: "#FFFFFF",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "800",
     fontFamily: "monospace",
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   ageText: {
     color: "#94A3B8",

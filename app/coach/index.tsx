@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -332,18 +333,16 @@ export default function CoachRoute() {
             nestedScrollEnabled={true}
           >
             {SUGGESTIONS.map((suggestion, index) => (
-              <Pressable
+              <TouchableOpacity
                 key={index}
-                style={({ pressed }) => [
-                  styles.suggestionChip,
-                  pressed && styles.chipPressed,
-                ]}
+                style={styles.suggestionChip}
+                activeOpacity={0.7}
                 onPress={() => handleSuggestionPress(suggestion)}
                 accessibilityRole="button"
               >
                 <Sparkles size={11} color="#38EDD8" />
                 <Text style={styles.suggestionText}>{suggestion}</Text>
-              </Pressable>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -367,11 +366,9 @@ export default function CoachRoute() {
               onSubmitEditing={() => handleSend()}
               returnKeyType="send"
             />
-            <Pressable
-              style={({ pressed }) => [
-                styles.sendBtn,
-                pressed && styles.sendBtnPressed,
-              ]}
+            <TouchableOpacity
+              style={styles.sendBtn}
+              activeOpacity={0.8}
               onPress={() => handleSend()}
               accessibilityRole="button"
             >
@@ -383,7 +380,7 @@ export default function CoachRoute() {
               >
                 <Send size={15} color="#0B0E14" strokeWidth={2.6} />
               </LinearGradient>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -580,7 +577,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   suggestionsWrapper: {
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   suggestionsContainer: {
     paddingHorizontal: 20,
@@ -592,18 +589,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#11141C",
-    paddingHorizontal: 12,
+    backgroundColor: "#161B26",
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 12,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "rgba(56, 237, 216, 0.22)",
     ...(Platform.OS === "web"
       ? ({ outlineStyle: "none", outlineWidth: 0 } as any)
       : {}),
   },
   chipPressed: {
-    opacity: 0.75,
+    opacity: 0.7,
+    borderColor: "#38EDD8",
+    backgroundColor: "rgba(56, 237, 216, 0.12)",
   },
   suggestionText: {
     color: "#CBD5E1",

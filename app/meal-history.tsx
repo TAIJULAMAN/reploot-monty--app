@@ -194,7 +194,7 @@ export default function MealHistoryScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 40, 60) },
+          { paddingBottom: Math.max(insets.bottom + 60, 80) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -208,7 +208,6 @@ export default function MealHistoryScreen() {
                   <Text
                     style={styles.mainTitle}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
                   >
                     MEAL HISTORY
                   </Text>
@@ -356,10 +355,7 @@ export default function MealHistoryScreen() {
               </View>
 
               <Pressable
-                style={({ pressed }) => [
-                  styles.likeBtn,
-                  pressed && { opacity: 0.7 },
-                ]}
+                style={styles.likeBtn}
                 onPress={() => toggleLike(meal.id)}
               >
                 <Heart
@@ -388,10 +384,7 @@ export default function MealHistoryScreen() {
               recommended."
             </Text>
             <Pressable
-              style={({ pressed }) => [
-                styles.addSuggestionBtn,
-                pressed && { opacity: 0.75 },
-              ]}
+              style={styles.addSuggestionBtn}
               onPress={handleAddSuggestion}
             >
               {suggestionAdded ? (
@@ -418,14 +411,11 @@ export default function MealHistoryScreen() {
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <Pressable
-            style={({ pressed }) => [
-              styles.applyBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.applyBtn}
             onPress={handleApplyPlan}
           >
             <LinearGradient
-              colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+              colors={["#00f2fe", "#4facfe"]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
               style={styles.applyBtnGradient}
@@ -435,10 +425,7 @@ export default function MealHistoryScreen() {
           </Pressable>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.regenerateBtn,
-              pressed && { opacity: 0.75, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.regenerateBtn}
             onPress={handleRegenerate}
           >
             <RefreshCw
@@ -786,10 +773,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   applyBtnText: {
-    color: "#FFFFFF",
+    color: "#050811",
     fontSize: 13,
     fontFamily: "monospace",
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 1.2,
   },
   regenerateBtn: {

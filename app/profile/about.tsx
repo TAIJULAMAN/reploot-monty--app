@@ -1,6 +1,7 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Cpu, Globe, Sparkles } from "lucide-react-native";
 import React from "react";
@@ -9,7 +10,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
 
 export default function AboutRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/profile/account-settings");
+    }
+  };
 
   const specs = [
     {
@@ -74,6 +84,7 @@ export default function AboutRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}

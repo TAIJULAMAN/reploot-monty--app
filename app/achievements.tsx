@@ -138,7 +138,7 @@ export default function AchievementsScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContainer,
-          { paddingBottom: Math.max(insets.bottom + 100, 120) },
+          { paddingBottom: Math.max(insets.bottom + 140, 160) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -149,11 +149,7 @@ export default function AchievementsScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     UNLOCK NEXT LEVEL
                   </Text>
                 </View>
@@ -279,10 +275,7 @@ export default function AchievementsScreen() {
 
         {/* Start Today's Workout Button (Matching progress.tsx startWorkoutBtn) */}
         <Pressable
-          style={({ pressed }) => [
-            styles.startWorkoutBtn,
-            pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-          ]}
+          style={styles.startWorkoutBtn}
           onPress={handleStartWorkout}
         >
           <LinearGradient
@@ -313,8 +306,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   maskedTitleWrapper: {
-    height: 48,
+    height: 44,
     width: "100%",
+    justifyContent: "center",
   },
   maskedTitleView: {
     flex: 1,
@@ -324,17 +318,19 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 28,
+    lineHeight: 36,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
+    letterSpacing: 0.5,
+    textAlign: "left",
     textTransform: "uppercase",
   },
   subtitle: {

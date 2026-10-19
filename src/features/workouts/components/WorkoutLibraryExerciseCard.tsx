@@ -64,11 +64,7 @@ export const WorkoutLibraryExerciseCard: React.FC<
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.cardContainer,
-        pressed && styles.pressedCard,
-        style,
-      ]}
+      style={[styles.cardContainer, style]}
       accessibilityRole="button"
       accessibilityLabel={`${exercise.title}, ${exercise.setsReps}`}
     >
@@ -98,10 +94,7 @@ export const WorkoutLibraryExerciseCard: React.FC<
       {/* Favorite Star Button */}
       <Pressable
         onPress={handleStarPress}
-        style={({ pressed }) => [
-          styles.starButton,
-          pressed && styles.pressedStar,
-        ]}
+        style={styles.starButton}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         accessibilityRole="button"
         accessibilityLabel="Favorite exercise"
@@ -150,15 +143,17 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: -0.2,
+    fontSize: 15.5,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.3,
     marginBottom: 4,
   },
   setsReps: {
     color: "#8E95A5",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 11.5,
+    fontWeight: "700",
+    fontFamily: "monospace",
     letterSpacing: 0.6,
     textTransform: "uppercase",
     marginBottom: 6,
@@ -198,16 +193,14 @@ const styles = StyleSheet.create({
   diffBadgeText: {
     fontSize: 10,
     fontWeight: "800",
+    fontFamily: "monospace",
     letterSpacing: 0.5,
   },
   xpText: {
     color: "#C4C9D6",
     fontSize: 11,
-    fontWeight: "700",
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontWeight: "800",
+    fontFamily: "monospace",
   },
   starButton: {
     padding: 6,

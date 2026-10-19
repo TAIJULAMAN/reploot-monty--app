@@ -1,14 +1,19 @@
+import React from "react";
 import { AppProviders } from "@/providers/AppProviders";
 import { colors } from "@/theme/colors";
 import {
   JetBrainsMono_700Bold,
+  JetBrainsMono_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/jetbrains-mono";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { LogBox } from "react-native";
 import "../global.css";
 
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+
+LogBox.ignoreAllLogs(true);
 
 function AuthGuard() {
   useProtectedRoute();
@@ -18,6 +23,8 @@ function AuthGuard() {
 export default function RootLayout() {
   useFonts({
     JetBrainsMono_700Bold,
+    JetBrainsMono_800ExtraBold,
+    JetBrainsMono_900Bold: JetBrainsMono_800ExtraBold,
   });
   
   return (
@@ -45,6 +52,10 @@ export default function RootLayout() {
         <Stack.Screen name="workouts/index" />
         <Stack.Screen name="notifications/index" />
         <Stack.Screen name="search/index" />
+        <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="weekly-progress" />
+        <Stack.Screen name="workout-calendar" />
+        <Stack.Screen name="settings" />
         <Stack.Screen
           name="modals/index"
           options={{

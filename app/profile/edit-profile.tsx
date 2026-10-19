@@ -6,7 +6,9 @@ import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import { useRouter } from "expo-router";
+import { Check } from "lucide-react-native";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,7 +21,24 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
 
 export default function EditProfileRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/profile");
+    }
+  };
+
+  const handleSave = () => {
+    setToastMessage("ATHLETE PROFILE SYNCHRONIZED");
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 2500);
+  };
 
   return (
     <View style={styles.container}>
@@ -66,6 +85,7 @@ export default function EditProfileRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}
@@ -77,9 +97,10 @@ export default function EditProfileRoute() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
+          style={{ flex: 1 }}
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingBottom: Math.max(insets.bottom + 40, 60) },
+            { paddingBottom: Math.max(insets.bottom + 80, 100) },
           ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
@@ -117,9 +138,17 @@ export default function EditProfileRoute() {
           <EditProfileBanner />
           <EditProfileForm />
           <EditProfileSecurityBox />
-          <EditProfileActions />
+          <EditProfileActions onSave={handleSave} />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Floating Cyber HUD Toast */}
+      {toastMessage && (
+        <View style={styles.savedToast}>
+          <Check size={16} color="#00f2fe" style={{ marginRight: 8 }} />
+          <Text style={styles.savedToastText}>{toastMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -135,6 +164,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 4,
+    flexGrow: 1,
   },
   titleSection: {
     marginTop: 4,
@@ -172,5 +202,33 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "600",
     marginTop: 4,
+  },
+  savedToast: {
+    position: "absolute",
+    bottom: 30,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(7, 10, 17, 0.95)",
+    borderWidth: 1.5,
+    borderColor: "#00f2fe",
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    zIndex: 9999,
+    elevation: 12,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  savedToastText: {
+    color: "#00f2fe",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.6,
   },
 });

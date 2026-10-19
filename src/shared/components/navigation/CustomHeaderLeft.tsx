@@ -1,13 +1,14 @@
 import { Image } from "expo-image";
 import { ArrowLeft } from "lucide-react-native";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface CustomHeaderLeftProps {
   leftContent?: React.ReactNode;
   showBackButton: boolean;
   handleBackPress: () => void;
   title?: string;
+  subtitle?: string;
   resolvedVariant: string;
   handleLogoPress: () => void;
 }
@@ -17,6 +18,7 @@ export const CustomHeaderLeft = ({
   showBackButton,
   handleBackPress,
   title,
+  subtitle,
   resolvedVariant,
   handleLogoPress,
 }: CustomHeaderLeftProps) => {
@@ -25,31 +27,36 @@ export const CustomHeaderLeft = ({
   if (showBackButton) {
     return (
       <View style={styles.leftRow}>
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.7}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           onPress={handleBackPress}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.pressedOpacity,
-          ]}
+          style={styles.backButton}
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
           <ArrowLeft size={20} color="#FFFFFF" />
-        </Pressable>
+        </TouchableOpacity>
         {Boolean(title) && title !== "REPLOOT" && (
-          <Text style={styles.pageTitle}>{title}</Text>
+          <View style={styles.titleColumn}>
+            <Text style={styles.pageTitle}>{title}</Text>
+            {Boolean(subtitle) && (
+              <Text style={styles.pageSubtitle} numberOfLines={1}>
+                {subtitle}
+              </Text>
+            )}
+          </View>
         )}
       </View>
     );
   }
 
   return (
-    <Pressable
+    <TouchableOpacity
+      activeOpacity={0.8}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       onPress={handleLogoPress}
-      style={({ pressed }) => [
-        styles.logoWrapper,
-        pressed && styles.pressedOpacity,
-      ]}
+      style={styles.logoWrapper}
       accessibilityRole="button"
       accessibilityLabel="Go to home"
     >
@@ -62,7 +69,7 @@ export const CustomHeaderLeft = ({
       ) : (
         <Text style={styles.pageTitle}>{title}</Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -96,11 +103,23 @@ const styles = StyleSheet.create({
     height: 24,
     width: 120, // Adjust this based on actual aspect ratio
   },
+  titleColumn: {
+    justifyContent: "center",
+  },
   pageTitle: {
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "800",
     letterSpacing: -0.3,
+    fontFamily: "monospace",
+  },
+  pageSubtitle: {
+    color: "#94A3B8",
+    fontSize: 12,
+    fontWeight: "500",
+    fontFamily: "monospace",
+    marginTop: 2,
+    letterSpacing: 0.2,
   },
   pressedOpacity: {
     opacity: 0.7,

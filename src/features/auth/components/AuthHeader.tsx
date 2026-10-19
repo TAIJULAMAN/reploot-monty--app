@@ -2,9 +2,9 @@ import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import {
-  Pressable,
   StyleProp,
   StyleSheet,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from "react-native";
@@ -45,18 +45,16 @@ export function AuthHeader({
   return (
     <View style={[styles.topBar, style]}>
       {showBackButton ? (
-        <Pressable
+        <TouchableOpacity
           onPress={handleBack}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && styles.buttonPressed,
-          ]}
-          hitSlop={12}
+          style={styles.backButton}
+          activeOpacity={0.7}
+          hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
           <ArrowLeft size={20} color="#FFFFFF" strokeWidth={2.2} />
-        </Pressable>
+        </TouchableOpacity>
       ) : (
         <View style={styles.placeholder} />
       )}

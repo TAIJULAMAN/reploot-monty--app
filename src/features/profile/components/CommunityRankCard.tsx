@@ -1,10 +1,19 @@
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const CommunityRankCard = () => {
   const router = useRouter();
+
+  const handlePress = () => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    router.push("/profile/global-rankings");
+  };
+
   return (
     <View style={styles.card}>
       <View style={[styles.cardHeader, { justifyContent: "space-between" }]}>
@@ -24,12 +33,13 @@ export const CommunityRankCard = () => {
         </View>
         <Text style={styles.rankSub}>TOP 5% OF ATHLETES</Text>
       </View>
-      <Pressable
+      <TouchableOpacity
         style={styles.darkBtn}
-        onPress={() => router.push("/profile/global-rankings")}
+        activeOpacity={0.75}
+        onPress={handlePress}
       >
         <Text style={styles.darkBtnText}>VIEW LEADERBOARD</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

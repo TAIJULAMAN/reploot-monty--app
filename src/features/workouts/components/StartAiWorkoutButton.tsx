@@ -46,11 +46,7 @@ export const StartAiWorkoutButton: React.FC<StartAiWorkoutButtonProps> = ({
         <Pressable
           onPress={handlePress}
           disabled={disabled}
-          style={({ pressed }) => [
-            styles.ctaWrapper,
-            pressed && styles.ctaPressed,
-            disabled && styles.ctaDisabled,
-          ]}
+          style={[styles.ctaWrapper, disabled && styles.ctaDisabled]}
           accessibilityRole="button"
           accessibilityLabel={title}
         >
@@ -89,11 +85,7 @@ export const StartAiWorkoutButton: React.FC<StartAiWorkoutButtonProps> = ({
       <Pressable
         onPress={handlePress}
         disabled={disabled}
-        style={({ pressed }) => [
-          styles.ctaWrapper,
-          pressed && styles.ctaPressed,
-          disabled && styles.ctaDisabled,
-        ]}
+        style={[styles.ctaWrapper, disabled && styles.ctaDisabled]}
         accessibilityRole="button"
         accessibilityLabel={title}
       >
@@ -103,7 +95,7 @@ export const StartAiWorkoutButton: React.FC<StartAiWorkoutButtonProps> = ({
           end={{ x: 1, y: 1 }}
           style={styles.ctaGradient}
         >
-          <Sparkles size={18} color="#FFFFFF" />
+          <Sparkles size={18} color="#FFFFFF" fill="#FFFFFF" />
           <Text style={styles.ctaText}>{title}</Text>
         </LinearGradient>
       </Pressable>
@@ -119,7 +111,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingHorizontal: 20,
     paddingTop: 16,
-    zIndex: 20,
+    zIndex: 50,
   },
   inlineWrapper: {
     width: "100%",
@@ -129,10 +121,6 @@ const styles = StyleSheet.create({
   ctaWrapper: {
     borderRadius: 28,
     overflow: "hidden",
-    shadowColor: "#3B82F6",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.45,
-    shadowRadius: 18,
     elevation: 8,
   },
   ctaPressed: {

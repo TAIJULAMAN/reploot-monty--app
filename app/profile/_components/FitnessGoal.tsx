@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface FitnessGoalProps {
   selectedGoal: string;
@@ -75,12 +75,12 @@ export function FitnessGoal({
         {goals.map((goal) => {
           const isSelected = selectedGoal === goal.id;
           return (
-            <Pressable
+            <TouchableOpacity
               key={goal.id}
-              style={({ pressed }) => [
+              activeOpacity={0.75}
+              style={[
                 styles.goalCard,
                 isSelected && styles.goalCardSelected,
-                pressed && styles.goalCardPressed,
               ]}
               onPress={() => handleSelect(goal.id)}
             >
@@ -124,7 +124,7 @@ export function FitnessGoal({
               >
                 {isSelected && <View style={styles.radioInner} />}
               </View>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>

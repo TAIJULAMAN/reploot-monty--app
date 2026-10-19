@@ -10,6 +10,9 @@ export function useProtectedRoute() {
   useEffect(() => {
     if (isLoading) return;
 
+    const inDevRoute = segments[0] === "dev";
+    if (inDevRoute) return;
+
     const inTabsGroup = segments[0] === "(tabs)";
     const inProfileSetup = segments[0] === "(profile-setup)";
     const inAuthGroup = segments[0] === "(auth)";

@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const PlanCard = () => {
   const router = useRouter();
@@ -36,11 +36,9 @@ export const PlanCard = () => {
         <Text style={styles.planDate}>Renewal: Dec 12, 2026</Text>
       </View>
 
-      <Pressable
-        style={({ pressed }) => [
-          styles.buttonWrapper,
-          pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-        ]}
+      <TouchableOpacity
+        style={styles.buttonWrapper}
+        activeOpacity={0.8}
         onPress={handleManagePlan}
       >
         <LinearGradient
@@ -51,7 +49,7 @@ export const PlanCard = () => {
         >
           <Text style={styles.btnText}>MANAGE PLAN</Text>
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

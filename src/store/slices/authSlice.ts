@@ -9,8 +9,14 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
+  user: {
+    id: "1",
+    email: "alex@kinetic.ai",
+    fullName: "Alex",
+    hasCompletedOnboarding: true,
+    createdAt: new Date().toISOString(),
+  },
+  isAuthenticated: true,
   isLoading: false,
 };
 

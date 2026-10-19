@@ -11,7 +11,6 @@ import {
   Flame,
   History,
   Sparkles,
-  Target,
   TrendingUp,
   Trophy,
   Zap,
@@ -57,7 +56,7 @@ export default function ProgressTabRoute() {
       <StatusBar style="light" />
 
       {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
         <LinearGradient
           colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
           locations={[0, 0.25, 0.65, 1]}
@@ -65,7 +64,7 @@ export default function ProgressTabRoute() {
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+        <Svg style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
           <SvgLine
             x1="420"
             y1="-20"
@@ -96,9 +95,10 @@ export default function ProgressTabRoute() {
       <WorkoutHeader transparent={true} />
 
       <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContainer,
-          { paddingBottom: Math.max(insets.bottom + 100, 120) },
+          { paddingBottom: Math.max(insets.bottom + 140, 160) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -109,11 +109,7 @@ export default function ProgressTabRoute() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     LEVEL UP...
                   </Text>
                 </View>
@@ -188,10 +184,7 @@ export default function ProgressTabRoute() {
           </View>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.viewRecordsBtn,
-              pressed && { opacity: 0.75 },
-            ]}
+            style={styles.viewRecordsBtn}
             onPress={() => handleNavigate("/profile/global-rankings")}
           >
             <Text style={styles.viewRecordsText}>VIEW ALL RECORDS</Text>
@@ -226,10 +219,7 @@ export default function ProgressTabRoute() {
           </View>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.startWorkoutBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.startWorkoutBtn}
             onPress={handleStartWorkout}
           >
             <LinearGradient
@@ -294,10 +284,7 @@ export default function ProgressTabRoute() {
         <View style={styles.menuList}>
           {/* Reports -> Weight Progress */}
           <Pressable
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && { opacity: 0.75 },
-            ]}
+            style={styles.menuItem}
             onPress={() => handleNavigate("/weight-progress")}
           >
             <View style={styles.menuIconWrapper}>
@@ -316,10 +303,7 @@ export default function ProgressTabRoute() {
 
           {/* Workout History -> Your Workouts */}
           <Pressable
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && { opacity: 0.75 },
-            ]}
+            style={styles.menuItem}
             onPress={() => handleNavigate("/your-workouts")}
           >
             <View
@@ -346,10 +330,7 @@ export default function ProgressTabRoute() {
 
           {/* Global Rankings / Achievements -> Unlock Next Level Badges */}
           <Pressable
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && { opacity: 0.75 },
-            ]}
+            style={styles.menuItem}
             onPress={() => handleNavigate("/achievements")}
           >
             <View
@@ -384,6 +365,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#090A10",
   },
+  scrollView: {
+    flex: 1,
+  },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingTop: 4,
@@ -397,24 +381,26 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   maskedTitleView: {
-    flex: 1,
+    height: 48,
     width: "100%",
   },
   maskWrapper: {
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 30,
+    lineHeight: 38,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
+    letterSpacing: 0.5,
+    textAlign: "left",
     textTransform: "uppercase",
   },
   subtitle: {
@@ -465,7 +451,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   tierPill: {
     flexDirection: "row",
@@ -496,10 +482,10 @@ const styles = StyleSheet.create({
   },
   progressBarBg: {
     height: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
     borderRadius: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
     overflow: "hidden",
-    marginBottom: 12,
+    marginBottom: 10,
   },
   xpRow: {
     flexDirection: "row",
@@ -521,6 +507,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: "monospace",
     fontWeight: "700",
+    marginLeft: 3,
   },
   xpRightCol: {
     flexDirection: "row",
@@ -660,8 +647,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "monospace",
     fontWeight: "900",
-    letterSpacing: 1,
-    marginBottom: 4,
+    letterSpacing: 0.8,
+    marginBottom: 6,
   },
   streakDesc: {
     color: "#94A3B8",
@@ -688,10 +675,10 @@ const styles = StyleSheet.create({
   challengeHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginBottom: 8,
   },
-  challengeBadge: {
+  challengeBadgeRow: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 4,

@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface WorkoutTabsProps {
   activeTab: string;
@@ -19,8 +19,9 @@ export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
 
   return (
     <View style={styles.tabsContainer}>
-      <Pressable
+      <TouchableOpacity
         style={styles.tab}
+        activeOpacity={0.8}
         onPress={() => handleTabPress("gym")}
       >
         {activeTab === "gym" && (
@@ -36,10 +37,11 @@ export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
         >
           GYM WORKOUT
         </Text>
-      </Pressable>
+      </TouchableOpacity>
 
-      <Pressable
+      <TouchableOpacity
         style={styles.tab}
+        activeOpacity={0.8}
         onPress={() => handleTabPress("home")}
       >
         {activeTab === "home" && (
@@ -55,7 +57,7 @@ export function WorkoutTabs({ activeTab, setActiveTab }: WorkoutTabsProps) {
         >
           HOME WORKOUT
         </Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }

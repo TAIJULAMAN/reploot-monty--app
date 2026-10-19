@@ -2,24 +2,35 @@ import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Check, Sparkles, Zap } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
 
 export default function ManagePlanRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [selectedPlan, setSelectedPlan] = useState<string>("pro");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/profile");
+    }
+  };
 
   const handleCycleChange = (cycle: "monthly" | "annual") => {
     if (Platform.OS !== "web") {
@@ -33,6 +44,11 @@ export default function ManagePlanRoute() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     }
     setSelectedPlan(planId);
+    const planName = planId === "elite" ? "APEX ATHLETE" : planId === "free" ? "ROOKIE FREE" : "REPLOOT PRO";
+    setToastMessage(`TIER SYNCHRONIZED: ${planName}`);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 2500);
   };
 
   const plans = [
@@ -133,6 +149,7 @@ export default function ManagePlanRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}
@@ -178,7 +195,8 @@ export default function ManagePlanRoute() {
 
         {/* Billing Cycle Switcher */}
         <View style={styles.cycleContainer}>
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.8}
             style={[
               styles.cycleTab,
               billingCycle === "monthly" && styles.cycleTabActive,
@@ -193,9 +211,10 @@ export default function ManagePlanRoute() {
             >
               MONTHLY
             </Text>
-          </Pressable>
+          </TouchableOpacity>
 
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.8}
             style={[
               styles.cycleTab,
               billingCycle === "annual" && styles.cycleTabActive,
@@ -213,7 +232,7 @@ export default function ManagePlanRoute() {
             <View style={styles.discountBadge}>
               <Text style={styles.discountText}>SAVE 25%</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         {/* Plans List */}
@@ -295,11 +314,9 @@ export default function ManagePlanRoute() {
                 </View>
 
                 {/* Call to action button */}
-                <Pressable
-                  style={({ pressed }) => [
-                    styles.ctaBtn,
-                    pressed && styles.btnPressed,
-                  ]}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.ctaBtn}
                   onPress={() => handleSelectPlan(plan.id)}
                 >
                   {plan.isCurrent ? (
@@ -322,12 +339,20 @@ export default function ManagePlanRoute() {
                       <Text style={styles.ctaBtnText}>{plan.cta}</Text>
                     </LinearGradient>
                   )}
-                </Pressable>
+                </TouchableOpacity>
               </View>
             );
           })}
         </View>
       </ScrollView>
+
+      {/* Floating Cyber HUD Toast */}
+      {toastMessage && (
+        <View style={styles.savedToast}>
+          <Check size={16} color="#00f2fe" style={{ marginRight: 8 }} />
+          <Text style={styles.savedToastText}>{toastMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -577,5 +602,33 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "800",
     letterSpacing: 1.2,
+  },
+  savedToast: {
+    position: "absolute",
+    bottom: 30,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(7, 10, 17, 0.95)",
+    borderWidth: 1.5,
+    borderColor: "#00f2fe",
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    zIndex: 9999,
+    elevation: 12,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  savedToastText: {
+    color: "#00f2fe",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.6,
   },
 });

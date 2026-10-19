@@ -36,11 +36,7 @@ export const WorkoutLibraryCard: React.FC<WorkoutLibraryCardProps> = ({
   return (
     <Pressable
       onPress={handlePress}
-      style={({ pressed }) => [
-        styles.card,
-        pressed && styles.cardPressed,
-        style,
-      ]}
+      style={[styles.card, style]}
       accessibilityRole="button"
       accessibilityLabel={`${item.title} - ${item.badge}`}
       testID={testID}
@@ -147,15 +143,18 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "700",
-    letterSpacing: 0.2,
+    fontSize: 16,
+    fontWeight: "800",
+    fontFamily: "monospace",
+    letterSpacing: 0.5,
     marginBottom: 5,
+    textTransform: "uppercase",
   },
   subtitle: {
     color: "#8E9AA8",
-    fontSize: 12,
-    lineHeight: 16.5,
-    fontWeight: "400",
+    fontSize: 11.5,
+    lineHeight: 16,
+    fontFamily: "monospace",
+    fontWeight: "500",
   },
 });

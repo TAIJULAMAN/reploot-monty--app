@@ -85,9 +85,9 @@ export function ProfileFormInputs() {
 
 const styles = StyleSheet.create({
   formGroup: {
-    gap: 12,
-    marginTop: 20,
-    marginBottom: 30,
+    gap: 10,
+    marginTop: 6,
+    marginBottom: 16,
   },
   inputCard: {
     height: 52,

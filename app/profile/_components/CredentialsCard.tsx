@@ -11,7 +11,11 @@ import {
   View,
 } from "react-native";
 
-export function CredentialsCard() {
+interface CredentialsCardProps {
+  onPasswordUpdated?: () => void;
+}
+
+export function CredentialsCard({ onPasswordUpdated }: CredentialsCardProps = {}) {
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
 
   const triggerHaptic = () => {
@@ -45,15 +49,13 @@ export function CredentialsCard() {
             ))}
           </View>
         </View>
-        <Pressable
-          style={({ pressed }) => [
-            styles.actionBtn,
-            pressed && { opacity: 0.7 },
-          ]}
+        <TouchableOpacity
+          style={styles.actionBtn}
+          activeOpacity={0.75}
           onPress={openPasswordModal}
         >
           <Text style={styles.actionBtnText}>UPDATE</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
       {/* Password Modal */}
       <Modal
@@ -97,6 +99,9 @@ export function CredentialsCard() {
                 onPress={() => {
                   triggerHaptic();
                   setPasswordModalVisible(false);
+                  if (onPasswordUpdated) {
+                    onPasswordUpdated();
+                  }
                 }}
               >
                 <Text style={styles.modalSaveText}>UPDATE</Text>

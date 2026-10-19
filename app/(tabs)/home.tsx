@@ -23,7 +23,7 @@ export default function HomeTabRoute() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
         <LinearGradient
           colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
           locations={[0, 0.25, 0.65, 1]}
@@ -31,7 +31,7 @@ export default function HomeTabRoute() {
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+        <Svg style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
           <SvgLine
             x1="420"
             y1="-20"
@@ -60,6 +60,7 @@ export default function HomeTabRoute() {
       </View>
       <WorkoutHeader transparent={true} />
       <ScrollView
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
       >
@@ -79,7 +80,7 @@ export default function HomeTabRoute() {
       >
         <Image
           source={require("../../assets/coachOnline/floatingButton.png")}
-          style={{ width: 120, height: 120 }}
+          style={{ width: 100, height: 100 }}
           resizeMode="contain"
         />
       </Pressable>
@@ -91,6 +92,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#090A10",
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContainer: {
     paddingBottom: 110,

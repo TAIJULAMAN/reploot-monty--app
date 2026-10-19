@@ -1,6 +1,9 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   LayoutChangeEvent,
@@ -11,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Line as SvgLine } from "react-native-svg";
 import {
   WORKOUT_LIBRARY_CATEGORIES,
   WorkoutCategoryItem,
@@ -27,12 +31,13 @@ export interface WorkoutLibraryScreenProps {
 export const WorkoutLibraryScreen: React.FC<WorkoutLibraryScreenProps> = ({
   onBack,
   onSelectCategory,
-  subtitle = "Browse all available gym routines.",
+  subtitle = "Browse all available gym routines & exercise protocols.",
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [containerWidth, setContainerWidth] = useState<number>(0);
-  const [selectedCategory, setSelectedCategory] = useState<WorkoutCategoryItem | null>(null);
+  const [selectedCategory, setSelectedCategory] =
+    useState<WorkoutCategoryItem | null>(null);
 
   const handleBack = () => {
     if (Platform.OS !== "web") {
@@ -65,7 +70,9 @@ export const WorkoutLibraryScreen: React.FC<WorkoutLibraryScreenProps> = ({
   };
 
   if (selectedCategory?.id === "chest") {
-    return <WorkoutLibraryDetailScreen onBack={() => setSelectedCategory(null)} />;
+    return (
+      <WorkoutLibraryDetailScreen onBack={() => setSelectedCategory(null)} />
+    );
   }
 
   const onLayoutContainer = (e: LayoutChangeEvent) => {
@@ -81,20 +88,49 @@ export const WorkoutLibraryScreen: React.FC<WorkoutLibraryScreenProps> = ({
 
   return (
     <View style={styles.screen}>
-      <CustomHeader showBackButton onPressBack={handleBack} />
+      <StatusBar style="light" />
+
+      <CustomHeader
+        transparent={true}
+        showBackButton={true}
+        onPressBack={handleBack}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingBottom: Math.max(insets.bottom + 24, 40),
+            paddingBottom: Math.max(insets.bottom + 32, 50),
           },
         ]}
       >
-        {/* Glowing Hero Title */}
-        <View style={styles.heroSection}>
-          <Text style={styles.heroTitle}>{"WORKOUT\nLIBRARY"}</Text>
+        {/* Standardized Title Section with Masked Gradient Title (progress.tsx / GenericWorkoutDetailScreen pattern) */}
+        <View style={styles.titleSection}>
+          <Text style={styles.categoryBadge}>EXERCISE DATABASE</Text>
+          <View style={styles.maskedTitleWrapper}>
+            <MaskedView
+              style={styles.maskedTitleView}
+              maskElement={
+                <View style={styles.maskWrapper}>
+                  <Text
+                    style={styles.mainTitle}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    WORKOUT LIBRARY
+                  </Text>
+                </View>
+              }
+            >
+              <LinearGradient
+                colors={["#00f2fe", "#4facfe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </MaskedView>
+          </View>
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
 
@@ -124,33 +160,53 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 24,
+    paddingTop: 10,
   },
-  heroSection: {
-    marginBottom: 26,
+  titleSection: {
+    marginBottom: 22,
+    marginTop: 4,
   },
-  heroTitle: {
-    color: "#FFFFFF",
-    fontSize: 42,
-    lineHeight: 46,
-    fontWeight: "900",
-    letterSpacing: 0.5,
+  categoryBadge: {
+    color: "#44EAC3",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    fontFamily: "monospace",
     textTransform: "uppercase",
-    textShadowColor: "rgba(68, 234, 195, 0.55)",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 18,
-    ...(Platform.OS === "web"
-      ? ({
-          filter: "drop-shadow(0 0 16px rgba(68, 234, 195, 0.5))",
-        } as any)
-      : {}),
+    marginBottom: 8,
+  },
+  maskedTitleWrapper: {
+    height: 44,
+    width: "100%",
+    marginBottom: 6,
+  },
+  maskedTitleView: {
+    flex: 1,
+    width: "100%",
+  },
+  maskWrapper: {
+    backgroundColor: "transparent",
+    flex: 1,
+    justifyContent: "center",
+  },
+  gradient: {
+    flex: 1,
+  },
+  mainTitle: {
+    color: "#FFFFFF",
+    fontSize: 32,
+    lineHeight: 38,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
   },
   subtitle: {
-    color: "#8E95A5",
-    fontSize: 15,
-    lineHeight: 20,
-    fontWeight: "400",
-    marginTop: 8,
+    color: "#94A3B8",
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
   gridContainer: {
     flexDirection: "row",

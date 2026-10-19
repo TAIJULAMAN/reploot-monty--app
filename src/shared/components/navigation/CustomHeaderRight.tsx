@@ -33,10 +33,7 @@ export const CustomHeaderRight = ({
       {showSearch && (
         <Pressable
           onPress={handleSearchPress}
-          style={({ pressed }) => [
-            styles.iconButton,
-            pressed && styles.pressedOpacity,
-          ]}
+          style={styles.iconButton}
           accessibilityRole="button"
           accessibilityLabel="Search"
         >
@@ -47,10 +44,7 @@ export const CustomHeaderRight = ({
       {showNotifications && (
         <Pressable
           onPress={handleNotificationsPress}
-          style={({ pressed }) => [
-            styles.iconButton,
-            pressed && styles.pressedOpacity,
-          ]}
+          style={styles.iconButton}
           accessibilityRole="button"
           accessibilityLabel="Notifications"
         >
@@ -64,10 +58,7 @@ export const CustomHeaderRight = ({
       {showAvatar && (
         <Pressable
           onPress={handleAvatarPress}
-          style={({ pressed }) => [
-            styles.avatarContainer,
-            pressed && styles.pressedOpacity,
-          ]}
+          style={styles.avatarContainer}
           accessibilityRole="button"
           accessibilityLabel="User profile"
         >

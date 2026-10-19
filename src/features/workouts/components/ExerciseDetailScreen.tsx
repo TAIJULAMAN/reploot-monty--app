@@ -1,4 +1,9 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  markExerciseComplete,
+  unmarkExerciseComplete,
+} from "@/store/slices/workoutSlice";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
@@ -56,10 +61,15 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   // Selected Step Tab (0, 1, 2)
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [isMarkedDone, setIsMarkedDone] = useState<boolean>(false);
+  const reduxCompleted = useAppSelector((state) =>
+    state.workout?.completedExerciseIds.includes(exerciseData.id)
+  );
+  const [internalDone, setInternalDone] = useState<boolean>(false);
+  const isMarkedDone = reduxCompleted ?? internalDone;
 
   // Dynamic Sets State
   const [sets, setSets] = useState<SetDetailItem[]>(exerciseData.sets);
@@ -118,7 +128,13 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
         () => {},
       );
     }
-    setIsMarkedDone((prev) => !prev);
+    if (isMarkedDone) {
+      dispatch(unmarkExerciseComplete(exerciseData.id));
+      setInternalDone(false);
+    } else {
+      dispatch(markExerciseComplete(exerciseData.id));
+      setInternalDone(true);
+    }
     onMarkDone?.();
   };
 
@@ -290,10 +306,7 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
 
         {/* Primary Action 1: START EXERCISE (Gradient CTA) */}
         <Pressable
-          style={({ pressed }) => [
-            styles.startExerciseButton,
-            pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] },
-          ]}
+          style={styles.startExerciseButton}
           onPress={handleStartExercise}
         >
           <LinearGradient
@@ -311,10 +324,7 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
 
         {/* Secondary Action 2: VIEW FULL WORKOUT */}
         <Pressable
-          style={({ pressed }) => [
-            styles.secondaryOutlineButton,
-            pressed && { opacity: 0.8 },
-          ]}
+          style={styles.secondaryOutlineButton}
           onPress={handleViewFullWorkout}
         >
           <Eye size={17} color="#FFFFFF" />
@@ -323,10 +333,9 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
 
         {/* Secondary Action 3: MARK AS DONE */}
         <Pressable
-          style={({ pressed }) => [
+          style={[
             styles.markDoneButton,
             isMarkedDone && styles.markDoneButtonActive,
-            pressed && { opacity: 0.8 },
           ]}
           onPress={handleToggleMarkDone}
         >
@@ -624,10 +633,7 @@ export const ExerciseDetailScreen: React.FC<ExerciseDetailScreenProps> = ({
             </View>
 
             <Pressable
-              style={({ pressed }) => [
-                styles.setRestButton,
-                pressed && { opacity: 0.8 },
-              ]}
+              style={styles.setRestButton}
               onPress={() => {
                 if (Platform.OS !== "web") {
                   Haptics.notificationAsync(

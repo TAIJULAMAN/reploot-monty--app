@@ -15,13 +15,21 @@ import { setOnline, setHasSeenOnboarding } from "@/store/slices/appSlice";
 import { mockUser } from "@/mocks/user.mock";
 import { queryKeys } from "@/services/api/queryKeys";
 import { colors } from "@/theme/colors";
-import { Sparkles, CheckCircle, Zap, Shield, ChevronRight } from "lucide-react-native";
+import {
+  Sparkles,
+  CheckCircle,
+  Zap,
+  Shield,
+  ChevronRight,
+} from "lucide-react-native";
 
 export default function DevVerificationScreen() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isOnline = useAppSelector((state) => state.app.isOnline);
-  const hasSeenOnboarding = useAppSelector((state) => state.app.hasSeenOnboarding);
+  const hasSeenOnboarding = useAppSelector(
+    (state) => state.app.hasSeenOnboarding,
+  );
 
   // Demonstrate React Query server-state caching with mock data
   const { data: user, isLoading } = useQuery({
@@ -50,11 +58,162 @@ export default function DevVerificationScreen() {
         </View>
 
         <AppText variant="displayXL" color="primary" style={styles.brandTitle}>
-          KINETQX
+          REPLOOT
         </AppText>
         <AppText variant="label" color="accent" style={styles.tagline}>
           TRAIN SMARTER WITH AI
         </AppText>
+      </View>
+
+      {/* Screen Flow Navigator */}
+      <View style={{ marginBottom: 16, gap: 8 }}>
+        <AppText variant="label" color="accent">
+          SCREEN FLOW AUDIT & PREVIEW
+        </AppText>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Onboarding"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/(onboarding)" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Sign In"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/sign-in" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Sign Up"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/sign-up" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Forgot Pass"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/forgot-password" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Profile Setup (5 Steps)"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile-setup" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Home Tabs"
+            variant="primary"
+            size="sm"
+            onPress={() => router.push("/(tabs)/home" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="AI Coach"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/coach" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Edit Profile"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/edit-profile" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Account Settings"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/account-settings" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Fitness Profile"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/fitness-profile" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Manage Plan"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/manage-plan" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Payment History"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/payment-history" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Global Rankings"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/global-rankings" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Legal & About"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/profile/about" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Weekly Progress"
+            variant="primary"
+            size="sm"
+            onPress={() => router.push("/weekly-progress" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Weight Progress"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/weight-progress" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            title="Workout Calendar"
+            variant="primary"
+            size="sm"
+            onPress={() => router.push("/workout-calendar" as any)}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Workout Settings"
+            variant="secondary"
+            size="sm"
+            onPress={() => router.push("/settings" as any)}
+            style={{ flex: 1 }}
+          />
+        </View>
       </View>
 
       {/* System Status Verification Card */}
@@ -70,7 +229,10 @@ export default function DevVerificationScreen() {
           <VerificationItem label="Expo Router & Navigation Tree" ok />
           <VerificationItem label="NativeWind & Tailwind Tokens" ok />
           <VerificationItem label="Expo Linear Gradients & Glows" ok />
-          <VerificationItem label="TanStack React Query Cache" ok={!isLoading} />
+          <VerificationItem
+            label="TanStack React Query Cache"
+            ok={!isLoading}
+          />
           <VerificationItem label="Zustand Client State Engine" ok />
           <VerificationItem label="Hardware Camera & AI Boundaries" ok />
           <VerificationItem label="SecureStore Keychain / Keystore" ok />
@@ -90,17 +252,16 @@ export default function DevVerificationScreen() {
           <AppText variant="bodyMD" color="secondary">
             Onboarding Completed:
           </AppText>
-          <AppText
-            variant="label"
-            color={hasSeenOnboarding ? "mint" : "muted"}
-          >
+          <AppText variant="label" color={hasSeenOnboarding ? "mint" : "muted"}>
             {hasSeenOnboarding ? "COMPLETED" : "NOT STARTED"}
           </AppText>
         </View>
 
         <View style={styles.buttonRow}>
           <Button
-            title={hasSeenOnboarding ? "Reset Onboarding" : "Complete Onboarding"}
+            title={
+              hasSeenOnboarding ? "Reset Onboarding" : "Complete Onboarding"
+            }
             variant="secondary"
             size="sm"
             onPress={() => setHasSeenOnboarding(!hasSeenOnboarding)}
@@ -159,7 +320,7 @@ export default function DevVerificationScreen() {
         <RoutePreviewButton
           title="Phase 3: Profile Setup (5 Steps)"
           subtitle="Body metrics, goals, workout style"
-          onPress={() => router.push("/(profile-setup)")}
+          onPress={() => router.push("/profile-setup" as any)}
         />
         <RoutePreviewButton
           title="Phase 4: Main Tabs (Home, Nutrition...)"
@@ -181,6 +342,16 @@ export default function DevVerificationScreen() {
           subtitle="Accurate design with 8 categories and library images"
           onPress={() => router.push("/workouts/library")}
         />
+        <RoutePreviewButton
+          title="Workout Calendar"
+          subtitle="Drag & drop scheduling, monthly cycles, routines"
+          onPress={() => router.push("/workout-calendar" as any)}
+        />
+        <RoutePreviewButton
+          title="Workout Settings"
+          subtitle="Training frequency, location, experience, goals & styles"
+          onPress={() => router.push("/settings" as any)}
+        />
       </View>
     </Screen>
   );
@@ -189,8 +360,15 @@ export default function DevVerificationScreen() {
 function VerificationItem({ label, ok }: { label: string; ok: boolean }) {
   return (
     <View style={styles.verifyItem}>
-      <CheckCircle size={16} color={ok ? colors.brand.mint : colors.text.muted} />
-      <AppText variant="bodySM" color={ok ? "primary" : "muted"} style={styles.verifyLabel}>
+      <CheckCircle
+        size={16}
+        color={ok ? colors.brand.mint : colors.text.muted}
+      />
+      <AppText
+        variant="bodySM"
+        color={ok ? "primary" : "muted"}
+        style={styles.verifyLabel}
+      >
         {label}
       </AppText>
     </View>

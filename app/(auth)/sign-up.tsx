@@ -42,12 +42,12 @@ export default function SignUpRoute() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace("/(auth)/sign-in");
+      router.replace("/sign-in" as any);
     }
   };
 
   const handleCreateAccount = () => {
-    router.push("/(profile-setup)");
+    router.push("/profile-setup" as any);
     requestAnimationFrame(() => {
       try {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -79,11 +79,7 @@ export default function SignUpRoute() {
     } catch {
       // Haptics fallback
     }
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/(auth)/sign-in");
-    }
+    router.replace("/sign-in" as any);
   };
 
   return (
@@ -195,10 +191,7 @@ export default function SignUpRoute() {
                 <View style={styles.socialButtonWrapper}>
                   <Pressable
                     onPress={handleGoogleSignUp}
-                    style={({ pressed }) => [
-                      styles.fullWidth,
-                      pressed && styles.buttonPressed,
-                    ]}
+                    style={styles.fullWidth}
                   >
                     <View style={styles.socialButtonContainer}>
                       <View style={styles.socialIconBox}>
@@ -213,10 +206,7 @@ export default function SignUpRoute() {
                 <View style={styles.appleButtonWrapper}>
                   <Pressable
                     onPress={handleAppleSignUp}
-                    style={({ pressed }) => [
-                      styles.fullWidth,
-                      pressed && styles.buttonPressed,
-                    ]}
+                    style={styles.fullWidth}
                   >
                     <View style={styles.socialButtonContainer}>
                       <View style={styles.socialIconBox}>
@@ -236,7 +226,6 @@ export default function SignUpRoute() {
             <Pressable
               onPress={handleGoToLogin}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={({ pressed }) => [pressed && styles.buttonPressed]}
             >
               <Text style={styles.loginLink}>Login</Text>
             </Pressable>

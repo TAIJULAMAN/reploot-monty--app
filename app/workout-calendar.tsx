@@ -26,8 +26,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
+import Svg, { Line as SvgLine } from "react-native-svg";
 import {
   Gesture,
   GestureDetector,
@@ -265,13 +267,13 @@ function DraggableSplitChip({
 
   return (
     <GestureDetector gesture={panGesture}>
-      <Pressable
+      <TouchableOpacity
+        activeOpacity={0.75}
         onPress={onPress}
-        style={({ pressed }) => [
+        style={[
           styles.splitBadge,
           { borderColor: split.color },
           isActive && styles.splitBadgeActive,
-          pressed && { opacity: 0.8 },
         ]}
       >
         <LinearGradient
@@ -303,7 +305,7 @@ function DraggableSplitChip({
             </View>
           )}
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
     </GestureDetector>
   );
 }
@@ -386,8 +388,12 @@ export default function WorkoutCalendarScreen() {
     });
   };
 
+  const [scheduleFeedback, setScheduleFeedback] = useState(false);
+
   const prevMonthIdx = currentMonthIdx === 0 ? 11 : currentMonthIdx - 1;
   const prevMonthName = MONTH_NAMES[prevMonthIdx];
+  const nextMonthIdx = currentMonthIdx === 11 ? 0 : currentMonthIdx + 1;
+  const nextMonthName = MONTH_NAMES[nextMonthIdx];
 
   // Base calendar data merged with custom scheduled items
   const calendarData = useMemo(() => {
@@ -569,6 +575,43 @@ export default function WorkoutCalendarScreen() {
     <GestureHandlerRootView style={styles.container}>
       <StatusBar style="light" />
 
+      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <LinearGradient
+          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
+          locations={[0, 0.25, 0.65, 1]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SvgLine
+            x1="420"
+            y1="-20"
+            x2="-40"
+            y2="440"
+            stroke="rgba(255, 255, 255, 0.035)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="460"
+            y1="260"
+            x2="-40"
+            y2="760"
+            stroke="rgba(56, 189, 248, 0.04)"
+            strokeWidth="1"
+          />
+          <SvgLine
+            x1="480"
+            y1="560"
+            x2="-40"
+            y2="1080"
+            stroke="rgba(56, 237, 216, 0.04)"
+            strokeWidth="1"
+          />
+        </Svg>
+      </View>
+
       {/* Top Navigation Bar with Avatar & Actions */}
       <CustomHeader
         titleVariant="text"
@@ -578,12 +621,15 @@ export default function WorkoutCalendarScreen() {
         showNotifications={true}
         showAvatar={true}
         transparent={true}
+        onPressBack={() =>
+          router.canGoBack() ? router.back() : router.replace("/(tabs)/home")
+        }
       />
 
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 32, 48) },
+          { paddingBottom: Math.max(insets.bottom + 60, 80) },
         ]}
         showsVerticalScrollIndicator={false}
         scrollEnabled={!isDragging}
@@ -597,11 +643,7 @@ export default function WorkoutCalendarScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     WORKOUT CALENDAR
                   </Text>
                 </View>
@@ -634,16 +676,17 @@ export default function WorkoutCalendarScreen() {
             </View>
 
             {activeSelectedSplit && (
-              <Pressable
+              <TouchableOpacity
                 onPress={() => {
                   triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
                   setActiveSelectedSplit(null);
                 }}
                 style={styles.clearActiveBtn}
+                activeOpacity={0.7}
               >
                 <X size={12} color="#94A3B8" />
                 <Text style={styles.clearActiveText}>CLEAR</Text>
-              </Pressable>
+              </TouchableOpacity>
             )}
           </View>
 
@@ -718,29 +761,29 @@ export default function WorkoutCalendarScreen() {
 
         {/* Month Selector Row */}
         <View style={styles.monthSelectorRow}>
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.75}
             onPress={handlePrevMonth}
-            style={({ pressed }) => [
-              styles.monthBtnPrev,
-              pressed && { opacity: 0.75 },
-            ]}
+            style={styles.monthBtnPrev}
           >
             <ChevronLeft color="#94A3B8" size={16} />
             <Text style={styles.monthBtnPrevText}>{prevMonthName}</Text>
-          </Pressable>
+          </TouchableOpacity>
 
-          <Pressable
-            onPress={handleNextMonth}
-            style={({ pressed }) => [
-              styles.monthBtnCurrent,
-              pressed && { opacity: 0.8 },
-            ]}
-          >
+          <View style={styles.monthBtnCurrent}>
             <Text style={styles.monthBtnCurrentText}>
               {`${MONTH_NAMES[currentMonthIdx]} ${currentYear}`}
             </Text>
-            <ChevronRight color="#C5C0FF" size={16} />
-          </Pressable>
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.75}
+            onPress={handleNextMonth}
+            style={styles.monthBtnNext}
+          >
+            <Text style={styles.monthBtnNextText}>{nextMonthName}</Text>
+            <ChevronRight color="#94A3B8" size={16} />
+          </TouchableOpacity>
         </View>
 
         {/* Calendar Grid Container with Vibrant Gradient Border */}
@@ -818,7 +861,8 @@ export default function WorkoutCalendarScreen() {
 
                 return (
                   <View key={index} style={styles.cellContainer}>
-                    <Pressable
+                    <TouchableOpacity
+                      activeOpacity={0.75}
                       onPress={() => handleCellPress(item)}
                       disabled={!item.currentMonth}
                       style={{ alignItems: "center" }}
@@ -899,7 +943,7 @@ export default function WorkoutCalendarScreen() {
                       >
                         {item.label ? item.label : " "}
                       </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                   </View>
                 );
               })}
@@ -937,31 +981,42 @@ export default function WorkoutCalendarScreen() {
           </View>
         </LinearGradient>
 
-        {/* Update Schedule Button */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.updateButtonContainer,
-            pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] },
-          ]}
+        {/* Bottom Update Schedule Button */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.updateButtonContainer}
           onPress={() => {
             triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-            router.push("/workouts");
+            setScheduleFeedback(true);
+            setTimeout(() => {
+              setScheduleFeedback(false);
+            }, 3000);
           }}
         >
           <LinearGradient
-            colors={["#1B648C", "#3FA8DD"]}
+            colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.updateButton}
           >
-            <RefreshCw color="#FFFFFF" size={20} />
+            <RefreshCw color="#050811" size={18} />
             <Text style={styles.updateButtonText}>
-              UPDATE MY WORKOUT{"\n"}SCHEDULE
+              UPDATE WORKOUT SCHEDULE
             </Text>
-            <ArrowRight color="#FFFFFF" size={20} />
+            <ArrowRight color="#050811" size={18} />
           </LinearGradient>
-        </Pressable>
+        </TouchableOpacity>
       </ScrollView>
+
+      {/* Floating HUD Sync Toast */}
+      {scheduleFeedback && (
+        <View style={styles.floatingToast}>
+          <Check size={16} color="#00f2fe" style={{ marginRight: 8 }} />
+          <Text style={styles.floatingToastText}>
+            WORKOUT SCHEDULE SYNCHRONIZED
+          </Text>
+        </View>
+      )}
 
       {/* Floating Drag Item Follower (Powered by Reanimated) */}
       {activeDragSplit && (
@@ -1007,12 +1062,13 @@ export default function WorkoutCalendarScreen() {
                     : "No routine assigned for this date"}
                 </Text>
               </View>
-              <Pressable
+              <TouchableOpacity
                 onPress={() => setDateModalCell(null)}
                 style={styles.modalCloseBtn}
+                activeOpacity={0.7}
               >
                 <X size={16} color="#94A3B8" />
-              </Pressable>
+              </TouchableOpacity>
             </View>
 
             <Text style={styles.modalSectionLabel}>ASSIGN WORKOUT SPLIT:</Text>
@@ -1022,21 +1078,19 @@ export default function WorkoutCalendarScreen() {
                 const isCurrent = dateModalCell?.label === split.name;
 
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={split.id}
+                    activeOpacity={0.75}
                     onPress={() => {
                       if (dateModalCell) {
                         applyWorkoutToDate(dateModalCell.date, split);
                         setDateModalCell(null);
                       }
                     }}
-                    style={({ pressed }) => [
+                    style={[
                       styles.modalSplitItem,
                       { borderColor: split.color },
-                      isCurrent && {
-                        backgroundColor: "rgba(56, 189, 248, 0.15)",
-                      },
-                      pressed && { opacity: 0.75 },
+                      isCurrent && styles.modalSplitItemActive,
                     ]}
                   >
                     <View style={styles.modalSplitLeft}>
@@ -1056,13 +1110,14 @@ export default function WorkoutCalendarScreen() {
                     ) : (
                       <ArrowRight size={14} color="#64748B" />
                     )}
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               })}
             </View>
 
             {dateModalCell?.label && (
-              <Pressable
+              <TouchableOpacity
+                activeOpacity={0.75}
                 onPress={() => {
                   if (dateModalCell) {
                     removeWorkoutFromDate(dateModalCell.date);
@@ -1073,7 +1128,7 @@ export default function WorkoutCalendarScreen() {
               >
                 <Trash2 size={14} color="#F43F5E" />
                 <Text style={styles.modalClearText}>REMOVE WORKOUT</Text>
-              </Pressable>
+              </TouchableOpacity>
             )}
           </Pressable>
         </Pressable>
@@ -1085,7 +1140,7 @@ export default function WorkoutCalendarScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1D1D23",
+    backgroundColor: "#070A11",
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -1115,11 +1170,11 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 26,
+    lineHeight: 32,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
+    letterSpacing: 0.8,
     textTransform: "uppercase",
   },
   subtitle: {
@@ -1133,7 +1188,7 @@ const styles = StyleSheet.create({
 
   /* Drag Tray Card */
   trayCard: {
-    backgroundColor: "rgba(24, 24, 29, 0.95)",
+    backgroundColor: "rgba(17, 20, 28, 0.95)",
     borderRadius: 20,
     padding: 14,
     borderWidth: 1,
@@ -1246,39 +1301,61 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
+    gap: 8,
   },
   monthBtnPrev: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2E2E36",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    paddingHorizontal: 12,
+    paddingVertical: 9,
     borderRadius: 12,
   },
   monthBtnPrevText: {
     color: "#94A3B8",
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: "monospace",
     fontWeight: "800",
     marginLeft: 4,
   },
   monthBtnCurrent: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "rgba(80, 53, 127, 0.25)",
     borderWidth: 1,
-    borderColor: "#50357F",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    borderColor: "rgba(112, 123, 255, 0.4)",
+    paddingHorizontal: 10,
+    paddingVertical: 9,
     borderRadius: 12,
   },
   monthBtnCurrentText: {
     color: "#C5C0FF",
-    fontSize: 13,
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.5,
+    textAlign: "center",
+  },
+  monthBtnNext: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 12,
+  },
+  monthBtnNextText: {
+    color: "#94A3B8",
+    fontSize: 12,
     fontFamily: "monospace",
     fontWeight: "800",
-    marginRight: 8,
-    letterSpacing: 0.5,
+    marginRight: 4,
   },
 
   /* Calendar Card */
@@ -1288,7 +1365,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   calendarInner: {
-    backgroundColor: "#18181D",
+    backgroundColor: "#11141C",
     borderRadius: 22.5,
     padding: 16,
     paddingTop: 18,
@@ -1390,10 +1467,10 @@ const styles = StyleSheet.create({
 
   /* Bottom CTA */
   updateButtonContainer: {
-    borderRadius: 20,
+    borderRadius: 18,
     overflow: "hidden",
     elevation: 8,
-    shadowColor: "#1B648C",
+    shadowColor: "#00f2fe",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 10,
@@ -1402,18 +1479,45 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 22,
-    paddingVertical: 15,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 18,
   },
   updateButtonText: {
-    color: "#FFFFFF",
-    fontSize: 14,
+    color: "#050811",
+    fontSize: 13,
     fontFamily: "monospace",
     fontWeight: "900",
     textAlign: "center",
     letterSpacing: 0.8,
-    lineHeight: 18,
+  },
+  floatingToast: {
+    position: "absolute",
+    bottom: 92,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(7, 10, 17, 0.95)",
+    borderWidth: 1.5,
+    borderColor: "#00f2fe",
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    zIndex: 9999,
+    elevation: 12,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  floatingToastText: {
+    color: "#00f2fe",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.6,
   },
 
   /* Floating Drag Preview */
@@ -1449,10 +1553,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "#18181D",
+    backgroundColor: "#11141C",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 20,
+    paddingBottom: 34,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
   },
@@ -1504,7 +1609,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "rgba(255, 255, 255, 0.03)",
   },
+  modalSplitItemActive: {
+    backgroundColor: "rgba(56, 189, 248, 0.15)",
+  },
   modalSplitLeft: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,

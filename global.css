@@ -7,3 +7,12 @@
   outline: none !important;
   box-shadow: none !important;
 }
+
+html,
+body,
+#root {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100%;
+}
+

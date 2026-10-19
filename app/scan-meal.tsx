@@ -58,33 +58,51 @@ export default function ScanMealScreen() {
         </Text>
 
         <Pressable
-          onPress={() => {
+          onPress={async () => {
             triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-            // Bypass camera for simulator testing and go straight to analysis
-            router.push("/meal-analysis");
+            try {
+              const res = await requestPermission();
+              if (!res.granted) {
+                router.push("/meal-analysis");
+              }
+            } catch {
+              router.push("/meal-analysis");
+            }
           }}
           style={styles.grantBtn}
         >
           <LinearGradient
-            colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+            colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={styles.grantBtnGradient}
           >
-            <Text style={styles.grantBtnText}>GRANT CAMERA PERMISSION</Text>
+            <Text style={styles.grantBtnText}>INITIALIZE CAMERA SENSOR</Text>
           </LinearGradient>
+        </Pressable>
+
+        <Pressable
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            router.push("/meal-analysis");
+          }}
+          style={styles.demoBypassBtn}
+        >
+          <Text style={styles.demoBypassText}>
+            SIMULATE MEAL CAPTURE (EMULATOR)
+          </Text>
         </Pressable>
 
         <Pressable
           onPress={() => {
             triggerHaptic();
             if (router.canGoBack()) router.back();
-            else router.replace("/");
+            else router.replace("/(tabs)/nutrition");
           }}
           style={styles.backPlainBtn}
         >
-          <Text style={{ color: "white", fontFamily: "JetBrainsMono_700Bold" }}>
-            Go Back
+          <Text style={styles.backPlainBtnText}>
+            RETURN TO NUTRITION
           </Text>
         </Pressable>
       </View>
@@ -154,12 +172,9 @@ export default function ScanMealScreen() {
               onPress={() => {
                 triggerHaptic();
                 if (router.canGoBack()) router.back();
-                else router.replace("/");
+                else router.replace("/(tabs)/nutrition");
               }}
-              style={({ pressed }) => [
-                styles.backButton,
-                pressed && { opacity: 0.7 },
-              ]}
+              style={styles.backButton}
             >
               <ArrowLeft color="#38BDF8" size={20} />
             </Pressable>
@@ -214,10 +229,7 @@ export default function ScanMealScreen() {
             {/* Gallery Picker */}
             <View style={styles.controlItem}>
               <Pressable
-                style={({ pressed }) => [
-                  styles.sideButton,
-                  pressed && { opacity: 0.75, transform: [{ scale: 0.96 }] },
-                ]}
+                style={styles.sideButton}
                 onPress={pickImage}
               >
                 <ImageIcon color="#FFFFFF" size={20} />
@@ -228,10 +240,7 @@ export default function ScanMealScreen() {
             {/* Shutter Button */}
             <View style={styles.shutterWrapper}>
               <Pressable
-                style={({ pressed }) => [
-                  styles.shutterBtnOuter,
-                  pressed && { transform: [{ scale: 0.94 }] },
-                ]}
+                style={styles.shutterBtnOuter}
                 onPress={takePicture}
               >
                 <LinearGradient
@@ -251,10 +260,7 @@ export default function ScanMealScreen() {
             {/* Flash Toggle */}
             <View style={styles.controlItem}>
               <Pressable
-                style={({ pressed }) => [
-                  styles.sideButton,
-                  pressed && { opacity: 0.75, transform: [{ scale: 0.96 }] },
-                ]}
+                style={styles.sideButton}
                 onPress={toggleFlash}
               >
                 {flash === "off" ? (
@@ -337,6 +343,24 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "800",
     letterSpacing: 1,
+  },
+  demoBypassBtn: {
+    width: "100%",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.4)",
+    backgroundColor: "rgba(15, 23, 42, 0.6)",
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  demoBypassText: {
+    color: "#38BDF8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "700",
+    letterSpacing: 0.8,
   },
   backPlainBtn: {
     paddingVertical: 12,

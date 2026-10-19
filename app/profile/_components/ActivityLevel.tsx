@@ -1,6 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
+import React from "react";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ActivityLevelProps {
   activityLevel: string;
@@ -11,6 +12,13 @@ export function ActivityLevel({
   activityLevel,
   setActivityLevel,
 }: ActivityLevelProps) {
+  const handleSelect = (level: string) => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    setActivityLevel(level);
+  };
+
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -26,13 +34,14 @@ export function ActivityLevel({
         {["beginner", "intermediate", "advanced"].map((level) => {
           const isSelected = activityLevel === level;
           return (
-            <Pressable
+            <TouchableOpacity
               key={level}
+              activeOpacity={0.75}
               style={[
                 styles.activityBtn,
                 isSelected && styles.activityBtnSelected,
               ]}
-              onPress={() => setActivityLevel(level)}
+              onPress={() => handleSelect(level)}
             >
               <Text
                 style={[
@@ -42,7 +51,7 @@ export function ActivityLevel({
               >
                 {level.toUpperCase()}
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -79,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   activityBtnSelected: {
-    backgroundColor: "#3A4341",
+    backgroundColor: "#0284C7",
   },
   activityText: {
     color: "#fff",

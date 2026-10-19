@@ -1,11 +1,17 @@
+import { useAppDispatch } from "@/store/hooks";
+import {
+  markExerciseComplete,
+  setCurrentExerciseIndex as setReduxExerciseIndex,
+} from "@/store/slices/workoutSlice";
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import {
   WORKOUT_PATH_DETAILS_MAP,
   WorkoutExerciseItem,
 } from "../data/workoutPathDetailData";
+import { AiWorkoutCameraRecordScreen } from "./AiWorkoutCameraRecordScreen";
 import { AiWorkoutLiveScreen } from "./AiWorkoutLiveScreen";
 import { CountdownScreen } from "./CountdownScreen";
 import { GetReadyScreen } from "./GetReadyScreen";
@@ -14,6 +20,8 @@ import { WorkoutSummaryScreen } from "./WorkoutSummaryScreen";
 export type AiWorkoutSessionStep =
   | "get-ready"
   | "countdown"
+  | "camera-record"
+  | "stats"
   | "live"
   | "summary";
 
@@ -26,9 +34,11 @@ export const AiWorkoutFlowController: React.FC<
   AiWorkoutFlowControllerProps
 > = ({ initialPathId, initialExerciseId }) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const params = useLocalSearchParams<{
     pathId?: string;
     exerciseId?: string;
+    step?: string;
   }>();
 
   const pathKey = (initialPathId || params.pathId || "push").toLowerCase();
@@ -45,9 +55,16 @@ export const AiWorkoutFlowController: React.FC<
     initialIndex >= 0 ? initialIndex : 0
   );
 
-  // Flow State: 'get-ready' -> 'countdown' -> 'live' -> 'summary'
-  const [sessionStep, setSessionStep] =
-    useState<AiWorkoutSessionStep>("get-ready");
+  // Flow State: 'get-ready' -> 'countdown' -> 'camera-record' -> 'stats' -> next exercise 'camera-record' -> 'stats' -> ... -> 'summary'
+  const [sessionStep, setSessionStep] = useState<AiWorkoutSessionStep>(
+    (params.step as AiWorkoutSessionStep) || "get-ready"
+  );
+
+  useEffect(() => {
+    if (params.step) {
+      setSessionStep(params.step as AiWorkoutSessionStep);
+    }
+  }, [params.step]);
 
   const currentExercise: WorkoutExerciseItem =
     exercises[currentExerciseIndex] || {
@@ -57,22 +74,32 @@ export const AiWorkoutFlowController: React.FC<
       image: require("../../../../assets/pushDay/pd4.png"),
     };
 
-  // Step 1: User completes requirements on Get Ready page -> start countdown
+  // Step 1: User finishes Get Ready checks -> start 3-second countdown
   const handleReady = () => {
     setSessionStep("countdown");
   };
 
-  // Step 2: 3-2-1 countdown finishes -> start live workout
+  // Step 2: 3-2-1 countdown finishes -> start Camera recording for active exercise
   const handleCountdownFinished = () => {
-    setSessionStep("live");
+    setSessionStep("camera-record");
   };
 
-  // Step 3: User presses NEXT EXERCISE -> if more exercises remain, load next video/exercise; else show summary
+  // Step 3: User finishes taking the record on camera -> show the exercise Statistics page
+  const handleRecordFinished = () => {
+    setSessionStep("stats");
+  };
+
+  // Step 4: User presses NEXT EXERCISE on stats page -> mark current complete, advance to next exercise, and open the camera
   const handleNextExercise = () => {
+    // 1. Mark current exercise as complete in Redux store
+    dispatch(markExerciseComplete(currentExercise.id));
+
     if (currentExerciseIndex + 1 < exercises.length) {
-      setCurrentExerciseIndex((prev) => prev + 1);
-      // Restart ready camera check or directly record next exercise
-      setSessionStep("countdown");
+      const nextIndex = currentExerciseIndex + 1;
+      setCurrentExerciseIndex(nextIndex);
+      dispatch(setReduxExerciseIndex(nextIndex));
+      // Start 2nd/next exercise and immediately OPEN THE CAMERA to record!
+      setSessionStep("camera-record");
     } else {
       // Completed all exercises -> show Workout Summary
       setSessionStep("summary");
@@ -115,7 +142,19 @@ export const AiWorkoutFlowController: React.FC<
     );
   }
 
-  if (sessionStep === "live") {
+  if (sessionStep === "camera-record") {
+    return (
+      <AiWorkoutCameraRecordScreen
+        currentExercise={currentExercise}
+        exerciseIndex={currentExerciseIndex}
+        totalExercises={exercises.length}
+        onCompleteRecord={handleRecordFinished}
+        onBack={handleBackToWorkouts}
+      />
+    );
+  }
+
+  if (sessionStep === "stats" || sessionStep === "live") {
     return (
       <AiWorkoutLiveScreen
         currentExercise={currentExercise}
@@ -123,6 +162,7 @@ export const AiWorkoutFlowController: React.FC<
         totalExercises={exercises.length}
         onNextExercise={handleNextExercise}
         onEndWorkout={handleEndEarly}
+        onBack={handleBackToWorkouts}
       />
     );
   }
@@ -137,7 +177,11 @@ export const AiWorkoutFlowController: React.FC<
       durationFormatted="45:12"
       caloriesBurned={560}
       paceMps="1.25 m/s"
-      onBackToHome={() => router.replace("/(tabs)/workouts" as any)}
+      workoutTitle="PUSH DAY PROTOCOL"
+      workoutSubtitle="Chest, Shoulders & Triceps Focus"
+      description="High-intensity hypertrophy protocol targeting chest, shoulders, and triceps. Exceptional biomechanical execution and steady tempo maintained across all cleared sets."
+      exercises={exercises}
+      onBackToHome={() => router.replace("/(tabs)/home" as any)}
       onRepeatWorkout={handleRepeatWorkout}
     />
   );

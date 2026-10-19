@@ -4,10 +4,10 @@ import { QrCode, Share2, Sparkles } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Platform,
-  Pressable,
   Share,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
@@ -80,12 +80,10 @@ export const QRCodeCard = () => {
       </View>
 
       {/* Share / Action Button */}
-      <Pressable
+      <TouchableOpacity
         onPress={handleShare}
-        style={({ pressed }) => [
-          styles.buttonWrapper,
-          pressed && styles.buttonPressed,
-        ]}
+        activeOpacity={0.8}
+        style={styles.buttonWrapper}
       >
         <LinearGradient
           colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
@@ -105,7 +103,7 @@ export const QRCodeCard = () => {
             </View>
           )}
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

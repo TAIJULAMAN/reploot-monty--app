@@ -7,6 +7,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -97,13 +98,11 @@ export function Step4YourStyle() {
 
       {/* 2 Location Cards: GYM vs HOME */}
       <View style={styles.locationGroup}>
-        <Pressable
+        <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ selected: selectedStyle === "gym" }}
-          unstable_pressDelay={0}
-          hitSlop={6}
+          activeOpacity={0.8}
           onPress={() => handleSelectStyle("gym")}
-          style={({ pressed }) => [pressed && styles.pressed]}
         >
           <LocationCard
             isSelected={selectedStyle === "gym"}
@@ -111,14 +110,12 @@ export function Step4YourStyle() {
             title="GYM"
             subtitle="Full equipment access"
           />
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           accessibilityRole="button"
           accessibilityState={{ selected: selectedStyle === "home" }}
-          unstable_pressDelay={0}
-          hitSlop={6}
+          activeOpacity={0.8}
           onPress={() => handleSelectStyle("home")}
-          style={({ pressed }) => [pressed && styles.pressed]}
         >
           <LocationCard
             isSelected={selectedStyle === "home"}
@@ -126,7 +123,7 @@ export function Step4YourStyle() {
             title="HOME"
             subtitle="Bodyweight & basics"
           />
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       {/* Workout Days / week Section */}

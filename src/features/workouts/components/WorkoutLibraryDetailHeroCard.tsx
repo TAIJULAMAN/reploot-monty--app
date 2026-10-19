@@ -1,17 +1,10 @@
 import * as Haptics from "expo-haptics";
 import { Image, ImageSource } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Bookmark,
-  Clock,
-  Cpu,
-  Dumbbell,
-  Flame,
-} from "lucide-react-native";
+import { Clock, Dumbbell, Flame } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Platform,
-  Pressable,
   StyleProp,
   StyleSheet,
   Text,
@@ -36,7 +29,6 @@ export const WorkoutLibraryDetailHeroCard: React.FC<
   WorkoutLibraryDetailHeroCardProps
 > = ({
   image,
-  protocolBadge = "AI PROTOCOL",
   title = "CHEST",
   titleSecondary = "HYPERTROPHY",
   duration = "60 MIN",
@@ -49,18 +41,8 @@ export const WorkoutLibraryDetailHeroCard: React.FC<
   const [internalBookmarked, setInternalBookmarked] = useState(false);
   const isBookmarked = externalBookmarked ?? internalBookmarked;
 
-  const handleBookmarkPress = () => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
-    const nextVal = !isBookmarked;
-    setInternalBookmarked(nextVal);
-    onToggleBookmark?.(nextVal);
-  };
-
   return (
     <View style={[styles.cardContainer, style]}>
-      {/* Background Image */}
       {image && (
         <Image
           source={image}
@@ -69,11 +51,7 @@ export const WorkoutLibraryDetailHeroCard: React.FC<
           priority="high"
         />
       )}
-
-      {/* Subtle Cyan ambient overlay */}
       <View style={styles.ambientGlow} pointerEvents="none" />
-
-      {/* Gradient Vignette for Text Legibility */}
       <LinearGradient
         colors={[
           "rgba(7, 10, 17, 0.2)",
@@ -85,30 +63,6 @@ export const WorkoutLibraryDetailHeroCard: React.FC<
         style={styles.gradientOverlay}
         pointerEvents="none"
       />
-
-      {/* Top Controls Row */}
-      <View style={styles.topRow}>
-        <View style={styles.badgePill}>
-          <Cpu size={12} color="#44EAC3" />
-          <Text style={styles.badgeText}>{protocolBadge}</Text>
-        </View>
-
-        <Pressable
-          onPress={handleBookmarkPress}
-          style={({ pressed }) => [
-            styles.bookmarkBtn,
-            pressed && styles.pressedOpacity,
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel="Bookmark workout"
-        >
-          <Bookmark
-            size={18}
-            color={isBookmarked ? "#44EAC3" : "#FFFFFF"}
-            fill={isBookmarked ? "#44EAC3" : "transparent"}
-          />
-        </Pressable>
-      </View>
 
       {/* Bottom Content Row */}
       <View style={styles.bottomContent}>
@@ -193,12 +147,9 @@ const styles = StyleSheet.create({
   badgeText: {
     color: "#44EAC3",
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "800",
     letterSpacing: 1.2,
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontFamily: "monospace",
     textTransform: "uppercase",
   },
   bookmarkBtn: {
@@ -232,12 +183,13 @@ const styles = StyleSheet.create({
   },
   heroTitleItalic: {
     color: "#FFFFFF",
-    fontSize: 22,
-    lineHeight: 27,
-    fontStyle: "italic",
+    fontSize: 24,
+    lineHeight: 28,
+    // fontStyle: "italic",
     fontWeight: "900",
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
     textTransform: "uppercase",
+    fontFamily: "monospace",
   },
   statsRow: {
     flexDirection: "row",
@@ -254,10 +206,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     letterSpacing: 0.8,
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontFamily: "monospace",
     textTransform: "uppercase",
   },
 });

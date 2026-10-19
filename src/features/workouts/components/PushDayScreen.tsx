@@ -42,6 +42,11 @@ export const PushDayScreen: React.FC<PushDayScreenProps> = ({
     }
     if (onStartWorkout) {
       onStartWorkout();
+    } else {
+      router.push({
+        pathname: "/workouts/ai-session" as any,
+        params: { pathId: "push" },
+      });
     }
   };
 
@@ -49,7 +54,17 @@ export const PushDayScreen: React.FC<PushDayScreenProps> = ({
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
-    onSelectExercise?.(exercise.id);
+    if (onSelectExercise) {
+      onSelectExercise(exercise.id);
+    } else {
+      router.push({
+        pathname: "/workouts/exercise-detail" as any,
+        params: {
+          id: exercise.id,
+          title: exercise.title.replace(/\n/g, " "),
+        },
+      });
+    }
   };
 
   return (

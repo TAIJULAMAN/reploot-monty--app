@@ -13,6 +13,8 @@ import {
   Plus,
   Sparkles,
   Utensils,
+  Clock,
+  ArrowRight,
 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
@@ -27,10 +29,58 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
 
+interface LoggedMeal {
+  id: number;
+  type: string;
+  typeColor: string;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  time: string;
+}
+
 export default function NutritionTabRoute() {
   const insets = useSafeAreaInsets();
   const [waterInput, setWaterInput] = useState("");
   const [waterTotal, setWaterTotal] = useState(1.8);
+
+  const [recentMeals] = useState<LoggedMeal[]>([
+    {
+      id: 1,
+      type: "BREAKFAST",
+      typeColor: "#38BDF8",
+      name: "Avocado & Poached Egg Toast",
+      calories: 420,
+      protein: 18,
+      carbs: 34,
+      fat: 16,
+      time: "08:30 AM",
+    },
+    {
+      id: 2,
+      type: "LUNCH",
+      typeColor: "#2DD4BF",
+      name: "Grilled Chicken & Quinoa Bowl",
+      calories: 650,
+      protein: 45,
+      carbs: 58,
+      fat: 14,
+      time: "01:15 PM",
+    },
+    {
+      id: 3,
+      type: "SNACK",
+      typeColor: "#FFB68C",
+      name: "Almond & Cacao Protein Crunch",
+      calories: 280,
+      protein: 12,
+      carbs: 22,
+      fat: 11,
+      time: "04:45 PM",
+    },
+  ]);
 
   const triggerHaptic = (
     style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
@@ -59,7 +109,7 @@ export default function NutritionTabRoute() {
       <StatusBar style="light" />
 
       {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
         <LinearGradient
           colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
           locations={[0, 0.25, 0.65, 1]}
@@ -67,7 +117,7 @@ export default function NutritionTabRoute() {
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+        <Svg style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
           <SvgLine
             x1="420"
             y1="-20"
@@ -98,9 +148,10 @@ export default function NutritionTabRoute() {
       <WorkoutHeader transparent={true} />
 
       <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContainer,
-          { paddingBottom: Math.max(insets.bottom + 100, 120) },
+          { paddingBottom: Math.max(insets.bottom + 140, 160) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -111,11 +162,7 @@ export default function NutritionTabRoute() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     FUEL YOURSELF
                   </Text>
                 </View>
@@ -138,9 +185,19 @@ export default function NutritionTabRoute() {
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
             <View style={styles.headerBadge}>
-              <Flame size={13} color="#38BDF8" />
+              <Flame size={14} color="#38BDF8" />
               <Text style={styles.headerBadgeText}>DAILY ENERGY BUDGET</Text>
             </View>
+            <Pressable
+              onPress={() => {
+                triggerHaptic();
+                router.push("/meal-history");
+              }}
+              style={styles.headerLink}
+            >
+              <Text style={styles.headerLinkText}>LOGS</Text>
+              <ChevronRight size={12} color="#38BDF8" />
+            </Pressable>
           </View>
 
           {/* Budget Main Calories */}
@@ -178,6 +235,7 @@ export default function NutritionTabRoute() {
                 PROTEIN
               </Text>
               <Text style={styles.macroValue}>120g</Text>
+              <Text style={styles.macroTarget}>/ 180g</Text>
             </View>
 
             {/* Carbs */}
@@ -191,6 +249,7 @@ export default function NutritionTabRoute() {
                 CARBS
               </Text>
               <Text style={styles.macroValue}>180g</Text>
+              <Text style={styles.macroTarget}>/ 250g</Text>
             </View>
 
             {/* Fat */}
@@ -202,15 +261,13 @@ export default function NutritionTabRoute() {
             >
               <Text style={[styles.macroLabel, { color: "#F43F5E" }]}>FAT</Text>
               <Text style={styles.macroValue}>55g</Text>
+              <Text style={styles.macroTarget}>/ 70g</Text>
             </View>
           </View>
 
           {/* Scan Meal Button */}
           <Pressable
-            style={({ pressed }) => [
-              styles.scanBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.scanBtn}
             onPress={() => {
               triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
               router.push("/scan-meal");
@@ -232,23 +289,13 @@ export default function NutritionTabRoute() {
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
             <View style={styles.headerBadge}>
-              <Droplet size={13} color="#2DD4BF" />
+              <Droplet size={14} color="#2DD4BF" />
               <Text style={[styles.headerBadgeText, { color: "#2DD4BF" }]}>
                 HYDRATION TELEMETRY
               </Text>
             </View>
-            <View
-              style={[
-                styles.statusPill,
-                {
-                  backgroundColor: "rgba(45, 212, 191, 0.12)",
-                  borderColor: "rgba(45, 212, 191, 0.3)",
-                },
-              ]}
-            >
-              <Text style={[styles.statusPillText, { color: "#2DD4BF" }]}>
-                HYDRATED
-              </Text>
+            <View style={styles.statusPill}>
+              <Text style={styles.statusPillText}>HYDRATED</Text>
             </View>
           </View>
 
@@ -281,24 +328,22 @@ export default function NutritionTabRoute() {
             </LinearGradient>
           </Pressable>
 
-          {/* Quick Add Water Buttons */}
+          {/* Quick Add Water Buttons (Wrap in View to prevent CSS-Interop collapse on Android) */}
           <View style={styles.quickAddRow}>
             {[
               { label: "+250 ML", amount: 250 },
               { label: "+500 ML", amount: 500 },
               { label: "+750 ML", amount: 750 },
             ].map((btn, idx) => (
-              <Pressable
-                key={idx}
-                style={({ pressed }) => [
-                  styles.quickAddBtn,
-                  pressed && { opacity: 0.75, transform: [{ scale: 0.97 }] },
-                ]}
-                onPress={() => handleQuickAddWater(btn.amount)}
-              >
-                <Plus size={11} color="#38BDF8" style={{ marginRight: 2 }} />
-                <Text style={styles.quickAddText}>{btn.label}</Text>
-              </Pressable>
+              <View key={idx} style={styles.quickAddBtnWrapper}>
+                <Pressable
+                  style={styles.quickAddBtn}
+                  onPress={() => handleQuickAddWater(btn.amount)}
+                >
+                  <Plus size={11} color="#38BDF8" style={{ marginRight: 4 }} />
+                  <Text style={styles.quickAddText}>{btn.label}</Text>
+                </Pressable>
+              </View>
             ))}
           </View>
 
@@ -318,10 +363,7 @@ export default function NutritionTabRoute() {
             />
             <Text style={styles.waterInputUnit}>ML</Text>
             <Pressable
-              style={({ pressed }) => [
-                styles.saveInlineBtn,
-                pressed && { opacity: 0.8 },
-              ]}
+              style={styles.saveInlineBtn}
               onPress={handleSaveCustomWater}
             >
               <Text style={styles.saveInlineText}>ADD</Text>
@@ -342,6 +384,7 @@ export default function NutritionTabRoute() {
 
             <View style={styles.coachTextCol}>
               <View style={styles.coachLabelRow}>
+                <Sparkles size={11} color="#38BDF8" style={{ marginRight: 4 }} />
                 <Text style={styles.coachLabel}>AI METABOLIC COACH</Text>
               </View>
               <Text style={styles.coachQuote}>
@@ -366,23 +409,91 @@ export default function NutritionTabRoute() {
               <Text style={styles.recommendedMeal}>
                 Grilled Chicken with Quinoa & Asparagus
               </Text>
+              <View style={styles.mealMacroPill}>
+                <Text style={styles.mealMacroText}>+38g PRO</Text>
+              </View>
             </View>
           </View>
 
           {/* View Plan Button */}
           <Pressable
-            style={({ pressed }) => [
-              styles.viewPlanBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.viewPlanBtn}
             onPress={() => {
               triggerHaptic();
               router.push("/ai-meal-plan");
             }}
           >
-            <Text style={styles.viewPlanText}>ACCESS FULL AI MEAL PLAN</Text>
-            <ChevronRight color="#38BDF8" size={16} />
+            <View style={styles.viewPlanInner}>
+              <Text style={styles.viewPlanText}>ACCESS FULL AI MEAL PLAN</Text>
+              <ChevronRight color="#38BDF8" size={16} />
+            </View>
           </Pressable>
+        </View>
+
+        {/* Logged Protocols Today Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeaderRow}>
+            <View style={styles.headerBadge}>
+              <Utensils size={14} color="#38BDF8" />
+              <Text style={styles.headerBadgeText}>TODAY'S LOGGED PROTOCOLS</Text>
+            </View>
+            <Pressable
+              onPress={() => {
+                triggerHaptic();
+                router.push("/meal-history");
+              }}
+              style={styles.headerLink}
+            >
+              <Text style={styles.headerLinkText}>VIEW ALL</Text>
+              <ArrowRight size={12} color="#38BDF8" />
+            </Pressable>
+          </View>
+
+          <View style={styles.mealsList}>
+            {recentMeals.map((meal, index) => (
+              <View
+                key={meal.id}
+                style={[
+                  styles.mealItemRow,
+                  index === recentMeals.length - 1 && styles.mealItemRowLast,
+                ]}
+              >
+                <View style={styles.mealLeftCol}>
+                  <View style={styles.mealTypeTimeRow}>
+                    <View
+                      style={[
+                        styles.mealTypeBadge,
+                        {
+                          backgroundColor: `${meal.typeColor}18`,
+                          borderColor: `${meal.typeColor}40`,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[styles.mealTypeBadgeText, { color: meal.typeColor }]}
+                      >
+                        {meal.type}
+                      </Text>
+                    </View>
+                    <View style={styles.mealTimeRow}>
+                      <Clock size={10} color="#64748B" style={{ marginRight: 3 }} />
+                      <Text style={styles.mealTimeText}>{meal.time}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.mealItemName} numberOfLines={1}>
+                    {meal.name}
+                  </Text>
+                </View>
+
+                <View style={styles.mealRightCol}>
+                  <Text style={styles.mealCaloriesText}>{meal.calories} KCAL</Text>
+                  <Text style={styles.mealMacrosText}>
+                    {meal.protein}P • {meal.carbs}C • {meal.fat}F
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -393,6 +504,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#090A10",
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContainer: {
     paddingHorizontal: 20,
@@ -407,24 +521,26 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   maskedTitleView: {
-    flex: 1,
+    height: 48,
     width: "100%",
   },
   maskWrapper: {
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 30,
+    lineHeight: 38,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
+    letterSpacing: 0.5,
+    textAlign: "left",
     textTransform: "uppercase",
   },
   heroSubtitle: {
@@ -461,16 +577,30 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: 1.2,
   },
+  headerLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+  },
+  headerLinkText: {
+    color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
   statusPill: {
-    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    backgroundColor: "rgba(45, 212, 191, 0.12)",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: "rgba(56, 189, 248, 0.3)",
+    borderColor: "rgba(45, 212, 191, 0.3)",
   },
   statusPillText: {
-    color: "#38BDF8",
+    color: "#2DD4BF",
     fontSize: 9,
     fontFamily: "monospace",
     fontWeight: "800",
@@ -537,12 +667,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.03)",
   },
-  macroDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginBottom: 4,
-  },
   macroLabel: {
     fontSize: 10,
     fontFamily: "monospace",
@@ -559,9 +683,9 @@ const styles = StyleSheet.create({
   },
   macroTarget: {
     color: "#64748B",
-    fontSize: 8,
+    fontSize: 9,
     fontFamily: "monospace",
-    fontWeight: "600",
+    fontWeight: "700",
   },
   scanBtn: {
     borderRadius: 16,
@@ -589,15 +713,15 @@ const styles = StyleSheet.create({
     width: 170,
     height: 170,
     borderRadius: 85,
-    padding: 10,
+    padding: 8,
     justifyContent: "center",
     alignItems: "center",
   },
   ringInner: {
-    width: "100%",
-    height: "100%",
+    width: 154,
+    height: 154,
     backgroundColor: "#0B0E17",
-    borderRadius: 85,
+    borderRadius: 77,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
@@ -628,32 +752,23 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 4,
   },
-  percentBadge: {
-    backgroundColor: "rgba(56, 189, 248, 0.12)",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  percentText: {
-    color: "#38BDF8",
-    fontSize: 9,
-    fontFamily: "monospace",
-    fontWeight: "800",
-  },
   quickAddRow: {
     flexDirection: "row",
     gap: 8,
     marginBottom: 16,
   },
-  quickAddBtn: {
+  quickAddBtnWrapper: {
     flex: 1,
+  },
+  quickAddBtn: {
     backgroundColor: "rgba(56, 189, 248, 0.1)",
     borderWidth: 1,
     borderColor: "rgba(56, 189, 248, 0.25)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 10,
+    paddingVertical: 11,
+    paddingHorizontal: 4,
     borderRadius: 12,
   },
   quickAddText: {
@@ -679,6 +794,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "monospace",
     marginLeft: 10,
+    paddingVertical: 0,
   },
   waterInputUnit: {
     color: "#64748B",
@@ -723,17 +839,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: "rgba(56, 189, 248, 0.35)",
-  },
-  onlineBadge: {
-    position: "absolute",
-    bottom: -2,
-    right: -2,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#2DD4BF",
-    borderWidth: 2,
-    borderColor: "#090A10",
   },
   coachTextCol: {
     flex: 1,
@@ -806,15 +911,19 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   viewPlanBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "rgba(255, 255, 255, 0.04)",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
+    overflow: "hidden",
+  },
+  viewPlanInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    width: "100%",
   },
   viewPlanText: {
     color: "#FFFFFF",
@@ -822,5 +931,74 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
     fontWeight: "800",
     letterSpacing: 1,
+  },
+  mealsList: {
+    gap: 12,
+  },
+  mealItemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.06)",
+  },
+  mealItemRowLast: {
+    borderBottomWidth: 0,
+    paddingBottom: 0,
+  },
+  mealLeftCol: {
+    flex: 1,
+    marginRight: 12,
+  },
+  mealTypeTimeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  mealTypeBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+  mealTypeBadgeText: {
+    fontSize: 8,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  mealTimeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  mealTimeText: {
+    color: "#64748B",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "600",
+  },
+  mealItemName: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "700",
+  },
+  mealRightCol: {
+    alignItems: "flex-end",
+  },
+  mealCaloriesText: {
+    color: "#38BDF8",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    marginBottom: 2,
+  },
+  mealMacrosText: {
+    color: "#64748B",
+    fontSize: 9,
+    fontFamily: "monospace",
+    fontWeight: "600",
   },
 });

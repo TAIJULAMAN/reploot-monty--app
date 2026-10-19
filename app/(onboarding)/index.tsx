@@ -77,7 +77,7 @@ export default function OnboardingScreen() {
 
   const handleCompleteOnboarding = () => {
     dispatch(setHasSeenOnboarding(true));
-    router.replace("/(auth)/sign-up");
+    router.replace("/sign-up" as any);
     requestAnimationFrame(() => {
       try {
         void Haptics.notificationAsync(

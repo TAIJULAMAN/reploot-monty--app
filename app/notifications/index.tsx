@@ -224,7 +224,6 @@ export default function NotificationsRoute() {
                   <Text
                     style={styles.mainTitle}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
                   >
                     YOUR UPDATES
                   </Text>

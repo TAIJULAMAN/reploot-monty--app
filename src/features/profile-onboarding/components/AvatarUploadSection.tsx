@@ -97,8 +97,8 @@ export function AvatarUploadSection() {
 const styles = StyleSheet.create({
   avatarSection: {
     alignItems: "center",
-    marginBottom: 30,
-    marginTop: 10,
+    marginBottom: 16,
+    marginTop: 4,
   },
   avatarWrapper: {
     position: "relative",

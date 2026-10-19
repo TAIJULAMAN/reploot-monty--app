@@ -1,12 +1,23 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export const EditProfileActions = () => {
+interface EditProfileActionsProps {
+  onSave?: () => void;
+  onDelete?: () => void;
+}
+
+export const EditProfileActions = ({
+  onSave,
+  onDelete,
+}: EditProfileActionsProps) => {
   const handleSave = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    }
+    if (onSave) {
+      onSave();
     }
   };
 
@@ -14,15 +25,16 @@ export const EditProfileActions = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
     }
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   return (
     <View style={styles.actionsContainer}>
-      <Pressable
-        style={({ pressed }) => [
-          styles.saveBtn,
-          pressed && styles.btnPressed,
-        ]}
+      <TouchableOpacity
+        style={styles.saveBtn}
+        activeOpacity={0.8}
         onPress={handleSave}
       >
         <LinearGradient
@@ -33,17 +45,15 @@ export const EditProfileActions = () => {
         >
           <Text style={styles.saveBtnText}>SAVE CHANGES</Text>
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
 
-      <Pressable
-        style={({ pressed }) => [
-          styles.deleteBtn,
-          pressed && styles.btnPressed,
-        ]}
+      <TouchableOpacity
+        style={styles.deleteBtn}
+        activeOpacity={0.8}
         onPress={handleDelete}
       >
         <Text style={styles.deleteBtnText}>DELETE ACCOUNT</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

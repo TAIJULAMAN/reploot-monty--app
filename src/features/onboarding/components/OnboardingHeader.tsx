@@ -1,7 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface OnboardingHeaderProps {
@@ -42,10 +41,7 @@ export const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
         <Pressable
           onPress={handleSkip}
           hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
-          style={({ pressed }) => [
-            styles.skipButton,
-            pressed && styles.skipPressed,
-          ]}
+          style={styles.skipButton}
         >
           <Text style={styles.skipText}>SKIP</Text>
         </Pressable>
@@ -83,9 +79,12 @@ const styles = StyleSheet.create({
   skipText: {
     color: "#CBD5E1",
     fontSize: 13,
-    fontWeight: "400",
     letterSpacing: 2.5,
     textTransform: "uppercase",
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_700Bold",
+    }),
   },
   skipPlaceholder: {
     width: 40,

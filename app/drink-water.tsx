@@ -125,7 +125,7 @@ export default function DrinkWaterScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 40, 60) },
+          { paddingBottom: Math.max(insets.bottom + 60, 80) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -139,7 +139,6 @@ export default function DrinkWaterScreen() {
                   <Text
                     style={styles.mainTitle}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
                   >
                     DRINK WATER
                   </Text>
@@ -222,10 +221,7 @@ export default function DrinkWaterScreen() {
           {quickPacks.map((pack, idx) => (
             <Pressable
               key={idx}
-              style={({ pressed }) => [
-                styles.quickAddBox,
-                pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
-              ]}
+              style={styles.quickAddBox}
               onPress={() => handleQuickAdd(pack.amount)}
             >
               <View style={styles.quickAddIconWrapper}>
@@ -260,32 +256,26 @@ export default function DrinkWaterScreen() {
           />
           <Text style={styles.customInputUnit}>ML</Text>
           <Pressable
-            style={({ pressed }) => [
-              styles.inlineAddBtn,
-              pressed && { opacity: 0.8 },
-            ]}
+            style={styles.inlineAddBtn}
             onPress={handleAddCustom}
           >
-            <Plus size={12} color="#FFFFFF" style={{ marginRight: 2 }} />
+            <Plus size={12} color="#050811" style={{ marginRight: 2 }} />
             <Text style={styles.inlineAddText}>LOG</Text>
           </Pressable>
         </View>
 
         {/* Save & Confirm Button */}
         <Pressable
-          style={({ pressed }) => [
-            styles.saveBtnWrapper,
-            pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-          ]}
+          style={styles.saveBtnWrapper}
           onPress={handleSaveAndExit}
         >
           <LinearGradient
-            colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+            colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={styles.saveBtn}
           >
-            <Check size={16} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Check size={16} color="#050811" style={{ marginRight: 8 }} />
             <Text style={styles.saveBtnText}>SAVE HYDRATION LOG</Text>
           </LinearGradient>
         </Pressable>
@@ -548,7 +538,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   inlineAddBtn: {
-    backgroundColor: "#0284C7",
+    backgroundColor: "#00f2fe",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,
@@ -556,10 +546,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   inlineAddText: {
-    color: "#FFFFFF",
+    color: "#050811",
     fontSize: 10,
     fontFamily: "monospace",
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 0.8,
   },
   saveBtnWrapper: {
@@ -573,10 +563,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   saveBtnText: {
-    color: "#FFFFFF",
+    color: "#050811",
     fontSize: 13,
     fontFamily: "monospace",
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 1.2,
   },
 });

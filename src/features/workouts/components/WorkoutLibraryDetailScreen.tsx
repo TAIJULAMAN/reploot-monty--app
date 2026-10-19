@@ -1,6 +1,7 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,14 +12,12 @@ import {
 import { StartAiWorkoutButton } from "./StartAiWorkoutButton";
 import { WorkoutLibraryDetailHeroCard } from "./WorkoutLibraryDetailHeroCard";
 import { WorkoutLibraryExerciseCard } from "./WorkoutLibraryExerciseCard";
-import { WorkoutLibraryExploreCard } from "./WorkoutLibraryExploreCard";
 
 export interface WorkoutLibraryDetailScreenProps {
   data?: WorkoutLibraryDetailData;
   onBack?: () => void;
   onStartWorkout?: () => void;
   onSelectExercise?: (exerciseId: string) => void;
-  onPressExplore?: () => void;
 }
 
 export const WorkoutLibraryDetailScreen: React.FC<
@@ -28,7 +27,6 @@ export const WorkoutLibraryDetailScreen: React.FC<
   onBack,
   onStartWorkout,
   onSelectExercise,
-  onPressExplore,
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -67,20 +65,15 @@ export const WorkoutLibraryDetailScreen: React.FC<
     }
   };
 
-  const handleExplorePress = () => {
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
-    }
-    if (onPressExplore) {
-      onPressExplore();
-    } else if (data.exploreMore?.targetRoute) {
-      router.push(data.exploreMore.targetRoute as any);
-    }
-  };
-
   return (
     <View style={styles.screen}>
-      <CustomHeader showBackButton onPressBack={handleBack} />
+      <StatusBar style="light" />
+
+      <CustomHeader
+        transparent={true}
+        showBackButton={true}
+        onPressBack={handleBack}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -113,20 +106,7 @@ export const WorkoutLibraryDetailScreen: React.FC<
             />
           ))}
         </View>
-
-        {/* Inlined START AI WORKOUT Button */}
         <StartAiWorkoutButton inline onPress={handleStartWorkout} />
-
-        {/* Section Header: EXPLORE MORE */}
-        <Text style={styles.sectionHeader}>EXPLORE MORE</Text>
-
-        {/* Bottom Banner Card */}
-        <WorkoutLibraryExploreCard
-          title={data.exploreMore.title}
-          subtitle={data.exploreMore.subtitle}
-          image={data.exploreMore.bannerImage}
-          onPress={handleExplorePress}
-        />
       </ScrollView>
     </View>
   );
@@ -142,15 +122,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   sectionHeader: {
-    color: "#8E95A5",
+    color: "#94A3B8",
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: "800",
     letterSpacing: 1.5,
     textTransform: "uppercase",
-    fontFamily: Platform.select({
-      web: "'JetBrains Mono', monospace",
-      default: "JetBrainsMono_700Bold",
-    }),
+    fontFamily: "monospace",
     marginTop: 22,
     marginBottom: 12,
   },

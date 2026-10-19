@@ -1,7 +1,7 @@
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Eye, EyeOff } from "lucide-react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AuthDarkPillInput } from "./AuthDarkPillInput";
 import { SecurityStrengthBar } from "./SecurityStrengthBar";
 
@@ -100,12 +100,10 @@ export function ForgotPasswordNewPasswordStep({
             </View>
 
             <View style={styles.actionButtonWrapper}>
-              <Pressable
+              <TouchableOpacity
                 onPress={onUpdatePassword}
-                style={({ pressed }) => [
-                  styles.fullWidth,
-                  pressed && styles.buttonPressed,
-                ]}
+                activeOpacity={0.8}
+                style={styles.fullWidth}
               >
                 <LinearGradient
                   colors={["#3568A5", "#4B85C4", "#69A6E3"]}
@@ -115,19 +113,17 @@ export function ForgotPasswordNewPasswordStep({
                 >
                   <Text style={styles.actionButtonText}>UPDATE PASSWORD</Text>
                 </LinearGradient>
-              </Pressable>
+              </TouchableOpacity>
             </View>
 
-            <Pressable
+            <TouchableOpacity
               onPress={onCancel}
-              style={({ pressed }) => [
-                styles.cancelButton,
-                pressed && styles.buttonPressed,
-              ]}
+              activeOpacity={0.7}
+              style={styles.cancelButton}
               hitSlop={12}
             >
               <Text style={styles.cancelText}>CANCEL & RETURN</Text>
-            </Pressable>
+            </TouchableOpacity>
           </LinearGradient>
         </View>
       </View>

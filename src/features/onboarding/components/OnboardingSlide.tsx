@@ -1,105 +1,120 @@
 import { Image } from "expo-image";
-import { Zap } from "lucide-react-native";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { Zap } from "lucide-react-native";
+import React from "react";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { OnboardingSlideItem } from "../data/onboardingData";
 
 interface OnboardingSlideProps {
   slide: OnboardingSlideItem;
 }
 
-export const OnboardingSlide: React.FC<OnboardingSlideProps> = ({ slide }) => {
-  const { width, height } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-  const bottomInset = insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64;
-  const bottomOffset = bottomInset + 164;
+export const OnboardingSlide: React.FC<OnboardingSlideProps> = React.memo(
+  ({ slide }) => {
+    const { width, height } = useWindowDimensions();
+    const insets = useSafeAreaInsets();
+    const bottomInset =
+      insets.bottom > 0 ? Math.max(insets.bottom + 32, 64) : 64;
+    const bottomOffset = bottomInset + 164;
 
-  return (
-    <View style={[styles.container, { width, height }]}>
-      <Image
-        source={slide.image}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        transition={250}
-        priority="high"
-      />
+    return (
+      <View style={[styles.container, { width, height }]}>
+        {/* Background Image */}
+        <Image
+          source={slide.image}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          transition={250}
+          priority="high"
+        />
 
-      {slide.id === "trainer" && (
-        <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          <View style={styles.cyberLine} />
-          <View style={[styles.emberGlow, { top: "18%", right: "32%" }]}>
-            <View style={styles.emberCore} />
-          </View>
-          <View style={[styles.emberGlow, { top: "34%", left: "11%" }]}>
-            <View style={styles.emberCore} />
-          </View>
-          <View style={[styles.emberGlow, { top: "84%", right: "18%" }]}>
-            <View style={styles.emberCore} />
-          </View>
-        </View>
-      )}
-      <View style={[styles.textContainer, { bottom: bottomOffset }]}>
-        <View style={styles.titleStack}>
-          {slide.titleLines.map((line, index) => (
-            <MaskedView
-              key={index}
-              style={styles.maskedView}
-              maskElement={
-                <View style={styles.maskWrapper}>
-                  <Text style={styles.titleLine}>{line}</Text>
-                </View>
-              }
-            >
-              <LinearGradient
-                colors={["#00f2fe", "#4facfe"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.gradient}
-              />
-            </MaskedView>
-          ))}
-        </View>
-
-        <View style={styles.subtitleWrapper}>
-          {slide.badgeIcon === "lightning" && (
-            <View style={styles.badgeIcon}>
-              <Zap size={16} color="#A855F7" fill="#A855F7" />
+        {/* Atmospheric Amber Embers & Cyber Line */}
+        {slide.id === "trainer" && (
+          <View style={StyleSheet.absoluteFill} pointerEvents="none">
+            <View style={styles.cyberLine} />
+            <View style={[styles.emberGlow, { top: "18%", right: "32%" }]}>
+              <View style={styles.emberCore} />
             </View>
-          )}
-          <MaskedView
-            style={styles.maskedSubtitleView}
-            maskElement={
-              <View style={styles.maskWrapper}>
-                <Text style={styles.subtitle}>
-                  {slide.subtitleParts.map((part, index) => (
-                    <Text
-                      key={index}
-                      style={[
-                        styles.subtitlePartDefault,
-                        part.isBold ? { fontWeight: "700" } : null,
-                      ]}
-                    >
-                      {part.text}
-                    </Text>
-                  ))}
+            <View style={[styles.emberGlow, { top: "34%", left: "11%" }]}>
+              <View style={styles.emberCore} />
+            </View>
+            <View style={[styles.emberGlow, { top: "84%", right: "18%" }]}>
+              <View style={styles.emberCore} />
+            </View>
+          </View>
+        )}
+
+        {/* Top subtle gradient for status bar / header readability */}
+        <LinearGradient
+          colors={["rgba(17, 19, 30, 0.55)", "rgba(17, 19, 30, 0)"]}
+          locations={[0, 1]}
+          style={styles.topGradient}
+          pointerEvents="none"
+        />
+
+        {/* Onboarding Overlay - Dark gradient at the bottom so text pops */}
+        <LinearGradient
+          colors={["rgba(17, 19, 30, 0)", "rgba(17, 19, 30, 0.65)", "#11131E"]}
+          locations={[0, 0.45, 1]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+
+        {/* Slide Typography & Highlights */}
+        <View style={[styles.textContainer, { bottom: bottomOffset }]}>
+          {/* Title Stack */}
+          <View style={styles.titleStack}>
+            {slide.titleLines.map((line, index) => {
+              const isLast =
+                index === slide.titleLines.length - 1 &&
+                slide.titleLines.length > 1;
+              return (
+                <Text
+                  key={index}
+                  style={[styles.titleLine, isLast && styles.titleLineAccent]}
+                >
+                  {line}
                 </Text>
+              );
+            })}
+          </View>
+
+          {/* Subtitle with Badges and Colored Highlights */}
+          <View style={styles.subtitleWrapper}>
+            {slide.badgeIcon === "lightning" && (
+              <View style={styles.badgeIcon}>
+                <Zap size={16} color="#A855F7" fill="#A855F7" />
               </View>
-            }
-          >
-            <LinearGradient
-              colors={["#00f2fe", "#4facfe"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradient}
-            />
-          </MaskedView>
+            )}
+            <Text style={styles.subtitle}>
+              {slide.subtitleParts.map((part, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.subtitlePartDefault,
+                    part.color ? { color: part.color } : null,
+                    part.isBold ? { fontWeight: "700" } : null,
+                  ]}
+                >
+                  {part.text}
+                </Text>
+              ))}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -151,65 +166,59 @@ const styles = StyleSheet.create({
   },
   titleStack: {
     alignItems: "center",
-    marginBottom: 12,
-  },
-  maskedView: {
-    height: 64,
-    width: 320,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  maskWrapper: {
-    backgroundColor: "transparent",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
-  gradient: {
-    flex: 1,
+    marginBottom: 14,
   },
   titleLine: {
     color: "#FFFFFF",
-    fontSize: 56,
-    lineHeight: 60,
-    fontFamily: "monospace",
-    fontWeight: "900",
-    letterSpacing: 2,
+    fontSize: 46,
+    lineHeight: 50,
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_800ExtraBold",
+    }),
+    letterSpacing: 1,
     textAlign: "center",
     textTransform: "uppercase",
-    textShadowColor: "#FFFFFF",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
+    textShadowColor: "rgba(0, 0, 0, 0.95)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 10,
+  },
+  titleLineAccent: {
+    color: "#00F2FE",
+    textShadowColor: "rgba(0, 242, 254, 0.65)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 14,
   },
   subtitleWrapper: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "center",
     maxWidth: 340,
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
   },
   badgeIcon: {
     marginRight: 6,
     marginTop: 3,
   },
-  maskedSubtitleView: {
-    height: 44, // enough for 2 lines of subtitle
-    width: 300,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   subtitle: {
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 22,
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_700Bold",
+    }),
   },
   subtitlePartDefault: {
-    color: "#FFFFFF",
-    fontSize: 15,
+    color: "#E2E8F0",
+    fontSize: 14,
     lineHeight: 22,
-    fontFamily: "monospace",
-    fontWeight: "400",
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_700Bold",
+    }),
+    textShadowColor: "rgba(0, 0, 0, 0.9)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
   },
 });

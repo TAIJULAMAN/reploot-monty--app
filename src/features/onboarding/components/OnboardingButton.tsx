@@ -1,8 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowRight } from "lucide-react-native";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export interface OnboardingButtonProps {
   isFinalSlide?: boolean;
@@ -35,15 +34,12 @@ export function OnboardingButton({
 
   return (
     <View style={styles.buttonContainer}>
-      <Pressable
+      <TouchableOpacity
         accessibilityRole="button"
         disabled={disabled}
+        activeOpacity={0.8}
         onPress={handlePress}
-        style={({ pressed }) => [
-          styles.buttonWrapper,
-          disabled && styles.buttonDisabled,
-          pressed && !disabled && styles.buttonPressed,
-        ]}
+        style={[styles.buttonWrapper, disabled && styles.buttonDisabled]}
       >
         <LinearGradient
           colors={
@@ -69,7 +65,7 @@ export function OnboardingButton({
             style={styles.arrowIcon}
           />
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
 
       {subtext ? <Text style={styles.subtext}>{subtext}</Text> : null}
     </View>
@@ -114,10 +110,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "700",
     letterSpacing: 2,
     textTransform: "uppercase",
-    fontFamily: "monospace",
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_700Bold",
+    }),
   },
   buttonTextDisabled: {
     color: "rgba(255, 255, 255, 0.5)",
@@ -128,10 +126,12 @@ const styles = StyleSheet.create({
   subtext: {
     color: "#64748B",
     fontSize: 10,
-    fontWeight: "700",
     letterSpacing: 1.2,
     textAlign: "center",
     marginTop: 8,
-    fontFamily: "monospace",
+    fontFamily: Platform.select({
+      web: "'JetBrains Mono', monospace",
+      default: "JetBrainsMono_700Bold",
+    }),
   },
 });

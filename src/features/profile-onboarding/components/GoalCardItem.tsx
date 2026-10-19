@@ -1,7 +1,7 @@
 import { FitnessGoal } from "@/shared/types/user";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export interface GoalOption {
   id: FitnessGoal;
@@ -29,16 +29,12 @@ export const GoalCardItem = React.memo(function GoalCardItem({
   }, [onSelect, opt.id]);
 
   return (
-    <Pressable
+    <TouchableOpacity
       accessibilityRole="button"
       accessibilityState={{ selected: isSelected }}
       onPress={handlePress}
-      unstable_pressDelay={0}
-      hitSlop={6}
-      style={({ pressed }) => [
-        { width: cardWidth, height: cardHeight },
-        pressed && styles.cardPressed,
-      ]}
+      activeOpacity={0.8}
+      style={{ width: cardWidth, height: cardHeight }}
     >
       {isSelected ? (
         <LinearGradient
@@ -70,7 +66,7 @@ export const GoalCardItem = React.memo(function GoalCardItem({
           </Text>
         </View>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 });
 

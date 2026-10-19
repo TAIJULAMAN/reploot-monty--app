@@ -1,8 +1,8 @@
 import * as Haptics from "expo-haptics";
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -27,13 +27,11 @@ export function GenderSelectionRow() {
 
   return (
     <View style={styles.genderRow}>
-      <Pressable
+      <TouchableOpacity
         accessibilityRole="button"
         accessibilityLabel="Select Male"
+        activeOpacity={0.8}
         onPress={() => handleSelectGender("male")}
-        unstable_pressDelay={0}
-        hitSlop={6}
-        style={({ pressed }) => [pressed && styles.pressed]}
       >
         <View
           style={[
@@ -53,14 +51,12 @@ export function GenderSelectionRow() {
           </View>
           <Text style={styles.genderLabel}>MALE</Text>
         </View>
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         accessibilityRole="button"
         accessibilityLabel="Select Female"
+        activeOpacity={0.8}
         onPress={() => handleSelectGender("female")}
-        unstable_pressDelay={0}
-        hitSlop={6}
-        style={({ pressed }) => [pressed && styles.pressed]}
       >
         <View
           style={[
@@ -80,7 +76,7 @@ export function GenderSelectionRow() {
           </View>
           <Text style={styles.genderLabel}>FEMALE</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -90,15 +86,15 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 14,
   },
   genderPressable: {
     width: "48%",
   },
   genderCard: {
     width: "100%",
-    height: 200,
-    borderRadius: 22,
+    height: 140,
+    borderRadius: 20,
     borderWidth: 1.5,
     backgroundColor: "#12131C",
     alignItems: "center",

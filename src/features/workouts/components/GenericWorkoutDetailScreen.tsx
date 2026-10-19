@@ -1,4 +1,5 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
+import { useAppSelector } from "@/store/hooks";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,6 +32,13 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
 }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  const completedExerciseIds = useAppSelector(
+    (state) => state.workout?.completedExerciseIds || []
+  );
+  const completedCount = workout.exercises.filter((ex) =>
+    completedExerciseIds.includes(ex.id)
+  ).length;
 
   const handleBack = () => {
     if (Platform.OS !== "web") {
@@ -167,11 +175,19 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
         {/* Section Header for Exercise List */}
         <View style={styles.exerciseHeaderRow}>
           <Text style={styles.exerciseHeaderTitle}>EXERCISES</Text>
-          <View style={styles.exerciseCountBadge}>
-            <Text style={styles.exerciseCountText}>
-              {workout.exercises.length} TARGETS
-            </Text>
-          </View>
+          {completedCount > 0 ? (
+            <View style={[styles.exerciseCountBadge, styles.completedCountBadge]}>
+              <Text style={styles.completedCountText}>
+                {completedCount}/{workout.exercises.length} COMPLETED
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.exerciseCountBadge}>
+              <Text style={styles.exerciseCountText}>
+                {workout.exercises.length} TARGETS
+              </Text>
+            </View>
+          )}
         </View>
 
         <PushDayExerciseList
@@ -266,6 +282,17 @@ const styles = StyleSheet.create({
   },
   exerciseCountText: {
     color: "#38BDF8",
+    fontSize: 10,
+    fontFamily: "monospace",
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+  completedCountBadge: {
+    backgroundColor: "rgba(56, 237, 216, 0.15)",
+    borderColor: "rgba(56, 237, 216, 0.45)",
+  },
+  completedCountText: {
+    color: "#38EDD8",
     fontSize: 10,
     fontFamily: "monospace",
     fontWeight: "800",

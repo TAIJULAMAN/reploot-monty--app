@@ -3,9 +3,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import {
   Alert,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { Trash2 } from "lucide-react-native";
@@ -45,11 +45,9 @@ export function BottomActions() {
   return (
     <View style={styles.bottomActions}>
       {/* Logout Button */}
-      <Pressable
-        style={({ pressed }) => [
-          styles.logoutBtn,
-          pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-        ]}
+      <TouchableOpacity
+        style={styles.logoutBtn}
+        activeOpacity={0.85}
         onPress={handleLogout}
       >
         <LinearGradient
@@ -60,19 +58,17 @@ export function BottomActions() {
         >
           <Text style={styles.logoutText}>TERMINATE SESSION (LOG OUT)</Text>
         </LinearGradient>
-      </Pressable>
+      </TouchableOpacity>
 
       {/* Delete Account Button */}
-      <Pressable
-        style={({ pressed }) => [
-          styles.deleteAccountBtn,
-          pressed && { opacity: 0.7 },
-        ]}
+      <TouchableOpacity
+        style={styles.deleteAccountBtn}
+        activeOpacity={0.8}
         onPress={handleDeleteAccount}
       >
         <Trash2 size={15} color="#EF4444" style={{ marginRight: 8 }} />
         <Text style={styles.deleteAccountText}>DELETE ATHLETE ACCOUNT</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <Text style={styles.footerVersion}>
         REPLOOT ENGINE V1.0.0 • SECURE PROTOCOL
@@ -84,6 +80,7 @@ export function BottomActions() {
 const styles = StyleSheet.create({
   bottomActions: {
     marginTop: 10,
+    width: "100%",
     alignItems: "center",
   },
   logoutBtn: {
@@ -94,6 +91,7 @@ const styles = StyleSheet.create({
   },
   logoutGradient: {
     height: 52,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -107,9 +105,10 @@ const styles = StyleSheet.create({
   deleteAccountBtn: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 12,
+    justifyContent: "center",
+    width: "100%",
+    height: 48,
+    borderRadius: 14,
     backgroundColor: "rgba(239, 68, 68, 0.08)",
     borderWidth: 1,
     borderColor: "rgba(239, 68, 68, 0.25)",

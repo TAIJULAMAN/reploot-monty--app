@@ -42,7 +42,6 @@ export const Screen: React.FC<ScreenProps> = ({
   };
 
   const innerStyle: ViewStyle = {
-    flex: 1,
     paddingHorizontal: padded ? 20 : 0,
   };
 
@@ -60,7 +59,7 @@ export const Screen: React.FC<ScreenProps> = ({
       {children}
     </ScrollView>
   ) : (
-    <View style={[innerStyle, contentContainerStyle]}>{children}</View>
+    <View style={[{ flex: 1 }, innerStyle, contentContainerStyle]}>{children}</View>
   );
 
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Mail, RotateCcw } from "lucide-react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export interface ForgotPasswordCheckEmailStepProps {
   onOpenMailApp: () => void;
@@ -40,12 +40,10 @@ export function ForgotPasswordCheckEmailStep({
             style={styles.cardGradient}
           >
             <View style={styles.actionButtonWrapper}>
-              <Pressable
+              <TouchableOpacity
                 onPress={onOpenMailApp}
-                style={({ pressed }) => [
-                  styles.fullWidth,
-                  pressed && styles.buttonPressed,
-                ]}
+                activeOpacity={0.8}
+                style={styles.fullWidth}
               >
                 <LinearGradient
                   colors={["#3568A5", "#4B85C4", "#69A6E3"]}
@@ -58,20 +56,18 @@ export function ForgotPasswordCheckEmailStep({
                     <Text style={styles.actionButtonText}>OPEN MAIL APP</Text>
                   </View>
                 </LinearGradient>
-              </Pressable>
+              </TouchableOpacity>
             </View>
 
-            <Pressable
+            <TouchableOpacity
               onPress={onResendEmail}
-              style={({ pressed }) => [
-                styles.resendButton,
-                pressed && styles.buttonPressed,
-              ]}
+              activeOpacity={0.7}
+              style={styles.resendButton}
               hitSlop={12}
             >
               <RotateCcw size={15} color="#94A3B8" style={styles.resendIcon} />
               <Text style={styles.resendText}>RESEND EMAIL</Text>
-            </Pressable>
+            </TouchableOpacity>
           </LinearGradient>
         </View>
       </View>

@@ -1,19 +1,29 @@
 import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
-import { LeaderboardList } from "./components/LeaderboardList";
-import { SearchInput } from "./components/SearchInput";
-import { StandingCard } from "./components/StandingCard";
-import { WorkoutTabs } from "./components/WorkoutTabs";
+import { LeaderboardList } from "./_components/LeaderboardList";
+import { SearchInput } from "./_components/SearchInput";
+import { StandingCard } from "./_components/StandingCard";
+import { WorkoutTabs } from "./_components/WorkoutTabs";
 
 export default function GlobalRankingsRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState("gym");
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/profile");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -58,6 +68,7 @@ export default function GlobalRankingsRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}

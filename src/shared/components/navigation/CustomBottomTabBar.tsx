@@ -1,21 +1,22 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
 import Svg, { Path, Circle, Rect, G } from "react-native-svg";
 import type { BottomTabBarProps } from "expo-router/build/react-navigation/bottom-tabs";
 
-export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function CustomBottomTabBar({
+  state,
+  descriptors,
+  navigation,
+}: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
-  const handleTabPress = (route: (typeof state.routes)[number], isFocused: boolean) => {
+  const handleTabPress = (
+    route: (typeof state.routes)[number],
+    isFocused: boolean,
+  ) => {
     const event = navigation.emit({
       type: "tabPress",
       target: route.key,
@@ -32,19 +33,41 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
     }
   };
 
+  // Hide tab bar if active screen requests tabBarStyle: { display: "none" }
+  const currentRoute = state.routes[state.index];
+  const currentDescriptor = descriptors[currentRoute?.key];
+  const tabBarStyle = currentDescriptor?.options?.tabBarStyle as any;
+  if (tabBarStyle?.display === "none") {
+    return null;
+  }
+
   // Safe bottom padding for navigation bar/gesture pill
-  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 10 : 14);
+  const bottomInset =
+    Platform.OS === "web" ? 12 : Math.max(insets.bottom + 4, 18);
 
   return (
-    <View style={[styles.container, { paddingBottom: bottomInset }]}>
-      {/* Subtle Top Glow Highlight */}
-      <View style={styles.topHighlightLine} />
+    <View
+      pointerEvents="box-none"
+      style={[styles.rootWrapper, { paddingBottom: bottomInset }]}
+    >
+      {/* Background Tab Bar Surface as sibling to avoid clipping elevated center button */}
+      <View style={styles.barSurface} pointerEvents="none">
+        <LinearGradient
+          colors={["#161B2E", "#0D101C"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.barSurfaceGradient}
+        />
+      </View>
 
       <View style={styles.tabsRow}>
         {state.routes.map((route, index) => {
           // Hide internal or hidden routes if any
           const { options } = descriptors[route.key];
-          if ((options.tabBarItemStyle as any)?.display === "none" || (options as any).href === null) {
+          if (
+            (options.tabBarItemStyle as any)?.display === "none" ||
+            (options as any).href === null
+          ) {
             return null;
           }
 
@@ -63,8 +86,13 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
                     pressed && styles.centerButtonPressed,
                   ]}
                 >
-                  {/* Concentric Dark Rim Bezel */}
-                  <View style={styles.centerBezelRing}>
+                  {/* Concentric Dark Rim Bezel with active highlight */}
+                  <View
+                    style={[
+                      styles.centerBezelRing,
+                      isFocused && styles.centerBezelRingActive,
+                    ]}
+                  >
                     {/* Vibrant Luminous Multi-Stop Linear Gradient */}
                     <LinearGradient
                       colors={["#6366F1", "#38BDF8", "#2DD4BF"]}
@@ -82,7 +110,7 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
           }
 
           const activeColor = "#2DD4BF";
-          const inactiveColor = "#64748B";
+          const inactiveColor = "#94A3B8";
           const tintColor = isFocused ? activeColor : inactiveColor;
 
           const renderIcon = () => {
@@ -90,11 +118,17 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
               case "home":
                 return <HomeTabIcon color={tintColor} isFocused={isFocused} />;
               case "nutrition":
-                return <NutritionTabIcon color={tintColor} isFocused={isFocused} />;
+                return (
+                  <NutritionTabIcon color={tintColor} isFocused={isFocused} />
+                );
               case "progress":
-                return <ProgressTabIcon color={tintColor} isFocused={isFocused} />;
+                return (
+                  <ProgressTabIcon color={tintColor} isFocused={isFocused} />
+                );
               case "profile":
-                return <ProfileTabIcon color={tintColor} isFocused={isFocused} />;
+                return (
+                  <ProfileTabIcon color={tintColor} isFocused={isFocused} />
+                );
               default:
                 return <HomeTabIcon color={tintColor} isFocused={isFocused} />;
             }
@@ -104,8 +138,8 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
               : options.title !== undefined
-              ? options.title
-              : route.name.charAt(0).toUpperCase() + route.name.slice(1);
+                ? options.title
+                : route.name.charAt(0).toUpperCase() + route.name.slice(1);
 
           return (
             <Pressable
@@ -140,7 +174,13 @@ export function CustomBottomTabBar({ state, descriptors, navigation }: BottomTab
 // --- TAB ICONS MATCHING FIGMA SPECIFICATION ---
 
 /** Home tab icon with peaked roof, flat walls and doorway cutout */
-function HomeTabIcon({ color, isFocused }: { color: string; isFocused: boolean }) {
+function HomeTabIcon({
+  color,
+  isFocused,
+}: {
+  color: string;
+  isFocused: boolean;
+}) {
   return (
     <View style={styles.iconWrapper}>
       <Svg
@@ -194,10 +234,31 @@ function CenterDumbbellIcon() {
         <Rect x={12.5} y={5} width={3} height={18} rx={1.5} fill="#FFFFFF" />
         {/* Top Weight Plates */}
         <Rect x={7.5} y={7.2} width={13} height={3.4} rx={1.4} fill="#FFFFFF" />
-        <Rect x={9.2} y={4.2} width={9.6} height={2.6} rx={1.2} fill="#FFFFFF" />
+        <Rect
+          x={9.2}
+          y={4.2}
+          width={9.6}
+          height={2.6}
+          rx={1.2}
+          fill="#FFFFFF"
+        />
         {/* Bottom Weight Plates */}
-        <Rect x={7.5} y={17.4} width={13} height={3.4} rx={1.4} fill="#FFFFFF" />
-        <Rect x={9.2} y={21.2} width={9.6} height={2.6} rx={1.2} fill="#FFFFFF" />
+        <Rect
+          x={7.5}
+          y={17.4}
+          width={13}
+          height={3.4}
+          rx={1.4}
+          fill="#FFFFFF"
+        />
+        <Rect
+          x={9.2}
+          y={21.2}
+          width={9.6}
+          height={2.6}
+          rx={1.2}
+          fill="#FFFFFF"
+        />
       </G>
     </Svg>
   );
@@ -226,11 +287,7 @@ function ProgressTabIcon({ color }: { color: string; isFocused: boolean }) {
           fill={color}
         />
         {/* Zigzag Trend Line */}
-        <Path
-          d="M4 17L9.5 9.5L15 15L21.5 7"
-          stroke={color}
-          strokeWidth={2.2}
-        />
+        <Path d="M4 17L9.5 9.5L15 15L21.5 7" stroke={color} strokeWidth={2.2} />
         {/* Trend Nodes */}
         <Circle cx={4} cy={17} r={2.2} fill={color} />
         <Circle cx={9.5} cy={9.5} r={2.2} fill={color} />
@@ -263,29 +320,37 @@ function ProfileTabIcon({ color }: { color: string; isFocused: boolean }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  rootWrapper: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#0B0E14",
+    width: "100%",
+    maxWidth: "100%",
+    zIndex: 100,
+  },
+  barSurface: {
+    position: "absolute",
+    top: 18,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#111524",
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.08)",
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: -6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
-    elevation: 20,
+    shadowOpacity: 0.65,
+    shadowRadius: 18,
+    elevation: 10,
+    overflow: "hidden",
   },
-  topHighlightLine: {
+  barSurfaceGradient: {
     position: "absolute",
+    left: 0,
+    right: 0,
     top: 0,
-    left: 32,
-    right: 32,
-    height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    bottom: 0,
   },
   tabsRow: {
     flexDirection: "row",
@@ -294,6 +359,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingHorizontal: 6,
     height: 62,
+    marginTop: 18,
   },
   tabItem: {
     flex: 1,
@@ -315,14 +381,14 @@ const styles = StyleSheet.create({
   },
   activeGlowAura: {
     position: "absolute",
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "rgba(45, 212, 191, 0.15)",
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "rgba(45, 212, 191, 0.12)",
     shadowColor: "#2DD4BF",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
   },
   tabLabel: {
     fontSize: 11,
@@ -341,14 +407,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   centerButtonPressable: {
-    top: -20,
+    top: -18,
     width: 66,
     height: 66,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 50,
   },
   centerButtonPressed: {
-    transform: [{ scale: 0.95 }],
+    transform: [{ scale: 0.94 }],
     opacity: 0.92,
   },
   centerBezelRing: {
@@ -364,7 +431,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.65,
     shadowRadius: 14,
-    elevation: 12,
+    elevation: 16,
+  },
+  centerBezelRingActive: {
+    shadowColor: "#38BDF8",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.9,
+    shadowRadius: 16,
+    elevation: 20,
   },
   centerGradientCircle: {
     width: 53,

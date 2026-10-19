@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   cardsColumn: {
+    width: "100%",
     gap: 16,
   },
 });

@@ -1,6 +1,7 @@
+import * as Haptics from "expo-haptics";
 import { ChevronDown, Mail, Phone, User } from "lucide-react-native";
 import React, { useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export const EditProfileForm = () => {
   const [fullName, setFullName] = useState("Alex Rivers");
@@ -68,37 +69,51 @@ export const EditProfileForm = () => {
         </View>
         <View style={[styles.formGroup, { flex: 1, zIndex: 10 }]}>
           <Text style={styles.inputLabel}>GENDER</Text>
-          <Pressable
+          <TouchableOpacity
             style={styles.inputWrapper}
-            onPress={() => setShowGenderSelect(!showGenderSelect)}
+            activeOpacity={0.7}
+            onPress={() => {
+              if (Platform.OS !== "web") {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+              }
+              setShowGenderSelect(!showGenderSelect);
+            }}
           >
             <Text style={[styles.input, { color: "#FFFFFF", lineHeight: 20 }]}>
               {gender}
             </Text>
             <ChevronDown size={18} color="#38BDF8" />
-          </Pressable>
+          </TouchableOpacity>
 
           {showGenderSelect && (
             <View style={styles.dropdownMenu}>
-              <Pressable
+              <TouchableOpacity
                 onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+                  }
                   setGender("Male");
                   setShowGenderSelect(false);
                 }}
+                activeOpacity={0.7}
                 style={styles.dropdownItem}
               >
                 <Text style={styles.dropdownText}>Male</Text>
-              </Pressable>
+              </TouchableOpacity>
               <View style={styles.dropdownDivider} />
-              <Pressable
+              <TouchableOpacity
                 onPress={() => {
+                  if (Platform.OS !== "web") {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+                  }
                   setGender("Female");
                   setShowGenderSelect(false);
                 }}
+                activeOpacity={0.7}
                 style={styles.dropdownItem}
               >
                 <Text style={styles.dropdownText}>Female</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           )}
         </View>

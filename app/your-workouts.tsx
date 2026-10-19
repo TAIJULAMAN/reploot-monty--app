@@ -271,7 +271,7 @@ export default function YourWorkoutsScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContainer,
-          { paddingBottom: Math.max(insets.bottom + 100, 120) },
+          { paddingBottom: Math.max(insets.bottom + 140, 160) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -282,11 +282,7 @@ export default function YourWorkoutsScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     YOUR WORKOUTS
                   </Text>
                 </View>
@@ -312,7 +308,7 @@ export default function YourWorkoutsScreen() {
             return (
               <Pressable
                 key={tab}
-                style={[styles.tabButton, isActive && styles.tabButtonActive]}
+                style={styles.tabButton}
                 onPress={() => handleTabChange(tab)}
               >
                 {isActive ? (
@@ -325,7 +321,9 @@ export default function YourWorkoutsScreen() {
                     <Text style={styles.tabTextActive}>{tab}</Text>
                   </LinearGradient>
                 ) : (
-                  <Text style={styles.tabTextInactive}>{tab}</Text>
+                  <View style={styles.tabInactiveInner}>
+                    <Text style={styles.tabTextInactive}>{tab}</Text>
+                  </View>
                 )}
               </Pressable>
             );
@@ -444,10 +442,7 @@ export default function YourWorkoutsScreen() {
 
           {/* Share Achievement CTA (startWorkoutBtn pattern) */}
           <Pressable
-            style={({ pressed }) => [
-              styles.shareWorkoutBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.shareWorkoutBtn}
             onPress={handleShare}
           >
             <LinearGradient
@@ -480,8 +475,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   maskedTitleWrapper: {
-    height: 48,
+    height: 44,
     width: "100%",
+    justifyContent: "center",
   },
   maskedTitleView: {
     flex: 1,
@@ -491,17 +487,19 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 28,
+    lineHeight: 36,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.5,
+    letterSpacing: 0.5,
+    textAlign: "left",
     textTransform: "uppercase",
   },
   subtitle: {
@@ -527,11 +525,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 36,
     borderRadius: 11,
+    overflow: "hidden",
+  },
+  tabInactiveInner: {
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-  },
-  tabButtonActive: {
-    overflow: "hidden",
   },
   tabActiveGradient: {
     width: "100%",

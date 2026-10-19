@@ -11,6 +11,7 @@ const defaultAvatarUri = require("../../../../assets/avatar/a2.avif");
 
 export interface CustomHeaderProps {
   title?: string;
+  subtitle?: string;
   titleVariant?: "logo" | "text";
   showBackButton?: boolean;
   onPressBack?: () => void;
@@ -32,6 +33,8 @@ export interface CustomHeaderProps {
 }
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
+  title,
+  subtitle,
   titleVariant,
   showBackButton = false,
   onPressBack,
@@ -119,19 +122,27 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
   const activeAvatar =
     avatarUri || (user as any)?.avatarUrl || defaultAvatarUri;
 
+  const headerHeight = 56 + Math.max(insets.top, 16);
+
   return (
     <View
       style={[
         styles.navBar,
-        { paddingTop: Math.max(insets.top, 16) },
+        {
+          paddingTop: Math.max(insets.top, 16),
+          height: headerHeight,
+          maxHeight: headerHeight,
+        },
         transparent && styles.navBarTransparent,
         showBorderBottom && styles.navBarBorderBottom,
         style,
       ]}
       testID={testID}
     >
-      <View style={styles.navBarInner}>
+      <View style={[styles.navBarInner, { height: 56 }]}>
         <CustomHeaderLeft
+          title={title}
+          subtitle={subtitle}
           leftContent={leftContent}
           showBackButton={showBackButton}
           handleBackPress={handleBackPress}
@@ -161,6 +172,8 @@ const styles = StyleSheet.create({
   navBar: {
     backgroundColor: "#070A11",
     zIndex: 10,
+    flexGrow: 0,
+    flexShrink: 0,
   },
   navBarTransparent: {
     backgroundColor: "transparent",
@@ -175,5 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 12,
+    minHeight: 56,
   },
 });

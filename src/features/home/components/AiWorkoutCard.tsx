@@ -1,13 +1,10 @@
-import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { Clock } from "lucide-react-native";
+import { ArrowRight, Clock } from "lucide-react-native";
 import React, { useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-
-import { OnboardingButton } from "@/features/onboarding/components/OnboardingButton";
 
 const bgAsset = require("../../../../assets/upperBody/upperBodyStrength.png");
 
@@ -67,29 +64,9 @@ export const AiWorkoutCard = () => {
         <View style={styles.workoutInfoBlock}>
           <Text style={styles.workoutSubtext}>TODAY'S AI WORKOUT</Text>
 
-          <View style={styles.maskedTitleWrapper}>
-            <MaskedView
-              style={styles.maskedTitleView}
-              maskElement={
-                <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.workoutTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
-                    UPPER BODY STRENGTH
-                  </Text>
-                </View>
-              }
-            >
-              <LinearGradient
-                colors={["#00f2fe", "#4facfe"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.gradient}
-              />
-            </MaskedView>
-          </View>
+          <Text style={styles.workoutTitle} numberOfLines={1}>
+            UPPER BODY STRENGTH
+          </Text>
 
           <View style={styles.durationRow}>
             <Clock size={13} color="#38EDD8" strokeWidth={2.5} />
@@ -100,47 +77,67 @@ export const AiWorkoutCard = () => {
         {/* Gym / Home Toggle */}
         <View style={styles.toggleRow}>
           <Pressable
-            style={({ pressed }) => [
-              styles.togglePill,
-              modality === "GYM" && styles.togglePillActive,
-              pressed && styles.pillPressed,
-            ]}
+            style={styles.toggleWrapper}
             onPress={() => handleToggle("GYM")}
+            accessibilityRole="button"
           >
-            <Text
+            <View
               style={[
-                styles.togglePillText,
-                modality === "GYM" && styles.togglePillTextActive,
+                styles.togglePill,
+                modality === "GYM" && styles.togglePillActive,
               ]}
             >
-              GYM
-            </Text>
+              <Text
+                style={[
+                  styles.togglePillText,
+                  modality === "GYM" && styles.togglePillTextActive,
+                ]}
+              >
+                GYM
+              </Text>
+            </View>
           </Pressable>
+
           <Pressable
-            style={({ pressed }) => [
-              styles.togglePill,
-              modality === "HOME" && styles.togglePillActive,
-              pressed && styles.pillPressed,
-            ]}
+            style={styles.toggleWrapper}
             onPress={() => handleToggle("HOME")}
+            accessibilityRole="button"
           >
-            <Text
+            <View
               style={[
-                styles.togglePillText,
-                modality === "HOME" && styles.togglePillTextActive,
+                styles.togglePill,
+                modality === "HOME" && styles.togglePillActive,
               ]}
             >
-              HOME
-            </Text>
+              <Text
+                style={[
+                  styles.togglePillText,
+                  modality === "HOME" && styles.togglePillTextActive,
+                ]}
+              >
+                HOME
+              </Text>
+            </View>
           </Pressable>
         </View>
 
         {/* Start Button */}
-        <OnboardingButton
-          text="START WORKOUT"
+        <Pressable
           onPress={handleStartWorkout}
-          isFinalSlide={true}
-        />
+          accessibilityRole="button"
+        >
+          <View style={styles.actionButton}>
+            <LinearGradient
+              colors={["#00a8e8", "#007ea7"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.buttonText}>START WORKOUT</Text>
+              <ArrowRight size={20} color="#FFFFFF" strokeWidth={2.5} />
+            </LinearGradient>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -155,6 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.08)",
+    position: "relative",
   },
   content: {
     padding: 22,
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   workoutInfoBlock: {
-    marginBottom: 20,
+    marginBottom: 18,
   },
   workoutSubtext: {
     color: "#94A3B8",
@@ -221,36 +219,21 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textTransform: "uppercase",
   },
-  maskedTitleWrapper: {
-    height: 34,
-    marginBottom: 8,
-  },
-  maskedTitleView: {
-    flex: 1,
-    width: "100%",
-  },
-  maskWrapper: {
-    backgroundColor: "transparent",
-    flex: 1,
-    justifyContent: "center",
-  },
-  gradient: {
-    flex: 1,
-  },
   workoutTitle: {
     color: "#FFFFFF",
-    fontSize: 24,
+    fontSize: 22,
     lineHeight: 28,
     fontWeight: "900",
     fontFamily: "monospace",
     letterSpacing: 1,
     textTransform: "uppercase",
+    marginBottom: 8,
   },
   durationRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    marginTop: 4,
+    marginTop: 2,
   },
   durationText: {
     color: "#94A3B8",
@@ -262,12 +245,15 @@ const styles = StyleSheet.create({
   toggleRow: {
     flexDirection: "row",
     gap: 10,
-    marginBottom: 22,
+    marginBottom: 20,
+  },
+  toggleWrapper: {
+    flex: 1,
   },
   togglePill: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 12,
+    width: "100%",
+    paddingVertical: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
     backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -275,12 +261,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   togglePillActive: {
-    backgroundColor: "rgba(0, 242, 254, 0.12)",
+    backgroundColor: "rgba(0, 242, 254, 0.08)",
     borderColor: "#00f2fe",
+    borderWidth: 1.5,
   },
   togglePillText: {
     color: "#64748B",
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "700",
     fontFamily: "monospace",
     letterSpacing: 1,
@@ -291,5 +278,30 @@ const styles = StyleSheet.create({
   },
   pillPressed: {
     opacity: 0.8,
+  },
+  actionButton: {
+    width: "100%",
+    height: 54,
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  buttonGradient: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingHorizontal: 20,
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "900",
+    fontFamily: "monospace",
+    letterSpacing: 1.5,
+  },
+  buttonPressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.985 }],
   },
 });

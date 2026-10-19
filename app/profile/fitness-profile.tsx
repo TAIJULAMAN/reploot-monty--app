@@ -2,7 +2,9 @@ import { CustomHeader } from "@/shared/components/navigation/CustomHeader";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { Check } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Platform,
@@ -10,23 +12,38 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Line as SvgLine } from "react-native-svg";
-import { ActivityLevel } from "./components/ActivityLevel";
-import { FitnessGoal } from "./components/FitnessGoal";
-import { PhysicalMetrics } from "./components/PhysicalMetrics";
+import { ActivityLevel } from "./_components/ActivityLevel";
+import { FitnessGoal } from "./_components/FitnessGoal";
+import { PhysicalMetrics } from "./_components/PhysicalMetrics";
 
 export default function FitnessProfileRoute() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [selectedGoal, setSelectedGoal] = useState("build_muscle");
   const [activityLevel, setActivityLevel] = useState("intermediate");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/profile");
+    }
+  };
 
   const handleSave = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     }
+    setToastMessage("FITNESS PROTOCOL SYNCHRONIZED");
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 2500);
   };
 
   return (
@@ -74,6 +91,7 @@ export default function FitnessProfileRoute() {
         titleVariant="text"
         title=""
         showBackButton={true}
+        onPressBack={handleBack}
         showSearch={true}
         showNotifications={true}
         showAvatar={true}
@@ -127,11 +145,9 @@ export default function FitnessProfileRoute() {
           setActivityLevel={setActivityLevel}
         />
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.saveBtn,
-            pressed && styles.saveBtnPressed,
-          ]}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.saveBtn}
           onPress={handleSave}
         >
           <LinearGradient
@@ -142,8 +158,16 @@ export default function FitnessProfileRoute() {
           >
             <Text style={styles.saveBtnText}>SAVE FITNESS PROFILE</Text>
           </LinearGradient>
-        </Pressable>
+        </TouchableOpacity>
       </ScrollView>
+
+      {/* Floating Cyber HUD Toast */}
+      {toastMessage && (
+        <View style={styles.savedToast}>
+          <Check size={16} color="#00f2fe" style={{ marginRight: 8 }} />
+          <Text style={styles.savedToastText}>{toastMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -215,5 +239,33 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontFamily: "monospace",
     letterSpacing: 1.2,
+  },
+  savedToast: {
+    position: "absolute",
+    bottom: 30,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(7, 10, 17, 0.95)",
+    borderWidth: 1.5,
+    borderColor: "#00f2fe",
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    zIndex: 9999,
+    elevation: 12,
+    shadowColor: "#00f2fe",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+  savedToastText: {
+    color: "#00f2fe",
+    fontSize: 12,
+    fontFamily: "monospace",
+    fontWeight: "900",
+    letterSpacing: 0.6,
   },
 });

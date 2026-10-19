@@ -14,10 +14,10 @@ import { ChevronRight } from "lucide-react-native";
 import React from "react";
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -39,44 +39,6 @@ export default function ProfileTabRoute() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       <CustomHeader
         titleVariant="logo"
         showBackButton={false}
@@ -87,6 +49,7 @@ export default function ProfileTabRoute() {
       />
 
       <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
           { paddingBottom: Math.max(insets.bottom + 110, 130) },
@@ -100,11 +63,7 @@ export default function ProfileTabRoute() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     MY PROFILE
                   </Text>
                 </View>
@@ -135,11 +94,9 @@ export default function ProfileTabRoute() {
         </View>
 
         {/* List Buttons */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.listItem,
-            pressed && styles.listItemPressed,
-          ]}
+        <TouchableOpacity
+          style={styles.listItem}
+          activeOpacity={0.75}
           onPress={() => handleNavigate("/profile/payment-history")}
         >
           <View style={styles.iconContainer}>
@@ -158,13 +115,11 @@ export default function ProfileTabRoute() {
           <View style={styles.chevronWrapper}>
             <ChevronRight size={18} color="#38BDF8" />
           </View>
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.listItem,
-            pressed && styles.listItemPressed,
-          ]}
+        <TouchableOpacity
+          style={styles.listItem}
+          activeOpacity={0.75}
           onPress={() => handleNavigate("/profile/account-settings")}
         >
           <View style={styles.iconContainer}>
@@ -183,7 +138,7 @@ export default function ProfileTabRoute() {
           <View style={styles.chevronWrapper}>
             <ChevronRight size={18} color="#38BDF8" />
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -193,6 +148,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#090A10",
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 20,

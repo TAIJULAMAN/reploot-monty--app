@@ -44,7 +44,7 @@ export default function ForgotPasswordRoute() {
       if (router.canGoBack()) {
         router.back();
       } else {
-        router.replace("/(auth)/sign-in");
+        router.replace("/sign-in" as any);
       }
     }
   };
@@ -77,14 +77,14 @@ export default function ForgotPasswordRoute() {
     try {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch {}
-    router.replace("/(auth)/sign-in");
+    router.replace("/sign-in" as any);
   };
 
   const handleCancelAndReturn = () => {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } catch {}
-    router.replace("/(auth)/sign-in");
+    router.replace("/sign-in" as any);
   };
 
   return (

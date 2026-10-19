@@ -193,7 +193,7 @@ export default function AiMealPlanScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: Math.max(insets.bottom + 40, 60) },
+          { paddingBottom: Math.max(insets.bottom + 60, 80) },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -204,11 +204,7 @@ export default function AiMealPlanScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     AI MEAL PLAN
                   </Text>
                 </View>
@@ -339,10 +335,7 @@ export default function AiMealPlanScreen() {
               </View>
 
               <Pressable
-                style={({ pressed }) => [
-                  styles.likeBtn,
-                  pressed && { opacity: 0.7 },
-                ]}
+                style={styles.likeBtn}
                 onPress={() => toggleLike(meal.id)}
               >
                 <Heart
@@ -372,10 +365,7 @@ export default function AiMealPlanScreen() {
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <Pressable
-            style={({ pressed }) => [
-              styles.applyBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.applyBtn}
             onPress={handleApplyPlan}
           >
             <LinearGradient
@@ -398,10 +388,7 @@ export default function AiMealPlanScreen() {
           </Pressable>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.regenerateBtn,
-              pressed && { opacity: 0.75, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.regenerateBtn}
             onPress={handleRegenerate}
           >
             <RefreshCw

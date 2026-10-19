@@ -125,7 +125,6 @@ export default function MealAnalysisScreen() {
                   <Text
                     style={styles.mainTitle}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
                   >
                     MEAL ANALYSIS
                   </Text>
@@ -282,34 +281,33 @@ export default function MealAnalysisScreen() {
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <Pressable
-            style={({ pressed }) => [
-              styles.saveButton,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.saveButton}
             onPress={handleSaveMeal}
           >
             <LinearGradient
-              colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
+              colors={["#00f2fe", "#4facfe"]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
               style={styles.saveGradient}
             >
               <CheckCircle2
-                color="#FFFFFF"
+                color="#000000"
                 size={16}
                 style={{ marginRight: 8 }}
               />
-              <Text style={styles.saveButtonText}>SAVE MEAL</Text>
+              <Text style={styles.saveButtonText}>SAVE MEAL TO MATRIX</Text>
             </LinearGradient>
           </Pressable>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.scanAgainButton,
-              pressed && { opacity: 0.75, transform: [{ scale: 0.99 }] },
-            ]}
+            style={styles.scanAgainButton}
             onPress={handleScanAgain}
           >
+            <RotateCcw
+              color="#38BDF8"
+              size={16}
+              style={{ marginRight: 8 }}
+            />
             <Text style={styles.scanAgainText}>SCAN ANOTHER MEAL</Text>
           </Pressable>
         </View>
@@ -621,10 +619,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   saveButtonText: {
-    color: "#FFFFFF",
+    color: "#050811",
     fontSize: 13,
     fontFamily: "monospace",
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 1.2,
   },
   scanAgainButton: {

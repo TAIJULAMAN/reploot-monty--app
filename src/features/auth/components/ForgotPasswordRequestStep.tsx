@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Mail, Zap } from "lucide-react-native";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AuthDarkPillInput } from "./AuthDarkPillInput";
 import { SparkleDecoration } from "./SparkleDecoration";
 
@@ -55,12 +55,10 @@ export function ForgotPasswordRequestStep({
             </View>
 
             <View style={styles.actionButtonWrapper}>
-              <Pressable
+              <TouchableOpacity
                 onPress={onSendResetLink}
-                style={({ pressed }) => [
-                  styles.fullWidth,
-                  pressed && styles.buttonPressed,
-                ]}
+                activeOpacity={0.8}
+                style={styles.fullWidth}
               >
                 <LinearGradient
                   colors={["#3568A5", "#4B85C4", "#69A6E3"]}
@@ -70,7 +68,7 @@ export function ForgotPasswordRequestStep({
                 >
                   <Text style={styles.actionButtonText}>SEND RESET LINK</Text>
                 </LinearGradient>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </LinearGradient>
         </View>

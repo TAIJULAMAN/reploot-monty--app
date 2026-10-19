@@ -31,6 +31,7 @@ import {
   DynamicWorkoutPathDetail,
   WORKOUT_PATH_DETAILS_MAP,
 } from "../data/workoutPathDetailData";
+import { useNavigation } from "expo-router";
 import { GenericWorkoutDetailScreen } from "./GenericWorkoutDetailScreen";
 import { WorkoutLibraryScreen } from "./WorkoutLibraryScreen";
 
@@ -66,7 +67,18 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
   onSelectPath,
 }) => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   const [activePath, setActivePath] = useState<WorkoutPathId | null>(null);
+
+  React.useEffect(() => {
+    try {
+      navigation.setOptions({
+        tabBarStyle: activePath ? { display: "none" } : undefined,
+      });
+    } catch {
+      // ignore
+    }
+  }, [activePath, navigation]);
 
   const handleCardPress = (pathId: WorkoutPathId) => {
     if (Platform.OS !== "web") {
@@ -213,15 +225,13 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
           />
         </Svg>
       </View>
-
       <CustomHeader transparent={true} />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingBottom: Math.max(insets.bottom + 32, 50),
+            paddingBottom: Math.max(insets.bottom + 100, 120),
           },
         ]}
       >
@@ -233,11 +243,7 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={2}
-                    adjustsFontSizeToFit
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={2}>
                     {"SELECT YOUR\nPATH"}
                   </Text>
                 </View>
@@ -261,10 +267,7 @@ export const GymWorkoutPathScreen: React.FC<GymWorkoutPathScreenProps> = ({
           {PATH_CARDS.map((item) => (
             <Pressable
               key={item.id}
-              style={({ pressed }) => [
-                styles.card,
-                pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-              ]}
+              style={styles.card}
               onPress={() => handleCardPress(item.id)}
             >
               {/* Radial Glow Overlay */}
@@ -332,6 +335,7 @@ const styles = StyleSheet.create({
     height: 84,
     width: "100%",
     marginBottom: 4,
+    justifyContent: "center",
   },
   maskedTitleView: {
     flex: 1,
@@ -341,17 +345,19 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
   gradient: {
     flex: 1,
   },
   mainTitle: {
     color: "#FFFFFF",
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 32,
+    lineHeight: 38,
     fontWeight: "900",
     fontFamily: "monospace",
-    letterSpacing: 1.2,
+    letterSpacing: 0.5,
+    textAlign: "left",
     textTransform: "uppercase",
   },
   subtitle: {
@@ -387,7 +393,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    filter: "blur(40px)",
+    opacity: 0.15,
   },
   cardTopRow: {
     flexDirection: "row",

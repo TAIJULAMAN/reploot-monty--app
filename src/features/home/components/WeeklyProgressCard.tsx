@@ -1,6 +1,14 @@
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { ArrowRight, Star, Zap } from "lucide-react-native";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export const WeeklyProgressCard = () => {
   return (
@@ -91,10 +99,19 @@ export const WeeklyProgressCard = () => {
         </View>
       </View>
 
-      <View style={styles.linkRow}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.linkRow}
+        onPress={() => {
+          if (Platform.OS !== "web") {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+          }
+          router.push("/weekly-progress" as any);
+        }}
+      >
         <Text style={styles.viewProgressLink}>View Weekly Progress</Text>
         <ArrowRight size={14} color="#38EDD8" strokeWidth={2.5} />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

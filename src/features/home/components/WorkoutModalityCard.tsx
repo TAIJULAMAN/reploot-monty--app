@@ -42,15 +42,10 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
 
   return (
     <Pressable
-      onPress={handlePress}
-      style={({ pressed }) => [
-        styles.cardContainer,
-        pressed && styles.cardPressed,
-        style,
-      ]}
-      accessibilityRole="button"
-      accessibilityLabel={`${title}: ${subtitle}`}
+      style={[styles.cardContainer, style]}
       testID={testID}
+      onPress={handlePress}
+      accessibilityLabel={`${title}: ${subtitle}`}
     >
       {/* Background Workout Image */}
       <Image
@@ -73,7 +68,7 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
       />
 
       {/* Bottom Content Row (Text and Opposite Arrow Button) */}
-      <View style={styles.bottomRow}>
+      <View style={styles.bottomRow} pointerEvents="none">
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={1}>
             {title}
@@ -83,7 +78,7 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
           </Text>
         </View>
 
-        <View style={styles.arrowButtonWrapper} pointerEvents="none">
+        <View style={styles.arrowButtonWrapper}>
           <Image
             source={arrowImage}
             style={styles.arrowImage}
@@ -98,7 +93,7 @@ export const WorkoutModalityCard: React.FC<WorkoutModalityCardProps> = ({
 const styles = StyleSheet.create({
   cardContainer: {
     width: "100%",
-    minHeight: 240,
+    height: 240,
     borderRadius: 24,
     overflow: "hidden",
     backgroundColor: "#11141C",
@@ -106,15 +101,18 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 255, 255, 0.08)",
     position: "relative",
   },
+  pressableOverlay: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 10,
+  },
   cardPressed: {
-    opacity: 0.92,
-    transform: [{ scale: 0.985 }],
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
   },
   bottomRow: {
     position: "absolute",
+    bottom: 20,
     left: 20,
     right: 20,
-    bottom: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

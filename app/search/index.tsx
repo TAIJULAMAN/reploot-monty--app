@@ -380,7 +380,6 @@ export default function SearchRoute() {
                   <Text
                     style={styles.mainTitle}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
                   >
                     SEARCH PROTOCOLS
                   </Text>
@@ -428,10 +427,7 @@ export default function SearchRoute() {
             {query.length > 0 && (
               <Pressable
                 onPress={handleClear}
-                style={({ pressed }) => [
-                  styles.clearButton,
-                  pressed && { opacity: 0.6 },
-                ]}
+                style={styles.clearButton}
                 accessibilityRole="button"
                 accessibilityLabel="Clear search"
               >
@@ -454,10 +450,9 @@ export default function SearchRoute() {
               <Pressable
                 key={cat}
                 onPress={() => handleSelectCategory(cat)}
-                style={({ pressed }) => [
+                style={[
                   styles.categoryPill,
                   isActive && styles.categoryPillActive,
-                  pressed && { opacity: 0.8 },
                 ]}
               >
                 <Text
@@ -486,10 +481,9 @@ export default function SearchRoute() {
                 <Pressable
                   key={tag}
                   onPress={() => handleSelectTag(tag)}
-                  style={({ pressed }) => [
+                  style={[
                     styles.tagChip,
                     isSelected && styles.tagChipActive,
-                    pressed && { opacity: 0.75 },
                   ]}
                 >
                   <Text
@@ -524,10 +518,7 @@ export default function SearchRoute() {
                 <Pressable
                   key={item.id}
                   onPress={() => handleItemPress(item)}
-                  style={({ pressed }) => [
-                    styles.itemCard,
-                    pressed && styles.itemCardPressed,
-                  ]}
+                  style={styles.itemCard}
                 >
                   {/* Left Icon Container */}
                   <View
@@ -593,10 +584,7 @@ export default function SearchRoute() {
                 setQuery("");
                 setSelectedCategory("ALL");
               }}
-              style={({ pressed }) => [
-                styles.resetButton,
-                pressed && { opacity: 0.8 },
-              ]}
+              style={styles.resetButton}
             >
               <Text style={styles.resetButtonText}>RESET SEARCH FILTERS</Text>
             </Pressable>
