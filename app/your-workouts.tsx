@@ -46,7 +46,7 @@ export default function YourWorkoutsScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("TODAY");
 
   const triggerHaptic = (
-    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
   ) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(style).catch(() => {});
@@ -214,49 +214,13 @@ export default function YourWorkoutsScreen() {
   const strokeWidth = 4;
   const radius = (circleSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const progressPercent = activeTab === "TODAY" ? 0.75 : activeTab === "WEEK" ? 0.88 : 0.94;
+  const progressPercent =
+    activeTab === "TODAY" ? 0.75 : activeTab === "WEEK" ? 0.88 : 0.94;
   const strokeDashoffset = circumference * (1 - progressPercent);
 
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines (Exact progress.tsx structure) */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
 
       {/* Unified WorkoutHeader with back button enabled */}
       <WorkoutHeader
@@ -264,7 +228,9 @@ export default function YourWorkoutsScreen() {
         showBackButton={true}
         onPressBack={() => {
           triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-          router.canGoBack() ? router.back() : router.replace("/(tabs)/progress");
+          router.canGoBack()
+            ? router.back()
+            : router.replace("/(tabs)/progress");
         }}
       />
 
@@ -345,8 +311,8 @@ export default function YourWorkoutsScreen() {
                 {activeTab === "TODAY"
                   ? "Today's Workout Summary"
                   : activeTab === "WEEK"
-                  ? "Weekly Workout Summary"
-                  : "Monthly Workout Summary"}
+                    ? "Weekly Workout Summary"
+                    : "Monthly Workout Summary"}
               </Text>
               <Text style={styles.summarySub}>
                 Aggregated output & energy telemetry
@@ -441,10 +407,7 @@ export default function YourWorkoutsScreen() {
           </View>
 
           {/* Share Achievement CTA (startWorkoutBtn pattern) */}
-          <Pressable
-            style={styles.shareWorkoutBtn}
-            onPress={handleShare}
-          >
+          <Pressable style={styles.shareWorkoutBtn} onPress={handleShare}>
             <LinearGradient
               colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
               start={{ x: 0, y: 0.5 }}

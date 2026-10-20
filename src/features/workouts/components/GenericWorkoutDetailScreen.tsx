@@ -24,20 +24,17 @@ export interface GenericWorkoutDetailScreenProps {
   onSelectExercise?: (exerciseId: string) => void;
 }
 
-export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProps> = ({
-  workout,
-  onBack,
-  onStartWorkout,
-  onSelectExercise,
-}) => {
+export const GenericWorkoutDetailScreen: React.FC<
+  GenericWorkoutDetailScreenProps
+> = ({ workout, onBack, onStartWorkout, onSelectExercise }) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
   const completedExerciseIds = useAppSelector(
-    (state) => state.workout?.completedExerciseIds || []
+    (state) => state.workout?.completedExerciseIds || [],
   );
   const completedCount = workout.exercises.filter((ex) =>
-    completedExerciseIds.includes(ex.id)
+    completedExerciseIds.includes(ex.id),
   ).length;
 
   const handleBack = () => {
@@ -90,44 +87,11 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
     <View style={styles.screen}>
       <StatusBar style="light" />
 
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines (Exact progress.tsx / GymWorkoutPathScreen pattern) */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
-      <CustomHeader transparent={true} showBackButton onPressBack={handleBack} />
+      <CustomHeader
+        transparent={true}
+        showBackButton
+        onPressBack={handleBack}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -176,7 +140,9 @@ export const GenericWorkoutDetailScreen: React.FC<GenericWorkoutDetailScreenProp
         <View style={styles.exerciseHeaderRow}>
           <Text style={styles.exerciseHeaderTitle}>EXERCISES</Text>
           {completedCount > 0 ? (
-            <View style={[styles.exerciseCountBadge, styles.completedCountBadge]}>
+            <View
+              style={[styles.exerciseCountBadge, styles.completedCountBadge]}
+            >
               <Text style={styles.completedCountText}>
                 {completedCount}/{workout.exercises.length} COMPLETED
               </Text>

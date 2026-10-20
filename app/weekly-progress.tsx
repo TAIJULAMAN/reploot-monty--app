@@ -51,7 +51,10 @@ interface DayData {
   barHeight: number;
 }
 
-const WEEK_DATA: Record<WeekTab, { dateRange: string; days: DayData[]; totalXp: number }> = {
+const WEEK_DATA: Record<
+  WeekTab,
+  { dateRange: string; days: DayData[]; totalXp: number }
+> = {
   THIS_WEEK: {
     dateRange: "OCT 12 — OCT 18, 2026",
     totalXp: 2450,
@@ -312,7 +315,7 @@ export default function WeeklyProgressScreen() {
   const selectedDay = currentWeek.days[selectedDayIndex] || currentWeek.days[3];
 
   const triggerHaptic = (
-    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
   ) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(style).catch(() => {});
@@ -334,8 +337,7 @@ export default function WeeklyProgressScreen() {
     triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     try {
       await Share.share({
-        message:
-          `⚡ KINETQX Weekly Report: ${currentWeek.dateRange} — 5 Workouts Completed, 3h 35m Training Time, 1,980 kcal burned with 93% AI accuracy score! #Kinetqx #TrainSmarter`,
+        message: `⚡ KINETQX Weekly Report: ${currentWeek.dateRange} — 5 Workouts Completed, 3h 35m Training Time, 1,980 kcal burned with 93% AI accuracy score! #Kinetqx #TrainSmarter`,
         title: "Kinetqx Weekly Report",
       });
     } catch {
@@ -346,43 +348,6 @@ export default function WeeklyProgressScreen() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
 
       {/* Unified WorkoutHeader with back button */}
       <WorkoutHeader
@@ -497,7 +462,9 @@ export default function WeeklyProgressScreen() {
             <View style={{ alignItems: "center" }}>
               <View style={styles.streakTopRow}>
                 <Star size={26} color="#38EDD8" strokeWidth={2.5} />
-                <Text style={[styles.streakNumber, { color: "#38EDD8" }]}>42</Text>
+                <Text style={[styles.streakNumber, { color: "#38EDD8" }]}>
+                  42
+                </Text>
               </View>
               <View style={styles.streakBottomRow}>
                 <Text style={styles.streakLabel}>ELITE</Text>
@@ -757,7 +724,9 @@ export default function WeeklyProgressScreen() {
               <View style={styles.headerIconContainer}>
                 <Dumbbell size={14} color="#38BDF8" />
               </View>
-              <Text style={styles.cardTitle}>WEEKLY TONNAGE & MUSCLE SPLIT</Text>
+              <Text style={styles.cardTitle}>
+                WEEKLY TONNAGE & MUSCLE SPLIT
+              </Text>
             </View>
             <Text style={styles.tonnageHighlight}>+12% LOAD</Text>
           </View>
@@ -770,8 +739,14 @@ export default function WeeklyProgressScreen() {
               </Text>
             </View>
             <View style={styles.tonnageBadge}>
-              <TrendingUp size={13} color="#2DD4BF" style={{ marginRight: 4 }} />
-              <Text style={styles.tonnageBadgeText}>+1,650 KG VS LAST WEEK</Text>
+              <TrendingUp
+                size={13}
+                color="#2DD4BF"
+                style={{ marginRight: 4 }}
+              />
+              <Text style={styles.tonnageBadgeText}>
+                +1,650 KG VS LAST WEEK
+              </Text>
             </View>
           </View>
 

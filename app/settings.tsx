@@ -62,7 +62,11 @@ const STYLE_OPTIONS = [
   { id: "push", title: "PUSH DAY", subtitle: "Chest, Delts &\nTriceps" },
   { id: "pull", title: "PULL DAY", subtitle: "Back, Lats & Biceps" },
   { id: "upper", title: "UPPER BODY", subtitle: "Full Torso\nHypertrophy" },
-  { id: "lower", title: "LOWER BODY /\nLEGS", subtitle: "Quads, Hamstrings,\nGlutes" },
+  {
+    id: "lower",
+    title: "LOWER BODY /\nLEGS",
+    subtitle: "Quads, Hamstrings,\nGlutes",
+  },
   { id: "full", title: "FULL BODY BLITZ", subtitle: "Compound Functional" },
 ];
 
@@ -85,10 +89,15 @@ export default function SettingsScreen() {
   const [location, setLocation] = useState("gym");
   const [experience, setExperience] = useState("intermed");
   const [goal, setGoal] = useState("muscle");
-  const [stylesSelected, setStylesSelected] = useState<string[]>(["push", "upper"]);
+  const [stylesSelected, setStylesSelected] = useState<string[]>([
+    "push",
+    "upper",
+  ]);
   const [isSaved, setIsSaved] = useState(false);
 
-  const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  const triggerHaptic = (
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+  ) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(style).catch(() => {});
     }
@@ -97,14 +106,11 @@ export default function SettingsScreen() {
   const toggleStyle = (id: string) => {
     triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     setStylesSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
     );
   };
 
-  const renderSectionHeader = (
-    title: string,
-    IconComponent: any
-  ) => (
+  const renderSectionHeader = (title: string, IconComponent: any) => (
     <View style={styles.sectionHeader}>
       <View style={styles.iconBadge}>
         <IconComponent size={13} color="#38BDF8" />
@@ -116,43 +122,6 @@ export default function SettingsScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
 
       <CustomHeader
         titleVariant="text"
@@ -199,7 +168,7 @@ export default function SettingsScreen() {
             System preferences, training frequency & AI engine parameters
           </Text>
         </View>
-        
+
         {/* Frequency */}
         {renderSectionHeader("1. FREQUENCY (DAYS PER WEEK)", RefreshCw)}
         <View style={styles.grid2}>
@@ -213,16 +182,10 @@ export default function SettingsScreen() {
                   triggerHaptic();
                   setFrequency(opt.id);
                 }}
-                style={[
-                  styles.card,
-                  isSelected && styles.cardSelected,
-                ]}
+                style={[styles.card, isSelected && styles.cardSelected]}
               >
                 <Text
-                  style={[
-                    styles.cardTitle,
-                    isSelected && styles.textSelected,
-                  ]}
+                  style={[styles.cardTitle, isSelected && styles.textSelected]}
                 >
                   {opt.title}
                 </Text>
@@ -253,12 +216,14 @@ export default function SettingsScreen() {
                   triggerHaptic();
                   setLocation(opt.id);
                 }}
-                style={[
-                  styles.cardRow,
-                  isSelected && styles.cardSelected,
-                ]}
+                style={[styles.cardRow, isSelected && styles.cardSelected]}
               >
-                <View style={[styles.iconWrapper, isSelected && { backgroundColor: THEME.selectedCyan }]}>
+                <View
+                  style={[
+                    styles.iconWrapper,
+                    isSelected && { backgroundColor: THEME.selectedCyan },
+                  ]}
+                >
                   <Icon size={16} color={isSelected ? "#070A11" : "#94A3B8"} />
                 </View>
                 <Text
@@ -328,9 +293,21 @@ export default function SettingsScreen() {
                   isSelected && styles.cardSelected,
                 ]}
               >
-                <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%", marginBottom: 20 }}>
-                  <Icon size={18} color={isSelected ? THEME.selectedCyan : "#94A3B8"} />
-                  {isSelected && <CheckCircle2 size={16} color={THEME.selectedCyan} />}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    marginBottom: 20,
+                  }}
+                >
+                  <Icon
+                    size={18}
+                    color={isSelected ? THEME.selectedCyan : "#94A3B8"}
+                  />
+                  {isSelected && (
+                    <CheckCircle2 size={16} color={THEME.selectedCyan} />
+                  )}
                 </View>
                 <Text
                   style={[
@@ -365,13 +342,23 @@ export default function SettingsScreen() {
                 <Text
                   style={[
                     styles.cardTitle,
-                    { fontSize: 12, marginBottom: 8, lineHeight: 18, textAlign: "left" },
+                    {
+                      fontSize: 12,
+                      marginBottom: 8,
+                      lineHeight: 18,
+                      textAlign: "left",
+                    },
                     isSelected && styles.textSelected,
                   ]}
                 >
                   {opt.title}
                 </Text>
-                <Text style={[styles.cardSubtitle, { textAlign: "left", lineHeight: 14 }]}>
+                <Text
+                  style={[
+                    styles.cardSubtitle,
+                    { textAlign: "left", lineHeight: 14 },
+                  ]}
+                >
                   {opt.subtitle}
                 </Text>
               </TouchableOpacity>
@@ -404,7 +391,6 @@ export default function SettingsScreen() {
             <ArrowRight color="#050811" size={18} />
           </LinearGradient>
         </TouchableOpacity>
-
       </ScrollView>
 
       {/* Floating HUD Sync Toast */}

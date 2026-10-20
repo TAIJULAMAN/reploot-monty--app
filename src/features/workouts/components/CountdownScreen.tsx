@@ -32,7 +32,9 @@ export const CountdownScreen: React.FC<CountdownScreenProps> = ({
         }
 
         if (Platform.OS !== "web") {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(
+            () => {},
+          );
         }
         return prev - 1;
       });
@@ -46,7 +48,7 @@ export const CountdownScreen: React.FC<CountdownScreenProps> = ({
     if (secondsLeft === 0) {
       if (Platform.OS !== "web") {
         Haptics.notificationAsync(
-          Haptics.NotificationFeedbackType.Success
+          Haptics.NotificationFeedbackType.Success,
         ).catch(() => {});
       }
       const timeout = setTimeout(() => {
@@ -59,27 +61,6 @@ export const CountdownScreen: React.FC<CountdownScreenProps> = ({
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
 
       <CustomHeader transparent={true} showBackButton={false} />
 
@@ -96,15 +77,9 @@ export const CountdownScreen: React.FC<CountdownScreenProps> = ({
 
         {/* 3 Progress Dots */}
         <View style={styles.dotsRow}>
-          <View
-            style={[styles.dot, secondsLeft >= 3 && styles.dotActive]}
-          />
-          <View
-            style={[styles.dot, secondsLeft === 2 && styles.dotActive]}
-          />
-          <View
-            style={[styles.dot, secondsLeft <= 1 && styles.dotActive]}
-          />
+          <View style={[styles.dot, secondsLeft >= 3 && styles.dotActive]} />
+          <View style={[styles.dot, secondsLeft === 2 && styles.dotActive]} />
+          <View style={[styles.dot, secondsLeft <= 1 && styles.dotActive]} />
         </View>
       </View>
 

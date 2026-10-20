@@ -61,43 +61,6 @@ export default function MealAnalysisScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       <CustomHeader
         titleVariant="text"
         title=""
@@ -122,10 +85,7 @@ export default function MealAnalysisScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     MEAL ANALYSIS
                   </Text>
                 </View>
@@ -280,10 +240,7 @@ export default function MealAnalysisScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
-          <Pressable
-            style={styles.saveButton}
-            onPress={handleSaveMeal}
-          >
+          <Pressable style={styles.saveButton} onPress={handleSaveMeal}>
             <LinearGradient
               colors={["#00f2fe", "#4facfe"]}
               start={{ x: 0, y: 0.5 }}
@@ -299,15 +256,8 @@ export default function MealAnalysisScreen() {
             </LinearGradient>
           </Pressable>
 
-          <Pressable
-            style={styles.scanAgainButton}
-            onPress={handleScanAgain}
-          >
-            <RotateCcw
-              color="#38BDF8"
-              size={16}
-              style={{ marginRight: 8 }}
-            />
+          <Pressable style={styles.scanAgainButton} onPress={handleScanAgain}>
+            <RotateCcw color="#38BDF8" size={16} style={{ marginRight: 8 }} />
             <Text style={styles.scanAgainText}>SCAN ANOTHER MEAL</Text>
           </Pressable>
         </View>

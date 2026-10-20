@@ -575,43 +575,6 @@ export default function WorkoutCalendarScreen() {
     <GestureHandlerRootView style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       {/* Top Navigation Bar with Avatar & Actions */}
       <CustomHeader
         titleVariant="text"
@@ -668,7 +631,9 @@ export default function WorkoutCalendarScreen() {
             <View style={styles.trayTitleCol}>
               <View style={styles.trayBadgeRow}>
                 <GripHorizontal size={13} color="#38BDF8" />
-                <Text style={styles.trayBadgeText}>DRAG & DROP TO SCHEDULE</Text>
+                <Text style={styles.trayBadgeText}>
+                  DRAG & DROP TO SCHEDULE
+                </Text>
               </View>
               <Text style={styles.traySubText}>
                 Drag onto a date, or tap a split to assign
@@ -855,9 +820,7 @@ export default function WorkoutCalendarScreen() {
                 const dumbbellColor =
                   isHovered && activeDragSplit
                     ? activeDragSplit.color
-                    : item.color ||
-                      categoryTheme?.color ||
-                      cellTextColor;
+                    : item.color || categoryTheme?.color || cellTextColor;
 
                 return (
                   <View key={index} style={styles.cellContainer}>
@@ -878,12 +841,7 @@ export default function WorkoutCalendarScreen() {
                             isHovered && styles.dateBoxHovered,
                           ]}
                         >
-                          <Text
-                            style={[
-                              styles.dateText,
-                              styles.dateTextToday,
-                            ]}
-                          >
+                          <Text style={[styles.dateText, styles.dateTextToday]}>
                             {item.date}
                           </Text>
                           <Image
@@ -919,7 +877,10 @@ export default function WorkoutCalendarScreen() {
                           >
                             {item.date}
                           </Text>
-                          {Boolean(item.currentMonth && (isCompleted || isScheduled || Boolean(item.label))) ? (
+                          {Boolean(
+                            item.currentMonth &&
+                            (isCompleted || isScheduled || Boolean(item.label)),
+                          ) ? (
                             <Image
                               source={require("../assets/dumble.svg")}
                               style={{
@@ -1000,9 +961,7 @@ export default function WorkoutCalendarScreen() {
             style={styles.updateButton}
           >
             <RefreshCw color="#050811" size={18} />
-            <Text style={styles.updateButtonText}>
-              UPDATE WORKOUT SCHEDULE
-            </Text>
+            <Text style={styles.updateButtonText}>UPDATE WORKOUT SCHEDULE</Text>
             <ArrowRight color="#050811" size={18} />
           </LinearGradient>
         </TouchableOpacity>
@@ -1470,10 +1429,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     overflow: "hidden",
     elevation: 8,
-    shadowColor: "#00f2fe",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
   },
   updateButton: {
     flexDirection: "row",
@@ -1501,16 +1456,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(7, 10, 17, 0.95)",
     borderWidth: 1.5,
-    borderColor: "#00f2fe",
     borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
     zIndex: 9999,
     elevation: 12,
-    shadowColor: "#00f2fe",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
   },
   floatingToastText: {
     color: "#00f2fe",

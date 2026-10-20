@@ -144,43 +144,6 @@ export default function MealHistoryScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       <CustomHeader
         titleVariant="text"
         title=""
@@ -205,10 +168,7 @@ export default function MealHistoryScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     MEAL HISTORY
                   </Text>
                 </View>
@@ -410,10 +370,7 @@ export default function MealHistoryScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actionsContainer}>
-          <Pressable
-            style={styles.applyBtn}
-            onPress={handleApplyPlan}
-          >
+          <Pressable style={styles.applyBtn} onPress={handleApplyPlan}>
             <LinearGradient
               colors={["#00f2fe", "#4facfe"]}
               start={{ x: 0, y: 0.5 }}
@@ -424,10 +381,7 @@ export default function MealHistoryScreen() {
             </LinearGradient>
           </Pressable>
 
-          <Pressable
-            style={styles.regenerateBtn}
-            onPress={handleRegenerate}
-          >
+          <Pressable style={styles.regenerateBtn} onPress={handleRegenerate}>
             <RefreshCw
               color="#38BDF8"
               size={14}

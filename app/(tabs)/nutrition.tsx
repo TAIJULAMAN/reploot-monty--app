@@ -107,44 +107,6 @@ export default function NutritionTabRoute() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       <WorkoutHeader transparent={true} />
 
       <ScrollView
@@ -384,7 +346,11 @@ export default function NutritionTabRoute() {
 
             <View style={styles.coachTextCol}>
               <View style={styles.coachLabelRow}>
-                <Sparkles size={11} color="#38BDF8" style={{ marginRight: 4 }} />
+                <Sparkles
+                  size={11}
+                  color="#38BDF8"
+                  style={{ marginRight: 4 }}
+                />
                 <Text style={styles.coachLabel}>AI METABOLIC COACH</Text>
               </View>
               <Text style={styles.coachQuote}>
@@ -435,7 +401,9 @@ export default function NutritionTabRoute() {
           <View style={styles.cardHeaderRow}>
             <View style={styles.headerBadge}>
               <Utensils size={14} color="#38BDF8" />
-              <Text style={styles.headerBadgeText}>TODAY'S LOGGED PROTOCOLS</Text>
+              <Text style={styles.headerBadgeText}>
+                TODAY'S LOGGED PROTOCOLS
+              </Text>
             </View>
             <Pressable
               onPress={() => {
@@ -470,13 +438,20 @@ export default function NutritionTabRoute() {
                       ]}
                     >
                       <Text
-                        style={[styles.mealTypeBadgeText, { color: meal.typeColor }]}
+                        style={[
+                          styles.mealTypeBadgeText,
+                          { color: meal.typeColor },
+                        ]}
                       >
                         {meal.type}
                       </Text>
                     </View>
                     <View style={styles.mealTimeRow}>
-                      <Clock size={10} color="#64748B" style={{ marginRight: 3 }} />
+                      <Clock
+                        size={10}
+                        color="#64748B"
+                        style={{ marginRight: 3 }}
+                      />
                       <Text style={styles.mealTimeText}>{meal.time}</Text>
                     </View>
                   </View>
@@ -486,7 +461,9 @@ export default function NutritionTabRoute() {
                 </View>
 
                 <View style={styles.mealRightCol}>
-                  <Text style={styles.mealCaloriesText}>{meal.calories} KCAL</Text>
+                  <Text style={styles.mealCaloriesText}>
+                    {meal.calories} KCAL
+                  </Text>
                   <Text style={styles.mealMacrosText}>
                     {meal.protein}P • {meal.carbs}C • {meal.fat}F
                   </Text>

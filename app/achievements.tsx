@@ -32,25 +32,75 @@ const { width } = Dimensions.get("window");
 interface BadgeItem {
   id: string;
   name: string;
-  type: "medal" | "lightning" | "drop" | "flame" | "arm" | "salad" | "ribbon" | "trophy";
+  type:
+    | "medal"
+    | "lightning"
+    | "drop"
+    | "flame"
+    | "arm"
+    | "salad"
+    | "ribbon"
+    | "trophy";
   glowColor: string;
 }
 
 const UNLOCKED_BADGES: BadgeItem[] = [
-  { id: "1", name: "Today Workout", type: "medal", glowColor: "rgba(250, 204, 21, 0.25)" },
-  { id: "2", name: "Healthy Day", type: "lightning", glowColor: "rgba(234, 179, 8, 0.25)" },
-  { id: "3", name: "Hydration Hero", type: "drop", glowColor: "rgba(56, 189, 248, 0.35)" },
-  { id: "4", name: "3 Day Streak", type: "flame", glowColor: "rgba(249, 115, 22, 0.35)" },
-  { id: "5", name: "2/12 Workouts", type: "arm", glowColor: "rgba(251, 146, 60, 0.25)" },
-  { id: "6", name: "Healthy Week", type: "salad", glowColor: "rgba(34, 197, 94, 0.25)" },
-  { id: "7", name: "2/16 Workouts", type: "ribbon", glowColor: "rgba(234, 179, 8, 0.25)" },
-  { id: "8", name: "2/25 Workouts", type: "trophy", glowColor: "rgba(245, 158, 11, 0.35)" },
+  {
+    id: "1",
+    name: "Today Workout",
+    type: "medal",
+    glowColor: "rgba(250, 204, 21, 0.25)",
+  },
+  {
+    id: "2",
+    name: "Healthy Day",
+    type: "lightning",
+    glowColor: "rgba(234, 179, 8, 0.25)",
+  },
+  {
+    id: "3",
+    name: "Hydration Hero",
+    type: "drop",
+    glowColor: "rgba(56, 189, 248, 0.35)",
+  },
+  {
+    id: "4",
+    name: "3 Day Streak",
+    type: "flame",
+    glowColor: "rgba(249, 115, 22, 0.35)",
+  },
+  {
+    id: "5",
+    name: "2/12 Workouts",
+    type: "arm",
+    glowColor: "rgba(251, 146, 60, 0.25)",
+  },
+  {
+    id: "6",
+    name: "Healthy Week",
+    type: "salad",
+    glowColor: "rgba(34, 197, 94, 0.25)",
+  },
+  {
+    id: "7",
+    name: "2/16 Workouts",
+    type: "ribbon",
+    glowColor: "rgba(234, 179, 8, 0.25)",
+  },
+  {
+    id: "8",
+    name: "2/25 Workouts",
+    type: "trophy",
+    glowColor: "rgba(245, 158, 11, 0.35)",
+  },
 ];
 
 export default function AchievementsScreen() {
   const insets = useSafeAreaInsets();
 
-  const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  const triggerHaptic = (
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+  ) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(style).catch(() => {});
     }
@@ -88,50 +138,15 @@ export default function AchievementsScreen() {
     <View style={styles.screen}>
       <StatusBar style="light" />
 
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines (Exact progress.tsx structure) */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       {/* Unified WorkoutHeader with back button enabled */}
       <WorkoutHeader
         transparent={true}
         showBackButton={true}
         onPressBack={() => {
           triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-          router.canGoBack() ? router.back() : router.replace("/(tabs)/progress");
+          router.canGoBack()
+            ? router.back()
+            : router.replace("/(tabs)/progress");
         }}
       />
 
@@ -197,7 +212,9 @@ export default function AchievementsScreen() {
           {/* Workouts Left info */}
           <View style={styles.infoRow}>
             <Info size={12} color="#38BDF8" style={{ marginRight: 6 }} />
-            <Text style={styles.infoText}>ONLY 5 WORKOUTS LEFT TO TIER ADVANCEMENT!</Text>
+            <Text style={styles.infoText}>
+              ONLY 5 WORKOUTS LEFT TO TIER ADVANCEMENT!
+            </Text>
           </View>
         </View>
 
@@ -243,12 +260,19 @@ export default function AchievementsScreen() {
               <View style={styles.upcomingTopRow}>
                 <Text style={styles.upcomingTitle}>CENTURY CLUB</Text>
                 <View style={styles.upcomingXpRow}>
-                  <Text style={[styles.upcomingXpText, { color: "#F59E0B" }]}>+500 XP</Text>
+                  <Text style={[styles.upcomingXpText, { color: "#F59E0B" }]}>
+                    +500 XP
+                  </Text>
                   <Text style={styles.upcomingRatio}>3/10</Text>
                 </View>
               </View>
               <View style={styles.upcomingProgressTrack}>
-                <View style={[styles.upcomingProgressFill, { width: "30%", backgroundColor: "#F59E0B" }]} />
+                <View
+                  style={[
+                    styles.upcomingProgressFill,
+                    { width: "30%", backgroundColor: "#F59E0B" },
+                  ]}
+                />
               </View>
             </View>
           </View>
@@ -262,22 +286,26 @@ export default function AchievementsScreen() {
               <View style={styles.upcomingTopRow}>
                 <Text style={styles.upcomingTitle}>EARLY BIRD</Text>
                 <View style={styles.upcomingXpRow}>
-                  <Text style={[styles.upcomingXpText, { color: "#2DD4BF" }]}>+250 XP</Text>
+                  <Text style={[styles.upcomingXpText, { color: "#2DD4BF" }]}>
+                    +250 XP
+                  </Text>
                   <Text style={styles.upcomingRatio}>6/10</Text>
                 </View>
               </View>
               <View style={styles.upcomingProgressTrack}>
-                <View style={[styles.upcomingProgressFill, { width: "60%", backgroundColor: "#2DD4BF" }]} />
+                <View
+                  style={[
+                    styles.upcomingProgressFill,
+                    { width: "60%", backgroundColor: "#2DD4BF" },
+                  ]}
+                />
               </View>
             </View>
           </View>
         </View>
 
         {/* Start Today's Workout Button (Matching progress.tsx startWorkoutBtn) */}
-        <Pressable
-          style={styles.startWorkoutBtn}
-          onPress={handleStartWorkout}
-        >
+        <Pressable style={styles.startWorkoutBtn} onPress={handleStartWorkout}>
           <LinearGradient
             colors={["#0284C7", "#0EA5E9", "#38BDF8"]}
             start={{ x: 0, y: 0.5 }}

@@ -23,7 +23,10 @@ export default function HomeTabRoute() {
   return (
     <View style={styles.screen}>
       <StatusBar style="light" />
-      <View style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
+      <View
+        style={[StyleSheet.absoluteFill, { overflow: "hidden" }]}
+        pointerEvents="none"
+      >
         <LinearGradient
           colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
           locations={[0, 0.25, 0.65, 1]}
@@ -31,7 +34,10 @@ export default function HomeTabRoute() {
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
-        <Svg style={[StyleSheet.absoluteFill, { overflow: "hidden" }]} pointerEvents="none">
+        <Svg
+          style={[StyleSheet.absoluteFill, { overflow: "hidden" }]}
+          pointerEvents="none"
+        >
           <SvgLine
             x1="420"
             y1="-20"

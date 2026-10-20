@@ -48,7 +48,16 @@ export const WorkoutLibraryDetailScreen: React.FC<
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     }
-    onStartWorkout?.();
+    if (onStartWorkout) {
+      onStartWorkout();
+    } else {
+      router.push({
+        pathname: "/workouts/ai-session" as any,
+        params: {
+          pathId: data.id,
+        },
+      });
+    }
   };
 
   const handleExercisePress = (exerciseId: string) => {

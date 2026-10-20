@@ -20,7 +20,9 @@ import Svg, { Line as SvgLine } from "react-native-svg";
 export default function ManagePlanRoute() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(
+    "monthly",
+  );
   const [selectedPlan, setSelectedPlan] = useState<string>("pro");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -44,7 +46,12 @@ export default function ManagePlanRoute() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     }
     setSelectedPlan(planId);
-    const planName = planId === "elite" ? "APEX ATHLETE" : planId === "free" ? "ROOKIE FREE" : "REPLOOT PRO";
+    const planName =
+      planId === "elite"
+        ? "APEX ATHLETE"
+        : planId === "free"
+          ? "ROOKIE FREE"
+          : "REPLOOT PRO";
     setToastMessage(`TIER SYNCHRONIZED: ${planName}`);
     setTimeout(() => {
       setToastMessage(null);
@@ -91,7 +98,8 @@ export default function ManagePlanRoute() {
       badge: "ELITE PERFORMANCE",
       price: billingCycle === "monthly" ? "$19.99" : "$14.99",
       period: billingCycle === "monthly" ? "/month" : "/mo (billed $179/yr)",
-      description: "Pro human coaching integration & customized hypertrophy engine",
+      description:
+        "Pro human coaching integration & customized hypertrophy engine",
       features: [
         "Everything in Reploot Pro",
         "1-on-1 Dedicated Human Coach Support",
@@ -107,43 +115,6 @@ export default function ManagePlanRoute() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
 
       <CustomHeader
         titleVariant="text"
@@ -264,9 +235,17 @@ export default function ManagePlanRoute() {
                       ]}
                     >
                       {isHighlight ? (
-                        <Sparkles size={11} color="#38BDF8" style={{ marginRight: 4 }} />
+                        <Sparkles
+                          size={11}
+                          color="#38BDF8"
+                          style={{ marginRight: 4 }}
+                        />
                       ) : (
-                        <Zap size={11} color="#FFB68C" style={{ marginRight: 4 }} />
+                        <Zap
+                          size={11}
+                          color="#FFB68C"
+                          style={{ marginRight: 4 }}
+                        />
                       )}
                       <Text
                         style={[
@@ -305,7 +284,13 @@ export default function ManagePlanRoute() {
                       >
                         <Check
                           size={11}
-                          color={isApex ? "#FFB68C" : isHighlight ? "#38BDF8" : "#94A3B8"}
+                          color={
+                            isApex
+                              ? "#FFB68C"
+                              : isHighlight
+                                ? "#38BDF8"
+                                : "#94A3B8"
+                          }
                         />
                       </View>
                       <Text style={styles.featureLabel}>{feature}</Text>
@@ -321,9 +306,7 @@ export default function ManagePlanRoute() {
                 >
                   {plan.isCurrent ? (
                     <View style={styles.currentPlanBtn}>
-                      <Text style={styles.currentPlanBtnText}>
-                        {plan.cta}
-                      </Text>
+                      <Text style={styles.currentPlanBtnText}>{plan.cta}</Text>
                     </View>
                   ) : (
                     <LinearGradient

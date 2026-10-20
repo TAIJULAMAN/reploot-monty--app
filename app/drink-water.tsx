@@ -33,7 +33,9 @@ export default function DrinkWaterScreen() {
   const [waterInput, setWaterInput] = useState("");
   const targetLiters = 3.0;
 
-  const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  const triggerHaptic = (
+    style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light,
+  ) => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(style).catch(() => {});
     }
@@ -41,14 +43,14 @@ export default function DrinkWaterScreen() {
 
   const handleQuickAdd = (ml: number) => {
     triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-    setCurrentLiters((prev) => +(Math.min(prev + ml / 1000, 6.0)).toFixed(2));
+    setCurrentLiters((prev) => +Math.min(prev + ml / 1000, 6.0).toFixed(2));
   };
 
   const handleAddCustom = () => {
     const val = parseFloat(waterInput);
     if (!isNaN(val) && val > 0) {
       triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-      setCurrentLiters((prev) => +(Math.min(prev + val / 1000, 6.0)).toFixed(2));
+      setCurrentLiters((prev) => +Math.min(prev + val / 1000, 6.0).toFixed(2));
       setWaterInput("");
     }
   };
@@ -60,9 +62,12 @@ export default function DrinkWaterScreen() {
 
   const progressPercentage = Math.min(
     Math.round((currentLiters / targetLiters) * 100),
-    100
+    100,
   );
-  const remainingLiters = Math.max(+(targetLiters - currentLiters).toFixed(2), 0);
+  const remainingLiters = Math.max(
+    +(targetLiters - currentLiters).toFixed(2),
+    0,
+  );
 
   const quickPacks = [
     { label: "+250 ML", amount: 250, desc: "Standard Glass" },
@@ -74,44 +79,6 @@ export default function DrinkWaterScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
-      {/* Cyber Kinetic Ambient Gradient & Accent Lines */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <LinearGradient
-          colors={["#1B182E", "#2A244A", "#151321", "#0B0B11"]}
-          locations={[0, 0.25, 0.65, 1]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SvgLine
-            x1="420"
-            y1="-20"
-            x2="-40"
-            y2="440"
-            stroke="rgba(255, 255, 255, 0.035)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="460"
-            y1="260"
-            x2="-40"
-            y2="760"
-            stroke="rgba(56, 189, 248, 0.04)"
-            strokeWidth="1"
-          />
-          <SvgLine
-            x1="480"
-            y1="560"
-            x2="-40"
-            y2="1080"
-            stroke="rgba(56, 237, 216, 0.04)"
-            strokeWidth="1"
-          />
-        </Svg>
-      </View>
-
       <CustomHeader
         titleVariant="text"
         title=""
@@ -136,10 +103,7 @@ export default function DrinkWaterScreen() {
               style={styles.maskedTitleView}
               maskElement={
                 <View style={styles.maskWrapper}>
-                  <Text
-                    style={styles.mainTitle}
-                    numberOfLines={1}
-                  >
+                  <Text style={styles.mainTitle} numberOfLines={1}>
                     DRINK WATER
                   </Text>
                 </View>
@@ -249,26 +213,18 @@ export default function DrinkWaterScreen() {
             placeholderTextColor="#64748B"
             keyboardType="number-pad"
             value={waterInput}
-            onChangeText={(text) =>
-              setWaterInput(text.replace(/[^0-9]/g, ""))
-            }
+            onChangeText={(text) => setWaterInput(text.replace(/[^0-9]/g, ""))}
             maxLength={5}
           />
           <Text style={styles.customInputUnit}>ML</Text>
-          <Pressable
-            style={styles.inlineAddBtn}
-            onPress={handleAddCustom}
-          >
+          <Pressable style={styles.inlineAddBtn} onPress={handleAddCustom}>
             <Plus size={12} color="#050811" style={{ marginRight: 2 }} />
             <Text style={styles.inlineAddText}>LOG</Text>
           </Pressable>
         </View>
 
         {/* Save & Confirm Button */}
-        <Pressable
-          style={styles.saveBtnWrapper}
-          onPress={handleSaveAndExit}
-        >
+        <Pressable style={styles.saveBtnWrapper} onPress={handleSaveAndExit}>
           <LinearGradient
             colors={["#00f2fe", "#4facfe"]}
             start={{ x: 0, y: 0.5 }}

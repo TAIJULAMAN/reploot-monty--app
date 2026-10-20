@@ -33,10 +33,7 @@ export const WorkoutModalitiesSection: React.FC<
     if (onSelectModality) {
       onSelectModality("home");
     } else {
-      router.push({
-        pathname: "/workouts",
-        params: { modality: "home" },
-      });
+      router.push("/workouts/home" as any);
     }
   };
 
